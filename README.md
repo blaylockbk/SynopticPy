@@ -35,6 +35,12 @@ The [notebooks directory](https://github.com/blaylockbk/Synoptic_API/tree/master
 
 ## 👨🏻‍💻 `get_Synoptic.py` -- All the useful functions in one module
 
+To use my functions, make sure the `get_Synoptic.py` file is in your working directory or PYTHONPATH.
+
+```python
+from get_Synoptic import function_name
+```
+
 There is a separate function for each of the Synoptic services.
 
 1. `synoptic_api` - A generalized wrapper for making an API request and returns a `requests` object. You *could* access the raw JSON from this object, but the other functions will convert that JSON to a Pandas DataFrame. Generally, you won't use this function directly.
