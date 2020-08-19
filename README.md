@@ -86,11 +86,12 @@ To get the air temperature and wind speed for WBB and KMRY nearest 00:00 UTC Jan
 ```python
 from get_Synoptic import stations_nearesttime
 from datetime import datetime
-a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'], attime=datetime(2020,1,1), within=60)
+a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'],
+                    attime=datetime(2020,1,1), within=60)
 ```
 ![](./images/nearesttime_df.png)
 
-> Note: `stations_nearesttime(stid='WBB,KMRY', vars='air_temp,wind_speed', attime='2020010100' within=60)` is equivalent to the above example.
+> Note: `stations_nearesttime(stid='WBB,KMRY', vars='air_temp,wind_speed', attime='2020010100', within=60)` is equivalent to the above example.
 
 
 ## ♻ Returned Data
@@ -110,6 +111,8 @@ In short, all sets and values are always returned, but column labels are simplif
 For the renamed columns, it is up to the user to know if the data is a derived quantity and which set/value it is. To find out, look for attributes "SENSOR_VARIABLES" and "RENAME" in the DataFrame attributes, or look at the raw JSON.
 
 This makes sense to me, but if you are confused and don't trust what I'm doing, you can turn this "relabeling" off with `rename_set_1=False` and `rename_value_1=False` (for the appropriate function).
+
+> Also note that `LATITUDE` and `LONGITUDE` in the raw JSON is renamed to `latitude` and `longitude` (lowercase) to match [CF convention](http://cfconventions.org/).
 
 ---
 
