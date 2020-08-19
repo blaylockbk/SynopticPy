@@ -64,6 +64,35 @@ If this is new to you, I recommend you become familiar with the [Station Selecto
 
 **One note about how my python functions work...** All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Also, any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API (e.g., `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made.)
 
+For example, to get a time series of a the station WBB for just air temperature and wind speed for the last 600 minutes...
+
+```python
+from get_Synoptic import stations_timeseries
+a = stations_timeseries(stid='WBB', vars=['air_temp', 'wind_speed'], recent=600)
+```
+![](./images/timeseries_df.png)
+
+To get the latest air temperature and wind speed data for WBB and KRMY within one hour...
+```python
+from get_Synoptic import stations_latest
+a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'], within=60)
+```
+![](./images/latest_df.png)
+
+> Note: `stations_latest(stid='WBB,KMRY', vars='air_temp,wind_speed', within=60)` is equivalent to the above example.
+
+To get the air temperature and wind speed for WBB and KMRY nearest 00:00 UTC Jan 1, 2020 within one hour...
+
+```python
+from get_Synoptic import stations_nearesttime
+from datetime import datetime
+a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'], attime=datetime(2020,1,1), within=60)
+```
+![](./images/nearesttime_df.png)
+
+> Note: `stations_nearesttime(stid='WBB,KMRY', vars='air_temp,wind_speed', attime='2020010100' within=60)` is equivalent to the above example.
+
+
 ## ♻ Returned Data
 The data retrieved from the Synoptic API is converted from JSON to a Pandas DataFrame. 
 
