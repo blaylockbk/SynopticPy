@@ -344,7 +344,7 @@ def synoptic_api(service, verbose=True, **params):
     
     ## Service URL
     ##------------
-    root = 'https://api.synopticdata.com/v2/'
+    root = 'https://api.synopticdata.com/v2'
     
     if service in _stations:    
         URL = f"{root}/stations/{service}"
