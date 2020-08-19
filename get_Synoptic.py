@@ -318,6 +318,9 @@ def synoptic_api(service, verbose=True, **params):
         API service to use, including {'auth', 'latest', 'metadata',
         'nearesttime', 'networks', 'networktypes', 'precipitation',
         'qctypes', 'timeseries', 'variables'}
+    verbose : {True, False, 'HIDE', 'hide'}
+        Print extra details to the screen.
+        If 'HIDE', then the token will be hidden.
     **params : keyword arguments
         API request parameters (arguments).
         Lists will be converted to a comma-separated string.
@@ -393,6 +396,9 @@ def synoptic_api(service, verbose=True, **params):
     assert code == 1, f"🛑 There are errors in the API request {decode_url}. {msg}"
 
     if verbose:
+        if isinstance(verbose, str) and verbose.upper() == 'HIDE':
+            token_idx = decode_url.find('token=')
+            decode_url = decode_url.replace(decode_url[token_idx:token_idx+6+32], 'token=🙈HIDDEN')
         print(f'\n 🚚💨 Speedy Delivery from Synoptic API [{service}]: {decode_url}\n')
     
     return f
