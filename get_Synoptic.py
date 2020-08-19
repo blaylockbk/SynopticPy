@@ -91,7 +91,7 @@ from datetime import datetime
 ## I import my API token from this file (hidden from GitHub). You will
 ## need to comment the next two lines and insert your own API token.
 ## (Or, you can create your own functin that returns your token. 😊)
-from .get_credentials import get_MW_token
+from get_credentials import get_MW_token
 _token = get_MW_token()['token']
 
 
