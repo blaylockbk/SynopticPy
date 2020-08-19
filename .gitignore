@@ -1,0 +1,11 @@
+.ipynb_checkpoints
+.vscode
+
+*.grib2
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+get_credentials.py
+sandbox/
