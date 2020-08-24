@@ -269,6 +269,12 @@ def _parse_latest_nearesttime(data, rename_value_1):
 
         # Add other station info to the DataFrame (i.e., ELEVATION, latitude, etc.)
         for k, v in i.items():
+            # Attempt to convert values to a float, if possible.
+            # (i.e, latitude, longitude, elevation, MNET_ID, etc.)
+            try:
+                v = float(v)  
+            except:
+                pass
             if k in ['LATITUDE', 'LONGITUDE']:
                 # lat/lon is lowercase for CF compliant variable name
                 df[k.lower()] = [None, v]
@@ -292,6 +298,8 @@ def _parse_latest_nearesttime(data, rename_value_1):
     
     df = pd.concat(dfs, axis=1)
     
+    df.attrs['STATIONS'] = [i for i in df.columns if 'date_time' not in i]
+    df.attrs['DATETIMES'] = [i for i in df.columns if 'date_time' in i]
     df.attrs['UNITS'] = data['UNITS']
     df.attrs['SUMMARY'] = data['SUMMARY']
     df.attrs['QC_SUMMARY'] = data['QC_SUMMARY']
