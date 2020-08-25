@@ -114,6 +114,39 @@ This makes sense to me, but if you are confused and don't trust what I'm doing, 
 
 > Also note that `LATITUDE` and `LONGITUDE` in the raw JSON is renamed to `latitude` and `longitude` (lowercase) to match [CF convention](http://cfconventions.org/).
 
+
+#### Wind U and V components
+If the returned data contains variables for both `wind_speed` and `wind_direction`, then the DataFrame will compute and return the `wind_u` and `wind_v` components.
+
+
+
+
+
+## ✅ How to use the Quality Control Checks
+Be default, only basic QC range checks to remove physically implausible data is applied to the data before it is returned by the API. This ensures that a 300 degree temperature will not be returned. 
+
+You can add additional QC checks that more stringently remove "bad" data.
+
+- [Read about the QC checks](https://developers.synopticdata.com/about/qc/)
+- [Read the QC section for a stations service (e.g., timeseries)](https://developers.synopticdata.com/mesonet/v2/stations/timeseries/)
+
+Some tips:
+
+- You can turn on more QC checks by Synoptic with the parameter `qc_checks='synopticlabs'`
+- You can turn all QC checks on (includes synopiclab, mesowest, and madis checks) with the parameter `qc_checks='all'`.
+- You can see the number of data point removed in the QC summary in the DataFrame attributes `df.attrs['QC_SUMMARY']`.
+- Specific checks can be turned on (read the docs for more details).
+
+For example:
+
+```python
+stations_timeseries(stid='UKBKB', recent=60, qc_checks='synopticlabs')
+```
+or
+```python
+stations_timeseries(stid='UKBKB', recent=60, qc_checks='all')
+```
+
 ---
 
 **Best of Luck 🍀**  

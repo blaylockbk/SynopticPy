@@ -466,6 +466,7 @@ def stations_metadata(verbose=True, **params):
     df.attrs['URL'] = urllib.parse.unquote(web.url)
     df.attrs['UNITS'] = {'ELEVATION': 'ft'}
     df.attrs['SUMMARY'] = data['SUMMARY']
+    df.attrs['params'] = params
     return df.transpose().sort_index()
 
 def stations_timeseries(verbose=True, rename_set_1=True, **params):
@@ -593,10 +594,11 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         df.attrs['longitude'] = df.attrs.pop('LONGITUDE')
         
         # Include other info
-        df.attrs['UNITS'] = data['UNITS']
-        df.attrs['QC_SUMMARY'] = data['QC_SUMMARY']
-        df.attrs['SUMMARY'] = data['SUMMARY']
+        for i in data.keys():
+            if i != 'STATION':
+                df.attrs[i] = data[i]
         df.attrs['SENSOR_VARIABLES'] = senvars
+        df.attrs['params'] = params
         
         Z.append(df)
         
@@ -637,15 +639,18 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
     """
     assert 'attime' in params, "🤔 `attime` is a required parameter (datetime)."
-    assert 'within' in params, "🤔 `within` is a required parameter (int, in minutes)."
     assert any([i in _stn_selector for i in params]), \
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
 
+    params.setdefault('within', 60)
+    if verbose: print(f'Checking for data within {params["within"]} minutes.')
+    
     # Get the data
     web = synoptic_api('nearesttime', verbose=verbose, **params)
     data = web.json()
     
     df = _parse_latest_nearesttime(data, rename_value_1)
+    df.attrs['params'] = params
     return df
 
 def stations_latest(verbose=True, rename_value_1=True, **params):
@@ -687,6 +692,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     data = web.json()
     
     df = _parse_latest_nearesttime(data, rename_value_1)
+    df.attrs['params'] = params
     return df
 
 def stations_precipitation(verbose=True, **params):
@@ -738,7 +744,7 @@ def networks(verbose=True, **params):
     df.set_index('ID', inplace=True)
     df['LAST_OBSERVATION'] = pd.to_datetime(df.LAST_OBSERVATION)
     df.attrs['SUMMARY'] = data['SUMMARY']
-    
+    df.attrs['params'] = params
     return df
 
 def networktypes(verbose=True, **params):
@@ -762,7 +768,7 @@ def networktypes(verbose=True, **params):
     df = pd.DataFrame(data['MNETCAT'])
     df.set_index('ID', inplace=True)
     df.attrs['SUMMARY'] = data['SUMMARY']
-    
+    df.attrs['params'] = params
     return df
 
 def variables(verbose=True, **params):
@@ -785,7 +791,7 @@ def variables(verbose=True, **params):
     df = pd.concat([pd.DataFrame(i) for i in data['VARIABLES']], axis=1).transpose()
     #df.set_index('vid', inplace=True)
     df.attrs['SUMMARY'] = data['SUMMARY']
-    
+    df.attrs['params'] = params
     return df
 
 def qctypes(verbose=True, **params):
@@ -809,7 +815,7 @@ def qctypes(verbose=True, **params):
     df.set_index('ID', inplace=True)
     df.sort_index(inplace=True)
     df.attrs['SUMMARY'] = data['SUMMARY']
-    
+    df.attrs['params'] = params
     return df
 
 def auth(helpme=True, verbose=True, **params):
@@ -859,6 +865,6 @@ def auth(helpme=True, verbose=True, **params):
     
 # Other Services
 #---------------
-# stations_precipitation : * NOT FINISHED
-# stations_latency :
+# stations_precipitation : *NOT FINISHED
+# stations_latency : *NOT CURRENTLY AVAILABLE
 # stations_qcsegments :
