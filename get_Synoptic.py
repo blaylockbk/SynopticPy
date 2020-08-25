@@ -137,7 +137,7 @@ def spddir_to_uv(wspd, wdir):
     if hasattr(u, '__len__'):
         u[np.where(wspd==0)] = 0
         v[np.where(wspd==0)] = 0
-    else:
+    elif wspd == 0:
         u = float(0)
         v = float(0)
     
@@ -281,6 +281,19 @@ def _parse_latest_nearesttime(data, rename_value_1):
             else:
                 df[k] = [None, v]
 
+        # Break wind into U and V components, if speed and direction are available
+        senvars = i['SENSOR_VARIABLES']
+        if all([i in senvars for i in ['wind_speed', 'wind_direction']]):
+            for i_spd, i_dir in zip(senvars['wind_speed'].keys(),
+                                    senvars['wind_direction'].keys()):
+                if obs[i_spd]['date_time'] == obs[i_spd]['date_time']:
+                    wspd = obs[i_spd]['value']
+                    wdir = obs[i_dir]['value']
+                    u, v = spddir_to_uv(wspd, wdir)
+                    this_set = '_'.join(i_spd.split('_')[-2:])
+                    df[f'wind_u_{this_set}'] = [obs[i_spd]['date_time'], u]
+                    df[f'wind_v_{this_set}'] = [obs[i_spd]['date_time'], v]
+        
         # Convert date_time to datetime object
         df.loc['date_time'] = pd.to_datetime(df.loc['date_time'])
         
