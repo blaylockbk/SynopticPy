@@ -1,6 +1,6 @@
 .ipynb_checkpoints
 .vscode
-
+*.log
 *.grib2
 
 __pycache__/

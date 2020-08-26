@@ -29,18 +29,30 @@ Then activate the `synoptic` environment with
     
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
+
 ## 📝 Jupyter Notebook Examples
 
 The [notebooks directory](https://github.com/blaylockbk/Synoptic_API/tree/master/notebooks) contains some practical examples of using these functions to get and show data.
 
+
 ## 👨🏻‍💻 `get_Synoptic.py` -- All the useful functions in one module
 
-To use my functions, make sure the `get_Synoptic.py` file is in your working directory or PYTHONPATH.
+To use my functions, make sure the `get_Synoptic.py` file is in your working directory or PYTHONPATH. Then you can import a function like this...
 
 ```python
 from get_Synoptic import function_name
 ```
 
+### Edit script with your API token
+Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/).
+
+When you have a token, **edit the `get_Synoptic.py` file** to specify your token. Look in that file near the top for the code block heading `API Token` (around line number 88) and follow the instructions to comment out my `_token` and insert your own token. When you do this, you should have something like 
+```python
+_token = '1234567890qwertyuiop'
+```
+in the `get_Synoptic.py` file and that will allow you to get data from Synoptic using your token.
+
+### Available Functions
 There is a separate function for each of the Synoptic services.
 
 1. `synoptic_api` - A generalized wrapper for making an API request and returns a `requests` object. You *could* access the raw JSON from this object, but the other functions will convert that JSON to a Pandas DataFrame. Generally, you won't use this function directly.
@@ -115,17 +127,13 @@ This makes sense to me, but if you are confused and don't trust what I'm doing, 
 > Also note that `LATITUDE` and `LONGITUDE` in the raw JSON is renamed to `latitude` and `longitude` (lowercase) to match [CF convention](http://cfconventions.org/).
 
 
-#### Wind U and V components
+### U and V Wind Components
 If the returned data contains variables for both `wind_speed` and `wind_direction`, then the DataFrame will compute and return the `wind_u` and `wind_v` components.
 
-
-
-
-
 ## ✅ How to use the Quality Control Checks
-Be default, only basic QC range checks to remove physically implausible data is applied to the data before it is returned by the API. This ensures that a 300 degree temperature will not be returned. 
+By default, only basic QC range checks are applied to the data before it is returned by the API. These basic checks remove physically implausible data like removing a 300 degree temperature instead of returning the value. 
 
-You can add additional QC checks that more stringently remove "bad" data.
+You can add additional QC checks that more stringently remove "bad" data that might not be representative of the area or caused by a faulty sensor. However, you can't expect every bad observation will be removed (or every good observation will be retained).
 
 - [Read about the QC checks](https://developers.synopticdata.com/about/qc/)
 - [Read the QC section for a stations service (e.g., timeseries)](https://developers.synopticdata.com/mesonet/v2/stations/timeseries/)
