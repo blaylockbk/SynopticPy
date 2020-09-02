@@ -565,6 +565,8 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
                 this_set = '_'.join(i_spd.split('_')[-2:])
                 df[f'wind_u_{this_set}'] = u
                 df[f'wind_v_{this_set}'] = v
+                data['UNITS']['wind_u'] = data['UNITS']['wind_speed']
+                data['UNITS']['wind_v'] = data['UNITS']['wind_speed']
         
         if rename_set_1:
             df = _rename_set_1(df)
