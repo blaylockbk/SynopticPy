@@ -8,13 +8,16 @@ Plot Data From Synoptic API
 Quick plots from the Synoptic API
 """
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 
 from get_Synoptic import *
 
-def plot_timeseries(cmap=None, 
+def plot_timeseries(cmap=None,
                     plot_kwargs=dict(marker='.', markersize=3),
+                    figsize=(10,5),
                     **params):
     '''
     Plot timeseries from multiple stations on a single plot for each variable.
@@ -49,7 +52,7 @@ def plot_timeseries(cmap=None,
     for i, var in enumerate(variables):
         if var == 'metar':
             continue
-        fig, ax = plt.subplots(1,1,figsize=[16,8])
+        fig, ax = plt.subplots(1,1, figsize=figsize)
         var_str = var.replace('_', ' ').title()
 
         ax.set_title(f"{var_str}", loc='left')
@@ -67,5 +70,53 @@ def plot_timeseries(cmap=None,
         plt.grid(linestyle='--', alpha=.5)
         plt.xlabel('')
         plt.legend()
+        
+def map_timeseries(data=None, verbose=True,
+                   ax=None, scale='10m', scatter_kwargs={},
+                   text=True, text_kwargs={},
+                   **params):
+    """
+    Plot a map of station locations returned from a ``stations_timeseries``.
+    
+    Use this to plot the locations of your requested stations on a map,
+    but if you just need 
+    
+    Parameters
+    ----------
+    data : output from stations_timeseries or None.
+        The returned data from ``stations_timeseries``.
+        If None, then the user must supply param keywords to make
+        the API request for stations_timeseries here.
+    params : keyword arguments for stations_timeseries
+        Parameters for stations_timeseries API request.
+        Required if ``data=None`.
+    """
+    if ax is None:
+        # Create a new default axis
+        ax = plt.subplot(projection=ccrs.PlateCarree())
 
+    # User must supply the data as returned from stations_timeseries
+    # or the param keywords used to make the API request.
+    if data is None:
+        a = stations_timeseries(verbose=verbose, **params)
+    else:
+        a = data
+        
+    if not isinstance(a, list):
+        a = [a]
+        
+    lats = [i.attrs['latitude'] for i in a]
+    lons = [i.attrs['longitude'] for i in a]
+    stid = [i.attrs['STID'] for i in a]
+    
+    ax.scatter(lons, lats, transform=ccrs.PlateCarree(), **scatter_kwargs)
+    
+    if text:
+        for lon, lat, stn in zip(lons, lats, stid):
+            ax.text(lon, lat, stn, transform=ccrs.PlateCarree(), **text_kwargs)
+    
+    ax.add_feature(cfeature.STATES.with_scale(scale))
+    
+    ax.set_title('Station Locations', loc='left', fontweight='bold')
+    ax.set_title(f'Total Stations: {len(a)}', loc='right')    
     
