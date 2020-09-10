@@ -15,7 +15,12 @@ import cartopy.feature as cfeature
 
 from get_Synoptic import *
 
-def plot_timeseries(cmap=None,
+plt.rcParams['grid.linestyle'] = '--'
+plt.rcParams['grid.alpha'] = .5
+plt.rcParams['axes.grid'] = True
+
+def plot_timeseries(data=None,
+                    cmap=None,
                     plot_kwargs=dict(marker='.', markersize=3),
                     figsize=(10,5),
                     **params):
@@ -24,16 +29,25 @@ def plot_timeseries(cmap=None,
     
     Parameters
     ----------
+    data : output from stations_timeseries or None.
+        The returned data from ``stations_timeseries``.
+        If None, then the user must supply param keywords to make
+        the API request for stations_timeseries here.
     cmap : str
-        A matplotlib named colormap to cycle colors (e.g. 'Spectral', 'Blues')
+        A matplotlib named colormap to cycle colors (e.g. 'Spectral', 'Blues').
+        If None, use the default color cycle.
     plot_kwargs : dict
         kwargs for the plotted lines
     params : keyword arguments
         Same as for `stations_timeseries`
     '''
     
-    # Get the data
-    a = stations_timeseries(**params)
+    # User must supply the data as returned from stations_timeseries
+    # or the param keywords used to make the API request.
+    if data is None:
+        a = stations_timeseries(verbose=verbose, **params)
+    else:
+        a = data
     
     # Get unique columns names for all stations
     variables = list({item for sublist in a for item in sublist})
@@ -71,7 +85,45 @@ def plot_timeseries(cmap=None,
         plt.xlabel('')
         plt.legend()
         
-def map_timeseries(data=None, verbose=True,
+
+def plot_timeseries_wind(data=None,
+                        figsize=(10,5),
+                        **params):
+    """
+    3-panel plot showing wind timeseries (wind speed/gust, direction, quiver)
+    """
+    
+    # User must supply the data as returned from stations_timeseries
+    # or the param keywords used to make the API request.
+    if data is None:
+        df = stations_timeseries(verbose=verbose, **params)
+    else:
+        df = data
+
+    fig, (ax1, ax2, ax3) = plt.subplots(3,1, sharex=True, figsize=figsize)
+
+    ax1.plot(df.index, df.wind_speed, color='k')
+    ax1.scatter(df.index, df.wind_gust, marker='+', color='tab:green')
+    ax1.set_ylim(ymin=0)
+    ax1.set_ylabel(f"Wind Speed ({df.attrs['UNITS']['wind_speed']})")
+    ax1.set_title(f"{df.attrs['STID']} : {df.attrs['NAME']}", loc='left', fontweight='bold')
+
+    ax2.scatter(df.index, df.wind_direction, marker='.', color='tab:orange')
+    ax2.set_yticks(range(0,361,45))
+    ax2.set_ylim(0,360)
+    ax2.set_ylabel(f"Wind Direction ({df.attrs['UNITS']['wind_direction']})")
+
+    ax2b = ax2.twinx()
+    ax2b.set_yticks(range(0,361,45))
+    ax2b.set_yticklabels(['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'N'])
+    ax2b.set_ylim(0,360)
+
+    ax3.quiver(df.index, df.wind_speed,
+            df.wind_u, df.wind_v, df.wind_speed, cmap='Blues',
+            edgecolors='k', linewidths=.3,
+            zorder=5)
+
+def map_timeseries(data=None, *, verbose=True,
                    ax=None, scale='10m', scatter_kwargs={},
                    text=True, text_kwargs={},
                    **params):
@@ -79,7 +131,8 @@ def map_timeseries(data=None, verbose=True,
     Plot a map of station locations returned from a ``stations_timeseries``.
     
     Use this to plot the locations of your requested stations on a map,
-    but if you just need 
+    but if you just need the map, don't bother getting the timeseries
+    data, too. Use the map_metadata function instead.
     
     Parameters
     ----------
@@ -120,3 +173,48 @@ def map_timeseries(data=None, verbose=True,
     ax.set_title('Station Locations', loc='left', fontweight='bold')
     ax.set_title(f'Total Stations: {len(a)}', loc='right')    
     
+def map_metadata(data=None, *, verbose=True,
+                 ax=None, scale='10m', scatter_kwargs={},
+                 text=True, text_kwargs={},
+                 **params):
+    """
+    Plot a map of station locations returned from a ``stations_metadata``.
+    
+    Use this to plot the locations of your requested stations on a map,
+    but if you just need the map.
+    
+    Parameters
+    ----------
+    data : output from stations_metadata or None.
+        The returned data from ``stations_metadata``.
+        If None, then the user must supply param keywords to make
+        the API request for stations_timeseries here.
+    params : keyword arguments for stations_timeseries
+        Parameters for stations_metadata API request.
+        Required if ``data=None`.
+    """
+    if ax is None:
+        # Create a new default axis
+        ax = plt.subplot(projection=ccrs.PlateCarree())
+
+    # User must supply the data as returned from stations_timeseries
+    # or the param keywords used to make the API request.
+    if data is None:
+        a = stations_metadata(verbose=verbose, **params)
+    else:
+        a = data
+                
+    lats = df.loc['latitude']
+    lons = df.loc['longitude']
+    stid = df.loc['STID']
+    
+    ax.scatter(lons, lats, transform=ccrs.PlateCarree(), **scatter_kwargs)
+    
+    if text:
+        for lon, lat, stn in zip(lons, lats, stid):
+            ax.text(lon, lat, stn, transform=ccrs.PlateCarree(), **text_kwargs)
+    
+    ax.add_feature(cfeature.STATES.with_scale(scale))
+    
+    ax.set_title('Station Locations', loc='left', fontweight='bold')
+    ax.set_title(f'Total Stations: {len(a)}', loc='right') 

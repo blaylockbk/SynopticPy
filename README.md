@@ -74,17 +74,18 @@ Function arguments are stitched together to create a web query. The parameters y
 
 If this is new to you, I recommend you become familiar with the [Station Selector arguments](https://developers.synopticdata.com/mesonet/v2/station-selectors/) first. These include keying in on specific stations or a set of stations within an area of interest(`stid`, `radius`, `vars`, `state`, etc.).
 
-**One note about how my python functions work...** All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Also, any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API (e.g., `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made.)
+**One note about how my python functions work...** All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Also, any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API (e.g., `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made.) The API requires `within` and `recent` arguments to be minutes as a integer. You may give integers for those arguments, but converting time to minutes is done automatically if you input given a datetime.timedelta or a pandas datetime. For example `within=timedelta(minutes=30)` and `recent=pd.to_timedelta('1d')`.
 
-For example, to get a time series of a the station WBB for just air temperature and wind speed for the last 600 minutes...
+For example, to get a time series of a the station WBB for just air temperature and wind speed for the last 10 hours (600 minutes)...
 
 ```python
 from get_Synoptic import stations_timeseries
-a = stations_timeseries(stid='WBB', vars=['air_temp', 'wind_speed'], recent=600)
+from datetime import timedelta
+a = stations_timeseries(stid='WBB', vars=['air_temp', 'wind_speed'], recent=timedelta(hours=10))
 ```
 ![](./images/timeseries_df.png)
 
-To get the latest air temperature and wind speed data for WBB and KRMY within one hour...
+To get the latest air temperature and wind speed data for WBB and KRMY within one hour, we can also set the minutes as an integer...
 ```python
 from get_Synoptic import stations_latest
 a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'], within=60)

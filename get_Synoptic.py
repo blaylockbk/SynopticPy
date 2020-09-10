@@ -77,12 +77,11 @@ status : {'active', 'inactive'}
 
 import sys
 import warnings
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 import requests
 import urllib
 import pandas as pd
-from datetime import datetime
 
 ##======================================================================
 ## API Token
@@ -385,13 +384,13 @@ def synoptic_api(service, verbose=True, **params):
     ## 1) Force all param keys to be lower case
     params = {k.lower(): v for k, v in params.items()}
     
-    ## 2) Join lists as comma separtated strings.
+    ## 2) Join lists as comma separated strings.
     ##    For example, stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY').
     for key, value in params.items():           
         if isinstance(value, list) and key not in ['obrange']:
             params[key] = ','.join(value)
-        
-    ## 2) Datetimes should be string: 'YYYYmmddHHMM' (obrange is 'YYYYmmdd')
+
+    ## 3) Datetimes should be string: 'YYYYmmddHHMM' (obrange is 'YYYYmmdd')
     for i in ['start', 'end', 'expire', 'attime']:
         if i in params and not isinstance(params[i], str):
             params[i] = f"{params[i]:%Y%m%d%H%M}"
@@ -401,6 +400,20 @@ def synoptic_api(service, verbose=True, **params):
             params['obrange'] = [params['obrange']]
         params['obrange'] = ','.join([f'{i:%Y%m%d}' for i in params['obrange']])    
     
+    if 'recent' in params:
+        if hasattr(params['recent'], 'seconds'):
+            # If recent is a timedelta or pd.timedelta, convert to minutes.
+            params['recent'] = params['recent'] / timedelta(minutes=1)
+        # recent must be an int in minutes.
+        params['recent'] = np.ceil(params['recent']).astype(int) 
+
+    if 'within' in params:
+        if hasattr(params['within'], 'seconds'):
+            # If within is a timedelta or pd.timedelta, convert to minutes.
+            params['within'] = params['within'] / timedelta(minutes=1)
+        # within must be an int in minutes.
+        params['within'] = np.ceil(params['within']).astype(int) 
+
     ########################
     # Make the API request #
     ########################
@@ -508,8 +521,10 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         **Must include ``start`` and ``end`` argument *or* ``recent``.**  
     start, end : datetime
         Start and end of time series
-    recent : int
-        Minutes for recent observations.
+    recent : int or timedelta
+        If int, given as minutes for recent observations.
+        Or, give a timedelta. For example: ``recent=timedelta(day=2)` 
+        or ``recent=pd.to_timedelta('1D')``
    
     Others: obtimezone, units, and STATION SELECTION PARAMETERS
     https://developers.synopticdata.com/mesonet/v2/station-selectors/
