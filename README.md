@@ -50,10 +50,14 @@ If conda environments are new to you, I suggest you become familiar with [managi
 
 The [notebooks directory](https://github.com/blaylockbk/Synoptic_API/tree/master/notebooks) contains some practical examples of using these functions to get and show data.
 
-## 🎟 `synoptic/mytoken.py`
+---
+---
+# `synoptic/`
+
+## 🎟 `mytoken.py`
 Edit this file with your own Synoptic API token. You must do this before making and API request.
 
-## 👨🏻‍💻 `synoptic/services.py`
+## 👨🏻‍💻 `services.py`
 Functions for making API requests, returned as Pandas DataFrames.
 
 ```python
@@ -176,7 +180,7 @@ or
 stations_timeseries(stid='UKBKB', recent=60, qc_checks='all')
 ```
 
-## 📈 `synoptic/plots.py`
+## 📈 `plots.py`
 These are some helpers for plotting data from the Synoptic API. ***These are a work in progress***.
 
 ```python
