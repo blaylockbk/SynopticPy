@@ -7,7 +7,7 @@
 
 The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather observations for thousands of stations.
 
-I wrote these functions to quickly access data from the Synoptic API  and convert the JSON data to a **[Pandas DataFrame](https://pandas.pydata.org/docs/)**. Maybe this will be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](https://github.com/mesowx/MesoPy) python wrapper, but converting the data to a Pandas DataFrame instead of a simple dictionary makes the data more *ready-to-use*.
+I wrote these functions to conveniently access data from the Synoptic API  and convert the JSON data to a **[Pandas DataFrame](https://pandas.pydata.org/docs/)**. Maybe this will be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](https://github.com/mesowx/MesoPy) python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary makes the retrieved data more *ready-to-use*.
 
 |🌐 Synoptic API Webpage|
 |--
@@ -17,7 +17,7 @@ I wrote these functions to quickly access data from the Synoptic API  and conver
 ---
 
 ## 🐍 Conda Environment
-I have provided an `environment.yml` file that lists the minimum packages required (plus some extras that might be useful if you are working with weather data).
+I have provided an `environment.yml` file that lists the minimum packages required (plus some extras that might be useful if you are working with weather data that might be useful in this environment).
 
 If you have Anaconda installed, create this environment with 
 
@@ -30,32 +30,49 @@ Then activate the `synoptic` environment with
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
 
+## 🔨 Setup
+1. Clone this repository.
+    ```bash
+    git clone https://github.com/blaylockbk/Synoptic_API.git
+    ```
+
+1. Add the path to the `Synoptic_API/` directory to your **PYTHONPATH**, or include the following lines in your python script.
+    ```python
+    import sys
+    sys.path.append('path/to/Synoptic_API/')
+    ```
+1. Edit `synoptic/mytoken.py` with your personal API token. Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/). When you edit `mytoken.py`, it should look something like this:
+    ```python
+    token = '1234567890qwertyuiop'
+    ```
+
 ## 📝 Jupyter Notebook Examples
 
 The [notebooks directory](https://github.com/blaylockbk/Synoptic_API/tree/master/notebooks) contains some practical examples of using these functions to get and show data.
 
+## 🎟 `synoptic/mytoken.py`
+Edit this file with your own Synoptic API token. You must do this before making and API request.
 
-## 👨🏻‍💻 `get_Synoptic.py` -- All the useful functions in one module
-
-To use my functions, make sure the `get_Synoptic.py` file is in your working directory or PYTHONPATH. Then you can import a function like this...
+## 👨🏻‍💻 `synoptic/services.py`
+Functions for making API requests, returned as Pandas DataFrames.
 
 ```python
-from get_Synoptic import function_name
+# Import all functions
+import synoptic.services as ss
 ```
-
-### Edit script with your API token
-Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/).
-
-When you have a token, **edit the `get_Synoptic.py` file** to specify your token. Look in that file near the top for the code block heading `API Token` (around line number 88) and follow the instructions to comment out my `_token` and insert your own token. When you do this, you should have something like 
+or
 ```python
-_token = '1234567890qwertyuiop'
+# Import a single function
+from synotpic.services import stations_timeseries
 ```
-in the `get_Synoptic.py` file and that will allow you to get data from Synoptic using your token.
 
 ### Available Functions
-There is a separate function for each of the Synoptic services.
+There is a separate function for each of the Synoptic Mesonet API services.
 
-1. `synoptic_api` - A generalized wrapper for making an API request and returns a `requests` object. You *could* access the raw JSON from this object, but the other functions will convert that JSON to a Pandas DataFrame. Generally, you won't use this function directly.
+1. `synoptic_api` - A generalized wrapper for making an API request and returns a `requests` object. You *could* access the raw JSON from this object, but the other functions will convert that JSON to a Pandas DataFrame. Generally, you won't use this function directly. The primary role of this function is to format parameter arguments to a string the API URL expects 
+    - convert datetimes to strings
+    - converts timedeltas to strings
+    - converts lists of station IDs and variable names to comma separated strings.
 1. `stations_metadata` - Returns metadata (information) about stations. [Docs 🔗](https://developers.synopticdata.com/mesonet/v2/stations/metadata/)
 1. `stations_timeseries` - Return data for a period of time [Docs 🔗](https://developers.synopticdata.com/mesonet/v2/stations/timeseries/)
 1. `stations_nearesttime` - Return observation closest to the requested time [Docs 🔗](https://developers.synopticdata.com/mesonet/v2/stations/nearesttime/)
@@ -74,20 +91,21 @@ Function arguments are stitched together to create a web query. The parameters y
 
 If this is new to you, I recommend you become familiar with the [Station Selector arguments](https://developers.synopticdata.com/mesonet/v2/station-selectors/) first. These include keying in on specific stations or a set of stations within an area of interest(`stid`, `radius`, `vars`, `state`, etc.).
 
-**One note about how my python functions work...** All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Also, any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API (e.g., `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made.) The API requires `within` and `recent` arguments to be minutes as a integer. You may give integers for those arguments, but converting time to minutes is done automatically if you input given a datetime.timedelta or a pandas datetime. For example `within=timedelta(minutes=30)` and `recent=pd.to_timedelta('1d')`.
+### How these functions work:
+All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Also, any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API (e.g., `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made.) The API requires `within` and `recent` arguments to be minutes as a integer. You may give integers for those arguments, but converting time to minutes is done automatically if you input a datetime.timedelta or a pandas datetime. For example `within=timedelta(minutes=30)` and `recent=pd.to_timedelta('1d')`.
 
 For example, to get a time series of a the station WBB for just air temperature and wind speed for the last 10 hours (600 minutes)...
 
 ```python
-from get_Synoptic import stations_timeseries
 from datetime import timedelta
+from synotpic.services import stations_timeseries
 a = stations_timeseries(stid='WBB', vars=['air_temp', 'wind_speed'], recent=timedelta(hours=10))
 ```
 ![](./images/timeseries_df.png)
 
 To get the latest air temperature and wind speed data for WBB and KRMY within one hour, we can also set the minutes as an integer...
 ```python
-from get_Synoptic import stations_latest
+from synotpic.services import stations_latest
 a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'], within=60)
 ```
 ![](./images/latest_df.png)
@@ -97,23 +115,24 @@ a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'], withi
 To get the air temperature and wind speed for WBB and KMRY nearest 00:00 UTC Jan 1, 2020 within one hour...
 
 ```python
-from get_Synoptic import stations_nearesttime
 from datetime import datetime
-a = stations_latest(stid=['WBB', 'KMRY'], vars=['air_temp', 'wind_speed'],
-                    attime=datetime(2020,1,1), within=60)
+from synotpic.services import stations_nearesttime
+a = stations_latest(stid=['WBB', 'KMRY'], 
+                    vars=['air_temp', 'wind_speed'],
+                    attime=datetime(2020,1,1),
+                    within=60)
 ```
 ![](./images/nearesttime_df.png)
 
 > Note: `stations_nearesttime(stid='WBB,KMRY', vars='air_temp,wind_speed', attime='2020010100', within=60)` is equivalent to the above example.
 
 
-## ♻ Returned Data
-The data retrieved from the Synoptic API is converted from JSON to a Pandas DataFrame. 
+## ♻ Returned Data: Variable Names
+The raw data retrieved from the Synoptic API is converted from JSON to a Pandas DataFrame. 
 
 If you look at the raw JSON returned, you will see that the observation values are returned as "sets" and "values", (e.g., `air_temp_set_1`, `pressure_set_1d`, etc.). This is because some stations have more than one sensor for a variable (wind at more than one level) or is reported at more than one interval (ozone at 1 hr and 15 min intervals). Time series requests return "sets" and nearest time requests return "values".
 
-
-I don't really like dealing with the set labels. Almost always, I want the **set**/**value** with the most data or the most recent observation. My functions, by default, will strip the `set_1` and `value_1` from the labels on the returned data. If there are more than one set or value, then the "set" and "value" labels will be retained for those extra sets.
+I don't really like dealing with the set labels. Almost always, I want the **set** or **value** with the most data or the most recent observation. My functions, by default, will strip the `set_1` and `value_1` from the labels on the returned data. If there are more than one set or value, then the "set" and "value" labels will be retained for those extra sets.
 
 - If a query returns `air_temp_set_1` and `air_temp_set_2`, then the labels are renamed `air_temp` and `air_temp_set_2`.
 - If a query returns `pressure_set_1` and `pressure_set_1d`, then the labels are renamed `pressure_set_1` and `pressure` _if **set_1d** has more observations than **set_1**_.
@@ -125,7 +144,8 @@ For the renamed columns, it is up to the user to know if the data is a derived q
 
 This makes sense to me, but if you are confused and don't trust what I'm doing, you can turn this "relabeling" off with `rename_set_1=False` and `rename_value_1=False` (for the appropriate function).
 
-> Also note that `LATITUDE` and `LONGITUDE` in the raw JSON is renamed to `latitude` and `longitude` (lowercase) to match [CF convention](http://cfconventions.org/).
+### Latitude and Longitude
+Note that `LATITUDE` and `LONGITUDE` in the raw JSON is renamed to `latitude` and `longitude` (lowercase) to match [CF convention](http://cfconventions.org/).
 
 
 ### U and V Wind Components
@@ -154,6 +174,19 @@ stations_timeseries(stid='UKBKB', recent=60, qc_checks='synopticlabs')
 or
 ```python
 stations_timeseries(stid='UKBKB', recent=60, qc_checks='all')
+```
+
+## 📈 `synoptic/plots.py`
+These are some helpers for plotting data from the Synoptic API. ***These are a work in progress***.
+
+```python
+# Import all functions
+import synoptic.plots as sp
+```
+or
+```python
+# Import individual functions
+from synoptic.plots import plot_timeseries
 ```
 
 ---

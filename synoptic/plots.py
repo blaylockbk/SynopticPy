@@ -2,18 +2,17 @@
 ## September 1, 2020
 
 """
-===========================
-Plot Data From Synoptic API
-===========================
+=====
+Plots
+=====
 Quick plots from the Synoptic API
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 
-from get_Synoptic import *
+import synoptic.services as ss
 
 plt.rcParams['grid.linestyle'] = '--'
 plt.rcParams['grid.alpha'] = .5
@@ -23,6 +22,7 @@ def plot_timeseries(data=None,
                     cmap=None,
                     plot_kwargs=dict(marker='.', markersize=3),
                     figsize=(10,5),
+                    verbose=True,
                     **params):
     '''
     Plot timeseries from multiple stations on a single plot for each variable.
@@ -45,10 +45,13 @@ def plot_timeseries(data=None,
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
-        a = stations_timeseries(verbose=verbose, **params)
+        a = ss.stations_timeseries(verbose=verbose, **params)
     else:
         a = data
     
+    if not isinstance(a, list):
+        a = [a]
+
     # Get unique columns names for all stations
     variables = list({item for sublist in a for item in sublist})
     variables.sort()
@@ -64,7 +67,7 @@ def plot_timeseries(data=None,
     # Make the Plots
     #################################
     for i, var in enumerate(variables):
-        if var == 'metar':
+        if var in ['metar', 'wind_cardinal_direction']:
             continue
         fig, ax = plt.subplots(1,1, figsize=figsize)
         var_str = var.replace('_', ' ').title()
@@ -96,7 +99,7 @@ def plot_timeseries_wind(data=None,
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
-        df = stations_timeseries(verbose=verbose, **params)
+        df = ss.stations_timeseries(verbose=verbose, **params)
     else:
         df = data
 
@@ -151,7 +154,7 @@ def map_timeseries(data=None, *, verbose=True,
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
-        a = stations_timeseries(verbose=verbose, **params)
+        a = ss.stations_timeseries(verbose=verbose, **params)
     else:
         a = data
         
@@ -200,7 +203,7 @@ def map_metadata(data=None, *, verbose=True,
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
-        a = stations_metadata(verbose=verbose, **params)
+        a = ss.stations_metadata(verbose=verbose, **params)
     else:
         a = data
                 

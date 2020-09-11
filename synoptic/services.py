@@ -1,17 +1,16 @@
 ## Brian Blaylock
-## August 13, 2020   COVID-19 Era
+## August 13, 2020    COVID-19 Era
 
 """
-============
-Synotpic API
-============
-
-Get mesonet data from the Synoptic API and return as Pandas.DataFrame.
+========
+Services
+========
+Get mesonet data from the Synoptic API services and return as Pandas.DataFrame.
 
     https://developers.synopticdata.com/
 
 Requires a Synoptic API token. You can get your own token here:
-    
+
     https://synopticlabs.org/api/guides/?getstarted
 
 Synoptic API Documentation
@@ -74,31 +73,16 @@ status : {'active', 'inactive'}
         df.index.tz_localize(None)
 
 """
-
 import sys
 import warnings
 from datetime import datetime, timedelta
-import numpy as np
+
 import requests
 import urllib
+import numpy as np
 import pandas as pd
 
-##======================================================================
-## API Token
-##======================================================================
-## Note to user:
-## I import my API token from this file (hidden from GitHub). You will
-## need to comment the next two lines and insert your own API token.
-## (Or, you can create your own functin that returns your token. 😊)
-from get_credentials import get_MW_token
-_token = get_MW_token()['token']
-
-
-## Get your own token here: https://developers.synopticdata.com/
-## and put it in the line below (and uncomment the line).
-#_token = 'YOUR_TOKEN_HERE'
-
-##======================================================================
+from synoptic.mytoken import token
 
 ## API Services
 ## https://developers.synopticdata.com/mesonet/v2/
@@ -375,7 +359,7 @@ def synoptic_api(service, verbose=True, **params):
     ##--------------
     ## Default token is set at top of this file, but you may overwrite
     ## with keyword argument.
-    params.setdefault('token', _token)
+    params.setdefault('token', token)
     
     ## Parse parameters
     ##-----------------
