@@ -155,6 +155,16 @@ Note that `LATITUDE` and `LONGITUDE` in the raw JSON is renamed to `latitude` an
 ### U and V Wind Components
 If the returned data contains variables for both `wind_speed` and `wind_direction`, then the DataFrame will compute and return the `wind_u` and `wind_v` components.
 
+## Timezone
+The default timezone the data is returned is in UTC time. You may change the time to local time with the parameter `obtimezone=local`. Pandas will return the data with a timezone-aware index. However, plotting functions convert this time back to UTC. To plot by local time, you need to use the `tz_localize(None)` method to make it unaware of timezone and plot local time correctly. For example:
+
+    # Compare the two lines in this plot
+    a = stations_timeseries(stid='KSLC', recent=1000, obtimezone='local', vars='air_temp')
+    
+    plt.plot(a.index, a.air_temp, label='tz aware (in UTC)')
+    plt.plot(a.index.tz_localize(None), a.air_temp, label='tz unaware (correctly plotted local time)')
+    plt.legend()
+
 ## ✅ How to use the Quality Control Checks
 By default, only basic QC range checks are applied to the data before it is returned by the API. These basic checks remove physically implausible data like removing a 300 degree temperature instead of returning the value. 
 
