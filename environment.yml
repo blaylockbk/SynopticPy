@@ -17,7 +17,6 @@ dependencies:
   - h5py
   - pylint
   
-  ## To install without setting PYTHONPATH,
-  ## uncomment the next two lines.
-  #- pip:
-  #  - git+https://github.com/blaylockbk/SynopticPy.git
+  # Install Brian's `synoptic` package from GitHub
+  - pip:
+    - git+https://github.com/blaylockbk/SynopticPy.git
