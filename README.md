@@ -17,14 +17,18 @@ I wrote these functions to conveniently access data from the Synoptic API  and c
 ---
 
 ## 🐍 Conda Environment and Install
-I have provided an Anaconda `environment.yml` file that lists the minimum packages required (plus some extras that might be useful if you are working with weather data that might be useful in this environment). The two lines at the bottom...
+I have provided a sample Anaconda [environment.yml](./environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. The two lines at the bottom...
 
 ```yaml
 - pip:
     - git+https://github.com/blaylockbk/SynopticPy.git
 ```
 
-will download this this development version of the `synoptic` package and install it as part of the environment.
+will download this development version of the `synoptic` package and install it as part of the environment. You have a few options when installing this package as part of an environment:
+1. Copy the [environment.yml](./environment.yml) file I provide and "create" the environemnt.
+3. Create your own new environment with those two last lines for the pip install.
+2. Add the two lines for the pip install to the bottom of an existing environment file and "update" the environment.
+
 
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
@@ -46,8 +50,11 @@ Update the package with the lastest version with
 conda env update -f environment.yml
 ```
 Note: I do not guarantee this development version will work becuase it's a work in progress. But generally, I only push updates to GitHub if the code is in a reasonably functional state.
+
+> ### Alternative Methods
+> There are several ways to import a python package in your scripts. One alternatively is you can `git clone https://github.com/blaylockbk/SynopticPy.git` this repository to any directory. To import the package, you will need to update your PYTHONPATH envrironment variable to find the directory you put this package or add the line `sys.path.append("/path/to/SynotpicPy")` at the top of your python script.
     
-### 🔨 Setup
+## 🔨 Setup
 
 Edit `synoptic/mytoken.py` with your personal API token. Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/). 
 
