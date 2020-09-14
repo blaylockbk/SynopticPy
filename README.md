@@ -39,6 +39,13 @@ Then, activate the `synoptic` environment with
 ```bash
 conda activate synoptic
 ```
+
+Update the package with the lastest version with
+
+```bash
+conda env update -f environment.yml
+```
+Note: I do not guarantee this development version will work becuase it's a work in progress. But generally, I only push updates to GitHub if the code is in a reasonably functional state.
     
 ### 🔨 Setup
 
