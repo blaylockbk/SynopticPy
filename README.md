@@ -44,21 +44,19 @@ Then, activate the `synoptic` environment with
 conda activate synoptic
 ```
 
-Update the package with the lastest version with
+When you want the latest updates for all packages in the environment, do
 
 ```bash
 conda env update -f environment.yml
 ```
-Note: I do not guarantee this development version will work becuase it's a work in progress. But generally, I only push updates to GitHub if the code is in a reasonably functional state.
+Note: This is a work in progress and I do not guarantee this development version will always. But generally, I only push updates to GitHub if the code is in a reasonably functional state.
 
 > ### Alternative Methods
-> There are several ways to import a python package in your scripts. One alternatively is you can `git clone https://github.com/blaylockbk/SynopticPy.git` this repository to any directory. To import the package, you will need to update your PYTHONPATH envrironment variable to find the directory you put this package or add the line `sys.path.append("/path/to/SynotpicPy")` at the top of your python script.
+> There are several other ways to "install" a python package in your scripts. One alternatively is you can `git clone https://github.com/blaylockbk/SynopticPy.git` this repository to any directory. To import the package, you will need to update your PYTHONPATH envrironment variable to find the directory you put this package or add the line `sys.path.append("/path/to/SynotpicPy")` at the top of your python script.
     
 ## 🔨 Setup
 
-Edit `synoptic/mytoken.py` with your personal API token. Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/). 
-
-When you edit `mytoken.py`, it should look something like this:
+Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a _token_.** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/) to obtain a token. When you have a token, edit `synoptic/mytoken.py` with your personal API **token**, _not your API key_.  It should look something like this:
     
     ```python
     token = '1234567890qwertyuiop'
