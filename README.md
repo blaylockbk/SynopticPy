@@ -16,32 +16,36 @@ I wrote these functions to conveniently access data from the Synoptic API  and c
 
 ---
 
-## 🐍 Conda Environment
-I have provided an `environment.yml` file that lists the minimum packages required (plus some extras that might be useful if you are working with weather data that might be useful in this environment).
+## 🐍 Conda Environment and Install
+I have provided an Anaconda `environment.yml` file that lists the minimum packages required (plus some extras that might be useful if you are working with weather data that might be useful in this environment). The two lines at the bottom...
 
-If you have Anaconda installed, create this environment with 
+```yaml
+- pip:
+    - git+https://github.com/blaylockbk/SynopticPy.git
+```
 
-    conda env create -f environment.yml
-    
-Then activate the `synoptic` environment with
+will download this this development version of the `synoptic` package and install it as part of the environment.
 
-    conda activate synoptic
-    
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
+First, create this environment with 
 
-## 🔨 Setup
-1. Clone this repository.
-    ```bash
-    git clone https://github.com/blaylockbk/Synoptic_API.git
-    ```
+```bash
+conda env create -f environment.yml
+```
+    
+Then, activate the `synoptic` environment with
 
-1. Add the path to the `Synoptic_API/` directory to your **PYTHONPATH**, or include the following lines in your python script.
-    ```python
-    import sys
-    sys.path.append('path/to/Synoptic_API/')
-    ```
-1. Edit `synoptic/mytoken.py` with your personal API token. Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/). When you edit `mytoken.py`, it should look something like this:
+```bash
+conda activate synoptic
+```
+    
+### 🔨 Setup
+
+Edit `synoptic/mytoken.py` with your personal API token. Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a "token."** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/). 
+
+When you edit `mytoken.py`, it should look something like this:
+    
     ```python
     token = '1234567890qwertyuiop'
     ```
