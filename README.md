@@ -52,7 +52,7 @@ When you edit `mytoken.py`, it should look something like this:
 
 ## 📝 Jupyter Notebook Examples
 
-The [notebooks directory](https://github.com/blaylockbk/Synoptic_API/tree/master/notebooks) contains some practical examples of using these functions to get and show data.
+The [notebooks directory](./notebooks) contains some practical examples of using these functions to get and show data.
 
 ---
 ---
