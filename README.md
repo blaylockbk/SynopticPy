@@ -25,7 +25,7 @@ I have provided a sample Anaconda [environment.yml](./environment.yml) file that
 ```
 
 will download this development version of the `synoptic` package and install it as part of the environment. You have a few options when installing this package as part of an environment:
-1. Copy the [environment.yml](./environment.yml) file I provide and "create" the environemnt.
+1. Copy the [environment.yml](./environment.yml) file I provide and "create" the environment.
 3. Create your own new environment with those two last lines for the pip install.
 2. Add the two lines for the pip install to the bottom of an existing environment file and "update" the environment.
 
