@@ -12,19 +12,21 @@ import configparser
 from pathlib import Path
 import requests
 
-# Directory of this file:
-BASE = Path(__file__).parent
-
+## Config File
+## -----------
 # Brian's has a special configuration file that is not passed to GitHub.
-# If that doesn't exist, then the default config file is used.
-brians_config = BASE / 'BB_config.cfg'
-default_config = BASE / 'config.cfg'
+# If that doesn't exist, then the default config file in this `synoptic`
+# directory is used.
+brians_config = Path('~').expanduser() / 'BB_credentials.cfg'
+default_config = Path(__file__).parent / 'config.cfg'
 
 if brians_config.is_file():
     _config_path = brians_config.resolve()
 else:
     _config_path = default_config.resolve()
 
+
+print(_config_path)
 
 msg = f'''
     | Dear SynopticPy User,
@@ -75,7 +77,7 @@ def test_token(verbose=True, configure_on_fail=True):
     # Get the token from config.cfg
     config = configparser.ConfigParser()
     config.read(_config_path)
-    token = config.get('API', 'token')
+    token = config.get('Synoptic', 'token')
     if token == '':
         # There isn't an API token defined, so configure one.
         return config_token()
@@ -121,7 +123,7 @@ def config_token(new_token=None):
     # Get the current token value to display
     config = configparser.ConfigParser()
     config.read(_config_path)
-    token = config.get('API', 'token')
+    token = config.get('Synoptic', 'token')
 
     print(f"Config File: {_config_path}")
     if token == '':
@@ -134,7 +136,7 @@ def config_token(new_token=None):
         new_token = input('What is your Synoptic API token? >>> ')
 
     # Save the new_token to the config.cfg file
-    config['API']['token'] = new_token
+    config['Synoptic']['token'] = new_token
     with open(_config_path, 'w') as configfile:
         config.write(configfile)
 

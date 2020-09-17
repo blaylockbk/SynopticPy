@@ -6,6 +6,5 @@ __pycache__/
 *.log
 *.grib2
 
-BB_config.cfg
 sandbox/
 sandbox.ipynb
