@@ -56,11 +56,16 @@ Note: This is a work in progress and I do not guarantee this development version
     
 ## 🔨 Setup
 
-Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a _token_.** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/) to obtain a token. When you have a token, edit `synoptic/mytoken.py` with your personal API **token**, _not your API key_.  It should look something like this:
+Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and create a _token_.** Follow the instructions at the [Getting Started Page](https://developers.synopticdata.com/mesonet/v2/getting-started/) to obtain a token. When you have a token, edit `synoptic/config.cfg` with your personal API **token**, _not your API key_.  The config file should look should look something like this:
     
-    ```python
-    token = '1234567890qwertyuiop'
-    ```
+```
+[Synoptic]
+token = 1234567890abcdefg
+```
+
+If you don't do this step, don't worry. When you import `synoptic.services`,
+a check will make sure your the token in the config file is valid. If not,
+you will be prompted to update the token in the config file.
 
 ## 📝 Jupyter Notebook Examples
 
@@ -70,11 +75,14 @@ The [notebooks directory](./notebooks) contains some practical examples of using
 ---
 # `synoptic/`
 
-## 🎟 `mytoken.py`
-Edit this file with your own Synoptic API token. You must do this before making and API request.
+## ⚙ `config.cfg`
+A configuration file where you will put your Synoptic API token. This token is required to make any data request from the Synoptic API.
+
+## 🎟 `get_token.py`
+This function performs a test on the token in the `config.cfg` file. If the token is valid, you are good to go. If not, then you will be prompted to edit the config.cfg file when you import any function from `synoptic.services`.
 
 ## 👨🏻‍💻 `services.py`
-Functions for making API requests, returned as Pandas DataFrames.
+Functions for making API requests, returned as Pandas DataFrames. This is the main script--the one you will interact with.
 
 ```python
 # Import all functions
@@ -82,7 +90,7 @@ import synoptic.services as ss
 ```
 or
 ```python
-# Import a single function
+# Import a single function (prefered)
 from synotpic.services import stations_timeseries
 ```
 
@@ -105,6 +113,9 @@ There is a separate function for each of the Synoptic Mesonet API services.
 1. `variables` - Return available variables [Docs 🔗](https://developers.synopticdata.com/mesonet/v2/stations/variables/)
 1. `qctypes` - Return quality control information [Docs 🔗](https://developers.synopticdata.com/mesonet/v2/stations/qctypes/)`
 1. `auth` - Manage tokens (you are better off doing this in the browser in your [Synoptic profile](https://developers.synopticdata.com/settings/)) [Docs 🔗](https://developers.synopticdata.com/mesonet/v2/stations/auth/)
+
+---
+---
 
 ## 🧭 Function Parameters
 Function arguments are stitched together to create a web query. The parameters you can use to filter the data depend on the API service. Synoptic's [API Explorer](https://developers.synopticdata.com/mesonet/explorer/) can help you determine what parameters can be used for each service.
