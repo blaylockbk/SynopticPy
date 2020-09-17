@@ -1,13 +1,11 @@
+__pycache__/
 .ipynb_checkpoints
 .vscode
+*.py[cod]
+*$py.class
 *.log
 *.grib2
 
-__pycache__/
-*.py[cod]
-*$py.class
-
-get_credentials.py
 BB_config.cfg
 sandbox/
 sandbox.ipynb

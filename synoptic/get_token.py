@@ -17,7 +17,7 @@ BASE = Path(__file__).parent
 
 # Brian's has a special configuration file that is not passed to GitHub.
 # If that doesn't exist, then the default config file is used.
-brians_config = BASE / 'BBa_config.cfg'
+brians_config = BASE / 'BB_config.cfg'
 default_config = BASE / 'config.cfg'
 
 if brians_config.is_file():
