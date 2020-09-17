@@ -8,5 +8,6 @@ __pycache__/
 *$py.class
 
 get_credentials.py
+BB_config.cfg
 sandbox/
 sandbox.ipynb

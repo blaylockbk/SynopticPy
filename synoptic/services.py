@@ -82,15 +82,15 @@ import urllib
 import numpy as np
 import pandas as pd
 
-from synoptic.mytoken import token
+from synoptic.get_token import token
 
-## API Services
+## Available API Services
 ## https://developers.synopticdata.com/mesonet/v2/
 _service = {'auth', 'networks', 'networktypes', 'variables', 'qctypes'}
 _stations = {'metadata', 'timeseries', 'precipitation', 'nearesttime', 'latest'}
 _service.update(_stations)
 
-## API Station Selector
+## Station Selector Parameters
 _stn_selector = {'stid', 'country', 'state', 'country', 'status', 'nwszone',
                  'nwsfirezone', 'cwa', 'gacc', 'subgacc', 'vars', 'varsoperator',
                  'network', 'radius', 'limit', 'bbox', 'fields'}
