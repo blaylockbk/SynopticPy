@@ -6,7 +6,7 @@ Synoptic API Token
 ==================
 The first time you import a synoptic.services function, it will check
 the API token in the config file. You can manually update that file, or
-let this script help you update it.
+let this script help you update it. 
 """
 import configparser
 from pathlib import Path
