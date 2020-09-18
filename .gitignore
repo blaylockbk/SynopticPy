@@ -8,3 +8,9 @@ __pycache__/
 
 sandbox/
 sandbox.ipynb
+
+dist/*
+build/*
+*.egg-info
+MANIFEST
+.eggs/

@@ -1,5 +1,6 @@
 **Brian Blaylock**  
-🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)
+🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)  
+🎉This is my first PyPI package
 
 # ☁ Synoptic API for Python (_unofficial_)
 
@@ -17,12 +18,29 @@ I wrote these functions to conveniently access data from the Synoptic API  and c
 ---
 
 ## 🐍 Conda Environment and Install
+### Option 1:
+Install the last published version from PyPI:
+
+```bash
+pip install SynopticPy
+```
+
+### Option 2:
+
 I have provided a sample Anaconda [environment.yml](./environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. The two lines at the bottom...
 
+For the latest development code
 ```yaml
 - pip:
     - git+https://github.com/blaylockbk/SynopticPy.git
 ```
+
+For the latest published version
+```yaml
+- pip:
+    - SynopticPy
+```
+
 
 will download this development version of the `synoptic` package and install it as part of the environment. You have a few options when installing this package as part of an environment:
 1. Copy the [environment.yml](./environment.yml) file I provide and "create" the environment.

@@ -1,20 +1,26 @@
 import os
-from setuptools import setup
+from pathlib import Path
+from setuptools import setup, find_packages
 
-def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+HERE = Path(__file__).parent
+README = (HERE / 'README.md').read_text()
 
 setup(
-    name = 'synoptic',
+    name = 'SynopticPy',   # I have to use 'SynopticPy' because 'synoptic' is used
     version = '0.0.2',
     author = 'Brian K. Blaylock',
     author_email = "blaylockbk@gmail.com",
     description = 'SynopticPy - Load mesonet data from the Synoptic API into a Pandas Dataframe',
-    long_description = read('README.md'),
-    url = 'https://github.com/blaylockbk/SynopticPy',
+    long_description = README,
+    long_description_content_type = 'text/markdown',
+    project_urls = {
+        'Source Code': 'https://github.com/blaylockbk/SynopticPy',
+    },
     license = "MIT",
-    packages = ['synoptic'],
-    include_package_data = True,
+    packages = find_packages(),
+    package_data = {
+        "": ['*.cfg'],
+    },
     install_requires = ['numpy', 'pandas', 'requests', 'matplotlib', 'cartopy'],
     keywords = ['mesonet', 'weather', 'synoptic', 'pandas'],
     classifiers = [
@@ -27,5 +33,24 @@ setup(
         "Programming Language :: Python",
         "Topic :: Scientific/Engineering :: Atmospheric Science",
     ],
-    zip_safe = False
+    zip_safe = False,
 )
+
+
+###############################################################################
+## Brian's NOTE: How to upload a new version
+'''
+# Created a new conda environment with twine
+# conda create -n pypi python=3.7 twine -c conda-forge
+
+conda activate pypi
+python setup.py sdist bdist_wheel
+
+twine check dist/*
+
+# Test PyPI
+twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+
+# PyPI
+twine upload --skip-existing dist/*
+'''
