@@ -1,11 +1,10 @@
 
-|||
+|![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/Balloon_logo/balloon_bkb_sm.png)|**Brian Blaylock**<br>🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)<br> 🎉This is my first PyPI package|
 |--|--
-|![](./images/Balloon_logo/balloon_bkb_sm.png)|**Brian Blaylock**<br>🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)<br> 🎉This is my first PyPI package|
 
 # ☁ Synoptic API for Python (_unofficial_)
 
-![](./images/synoptic_logo.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png)
 
 The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is _free_ up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a [paid tier](https://synopticdata.com/pricing) is available (through Synoptic, not me).
 
@@ -162,7 +161,7 @@ df = stations_timeseries(stid='WBB',
                         vars=['air_temp', 'wind_speed'],
                         recent=timedelta(hours=10))
 ```
-![](./images/timeseries_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/timeseries_df.png)
 
 To get the latest air temperature and wind speed data for WBB (University of Utah) and KRMY (Monterey, CA airport) within one hour, we can also set the minutes as an integer instead as a timedelta.
 
@@ -194,7 +193,7 @@ df = stations_latest(stid=['WBB', 'KMRY'],
                     attime=datetime(2020,1,1),
                     within=60)
 ```
-![](./images/nearesttime_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/nearesttime_df.png)
 
 > Note: the string/integer alternative to the above example is
 > ```python
@@ -245,7 +244,7 @@ plt.plot(df.index, df.air_temp, label='tz aware (plots in UTC)')
 plt.plot(df.index.tz_localize(None), df.air_temp, label='tz unaware (as local time)')
 plt.legend()
 ```
-![](./images/tz_localize.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master//images/tz_localize.png)
 
 ## ✅ How to set Synoptic's quality control checks
 By default, only basic QC range checks are applied to the data before it is returned by the API. These basic checks remove physically implausible data like removing a 300 degree temperature instead of returning the value. 

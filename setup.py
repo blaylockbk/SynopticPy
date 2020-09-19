@@ -2,7 +2,7 @@ from pathlib import Path
 from setuptools import setup, find_packages
 
 HERE = Path(__file__).parent
-README = (HERE / 'README.md').read_text()
+README = (HERE / 'README.md').read_text(encoding="utf8")
 
 setup(
     name = 'SynopticPy',   # I have to use 'SynopticPy' because 'synoptic' is used
