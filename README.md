@@ -7,7 +7,7 @@
 
 ![](./images/synoptic_logo.png)
 
-The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather observations for thousands of stations. Synoptic is _free_ to use for retrieving up to 5,000 API requests and 5 million service units each month. If you need more than that, a [paid plan](https://synopticdata.com/pricing) is available through Synoptic (not me).
+The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is _free_ up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a [paid tier](https://synopticdata.com/pricing) is available (through Synoptic, not me).
 
 > ### 🌐 Register for a free account at the Synoptic API Webpage
 >> https://developers.synopticdata.com
