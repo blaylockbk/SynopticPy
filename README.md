@@ -1,7 +1,7 @@
 
 |||
 |--|--
-|![](./images/balloon_logo/balloon_bkb_sm.png)|**Brian Blaylock**<br>🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)<br> 🎉This is my first PyPI package|
+|<img src='./images/balloon_logo/balloon_bkb_sm.png'>|**Brian Blaylock**<br>🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)<br> 🎉This is my first PyPI package|
 
 
 
