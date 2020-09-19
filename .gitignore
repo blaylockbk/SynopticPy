@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 *.log
 *.grib2
+env_pypi.yml
 
 sandbox/
 sandbox.ipynb

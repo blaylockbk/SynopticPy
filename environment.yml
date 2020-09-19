@@ -3,6 +3,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3
+  - pip
   - numpy
   - pandas
   - requests
@@ -19,4 +20,5 @@ dependencies:
   
   # Install Brian's `synoptic` package from GitHub
   - pip:
-    - git+https://github.com/blaylockbk/SynopticPy.git
+    - git+https://github.com/blaylockbk/SynopticPy.git   # Development Version
+    # - SynopticPy    # Release Version

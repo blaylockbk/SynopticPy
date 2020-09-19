@@ -36,13 +36,12 @@ setup(
     zip_safe = False,
 )
 
-
 ###############################################################################
-## Brian's NOTE: How to upload a new version
-'''
+## Brian's Note: How to upload a new version to PyPI
+## -------------------------------------------------
 # Created a new conda environment with twine
-# conda create -n pypi python=3.7 twine -c conda-forge
-
+# conda create -n pypi python=3 twine pip -c conda-forge
+'''
 conda activate pypi
 python setup.py sdist bdist_wheel
 
