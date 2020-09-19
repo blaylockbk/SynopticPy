@@ -18,7 +18,10 @@ dependencies:
   - h5py
   - pylint
   
-  # Install Brian's `synoptic` package from GitHub
+  # Development Version from GitHub
   - pip:
-    - git+https://github.com/blaylockbk/SynopticPy.git   # Development Version
-    # - SynopticPy    # Release Version
+    - git+https://github.com/blaylockbk/SynopticPy.git
+    
+  # Or, latest release from PyPI
+  #- pip:
+  #  - SynopticPy    # Release Version
