@@ -6,7 +6,7 @@ README = (HERE / 'README.md').read_text(encoding="utf8")
 
 setup(
     name = 'SynopticPy',   # I have to use 'SynopticPy' because 'synoptic' is used
-    version = '0.0.3',
+    version = '0.0.4',
     author = 'Brian K. Blaylock',
     author_email = "blaylockbk@gmail.com",
     description = 'Load mesonet weather and environmental data from the Synoptic API into a Pandas Dataframe',
@@ -14,7 +14,8 @@ setup(
     long_description_content_type = 'text/markdown',
     project_urls = {
         'Source Code': 'https://github.com/blaylockbk/SynopticPy',
-        'Synoptic API Documentation': 'https://developers.synopticdata.com/mesonet/',
+        'Documentation': 'https://github.com/blaylockbk/SynopticPy/blob/master/README.md',
+        'Official Synoptic Docs': 'https://developers.synopticdata.com/mesonet/',
     },
     license = "MIT",
     packages = find_packages(),
