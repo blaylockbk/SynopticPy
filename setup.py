@@ -6,7 +6,7 @@ README = (HERE / 'README.md').read_text(encoding="utf8")
 
 setup(
     name = 'SynopticPy',   # I have to use 'SynopticPy' because 'synoptic' is used
-    version = '0.0.4',
+    version = '0.0.5',
     author = 'Brian K. Blaylock',
     author_email = "blaylockbk@gmail.com",
     description = 'Load mesonet weather and environmental data from the Synoptic API into a Pandas Dataframe',
@@ -22,7 +22,7 @@ setup(
     package_data = {
         "": ['*.cfg'],
     },
-    install_requires = ['numpy', 'pandas', 'requests', 'matplotlib', 'cartopy'],
+    install_requires = ['numpy', 'pandas', 'requests'],
     keywords = ['pandas', 'meteorology', 'weather', 'mesonet', 'Synoptic', 'MesoWest'],
     classifiers = [
         "Development Status :: 4 - Beta",

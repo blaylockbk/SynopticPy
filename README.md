@@ -24,7 +24,8 @@ With that said, I am happy to share this project with you. You are welcome to op
 
 # 🐍 Installation and Conda Environment
 ### Option 1: pip
-Install the last published version from PyPI:
+Install the last published version from PyPI. This requires the following are already installed:  
+`numpy`, `pandas`, `requests`. It's optional, but you will want `matplotlib`, and `cartopy`, too.
 
 ```bash
 pip install SynopticPy
