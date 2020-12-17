@@ -17,7 +17,7 @@ import requests
 # Brian's has a special configuration file that is not passed to GitHub.
 # If that doesn't exist, then the default config file in this `synoptic`
 # directory is used.
-brians_config = Path('~').expanduser() / 'BB_credentials.cfg'
+brians_config = Path('~').expanduser() / '.BB_credentials.cfg'
 default_config = Path(__file__).parent / 'config.cfg'
 
 if brians_config.is_file():

@@ -94,6 +94,13 @@ def plot_timeseries_wind(data=None,
                         **params):
     """
     3-panel plot showing wind timeseries (wind speed/gust, direction, quiver)
+    
+    Consider resampling the data to smooth it out and so times with no
+    data is not shown in the plot. 
+    
+    .. code:: python
+        df.resample('30min').mean()
+        df.resample('1H').mean()
     """
     
     # User must supply the data as returned from stations_timeseries
@@ -106,7 +113,8 @@ def plot_timeseries_wind(data=None,
     fig, (ax1, ax2, ax3) = plt.subplots(3,1, sharex=True, figsize=figsize)
 
     ax1.plot(df.index, df.wind_speed, color='k')
-    ax1.scatter(df.index, df.wind_gust, marker='+', color='tab:green')
+    if 'wind_gust' in df:
+        ax1.scatter(df.index, df.wind_gust, marker='+', color='tab:green')
     ax1.set_ylim(ymin=0)
     ax1.set_ylabel(f"Wind Speed ({df.attrs['UNITS']['wind_speed']})")
     ax1.set_title(f"{df.attrs['STID']} : {df.attrs['NAME']}", loc='left', fontweight='bold')

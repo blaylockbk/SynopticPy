@@ -742,6 +742,9 @@ def networks(verbose=True, **params):
     data = web.json()
     
     df = pd.DataFrame(data['MNET'])
+    df['ID'] = df['ID'].astype(int)
+    df['CATEGORY'] = df['CATEGORY'].astype(int)
+    df['REPORTING_STATIONS'] = df['REPORTING_STATIONS'].astype(int)
     df.set_index('ID', inplace=True)
     df['LAST_OBSERVATION'] = pd.to_datetime(df.LAST_OBSERVATION)
     df.attrs['SUMMARY'] = data['SUMMARY']
