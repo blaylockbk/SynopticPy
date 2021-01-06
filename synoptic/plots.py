@@ -40,6 +40,7 @@ def plot_timeseries(data=None,
         kwargs for the plotted lines
     params : keyword arguments
         Same as for `stations_timeseries`
+
     '''
     
     # User must supply the data as returned from stations_timeseries
@@ -99,8 +100,10 @@ def plot_timeseries_wind(data=None,
     data is not shown in the plot. 
     
     .. code:: python
+
         df.resample('30min').mean()
         df.resample('1H').mean()
+
     """
     
     # User must supply the data as returned from stations_timeseries
@@ -153,7 +156,8 @@ def map_timeseries(data=None, *, verbose=True,
         the API request for stations_timeseries here.
     params : keyword arguments for stations_timeseries
         Parameters for stations_timeseries API request.
-        Required if ``data=None`.
+        Required if ``data=None``.
+
     """
     if ax is None:
         # Create a new default axis
@@ -202,7 +206,8 @@ def map_metadata(data=None, *, verbose=True,
         the API request for stations_timeseries here.
     params : keyword arguments for stations_timeseries
         Parameters for stations_metadata API request.
-        Required if ``data=None`.
+        Required if ``data=None``.
+        
     """
     if ax is None:
         # Create a new default axis

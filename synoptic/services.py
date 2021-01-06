@@ -479,12 +479,12 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     Parameters
     ----------
     rename_set_1 : bool
-        True - Rename the DataFrame columns to not include the set_1
+        - True - Rename the DataFrame columns to not include the set_1
           or set_1d in the name. I prefer these names to more easily
           key in on the variables I want. 
           Where there are both set_1 and set_1d for a variable, only the
           column with the most non-NaN values will be renamed. 
-        False - Perserve the original column names.
+        - False - Perserve the original column names.
         
         .. note:: 
             Observations returned from the Synoptic API are returned 
@@ -514,7 +514,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         Or, give a timedelta. For example: ``recent=timedelta(day=2)` 
         or ``recent=pd.to_timedelta('1D')``
    
-    Others: obtimezone, units, and STATION SELECTION PARAMETERS
+    Others : obtimezone, units, and STATION SELECTION PARAMETERS
     https://developers.synopticdata.com/mesonet/v2/station-selectors/
     
     Examples
@@ -524,6 +524,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     >>> stations_timeseries(stid='KMRY', recent=60, vars='air_temp', obtimezone='Local', units='temp|F')
     
     Plot Air Temperature
+    
     >>> import matplotlib.pyplot as plt
     >>> from matplotlib.dates import DateFormatter
     >>> df = stations_timeseries(stid='WBB', recent=300)

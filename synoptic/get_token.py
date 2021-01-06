@@ -72,6 +72,7 @@ def test_token(verbose=True, configure_on_fail=True):
     Returns
     -------
     A valid API token
+
     """
     
     # Get the token from config.cfg
@@ -119,6 +120,7 @@ def config_token(new_token=None):
     Returns
     -------
     A valid API token if it passes test_token. Else, None.
+    
     """
     # Get the current token value to display
     config = configparser.ConfigParser()

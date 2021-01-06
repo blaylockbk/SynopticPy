@@ -497,14 +497,14 @@ Requires <cite>start</cite> and <cite>end</cite> <em>or</em> <cite>recent</cite>
 <div><p>Get station data for time series.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/">https://developers.synopticdata.com/mesonet/v2/stations/timeseries/</a></p>
 <dl>
-<dt>rename_set_1<span class="classifier">bool</span></dt><dd><dl class="simple">
-<dt>True - Rename the DataFrame columns to not include the set_1</dt><dd><p>or set_1d in the name. I prefer these names to more easily
+<dt>rename_set_1<span class="classifier">bool</span></dt><dd><ul class="simple">
+<li><p>True - Rename the DataFrame columns to not include the set_1
+or set_1d in the name. I prefer these names to more easily
 key in on the variables I want.
 Where there are both set_1 and set_1d for a variable, only the
-column with the most non-NaN values will be renamed.</p>
-</dd>
-</dl>
-<p>False - Perserve the original column names.</p>
+column with the most non-NaN values will be renamed.</p></li>
+<li><p>False - Perserve the original column names.</p></li>
+</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Observations returned from the Synoptic API are returned
@@ -535,20 +535,22 @@ Or, give a timedelta. For example: <code class="docutils literal notranslate"><s
 <span class="pre">or</span> <span class="pre">``recent=pd.to_timedelta('1D')</span></code></p>
 </dd>
 </dl>
-<p>Others: obtimezone, units, and STATION SELECTION PARAMETERS
+<p>Others : obtimezone, units, and STATION SELECTION PARAMETERS
 <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/station-selectors/">https://developers.synopticdata.com/mesonet/v2/station-selectors/</a></p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="s1">&#39;UKBKB,10&#39;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;KMRY&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">obtimezone</span><span class="o">=</span><span class="s1">&#39;Local&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;temp|F&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Plot Air Temperature
-&gt;&gt;&gt; import matplotlib.pyplot as plt
-&gt;&gt;&gt; from matplotlib.dates import DateFormatter
-&gt;&gt;&gt; df = stations_timeseries(stid=’WBB’, recent=300)
-&gt;&gt;&gt; plt.plot(df[‘air_temp’])
-&gt;&gt;&gt; plt.plot(df[‘dew_point_temperature’])
-&gt;&gt;&gt; plt.gca().xaxis.set_major_formatter(DateFormatter(‘%b %d</p>
+<p>Plot Air Temperature</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">DateFormatter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dew_point_temperature&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span>
+</pre></div>
+</div>
 </div></blockquote>
 <dl>
 <dt>%H:%M’))</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -648,7 +650,7 @@ but if you just need the map.</p>
 If None, then the user must supply param keywords to make
 the API request for stations_timeseries here.</p></li>
 <li><p><strong>params</strong> (<em>keyword arguments for stations_timeseries</em>) – Parameters for stations_metadata API request.
-Required if <a href="#id1"><span class="problematic" id="id2">``</span></a>data=None`.</p></li>
+Required if <code class="docutils literal notranslate"><span class="pre">data=None</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -668,7 +670,7 @@ data, too. Use the map_metadata function instead.</p>
 If None, then the user must supply param keywords to make
 the API request for stations_timeseries here.</p></li>
 <li><p><strong>params</strong> (<em>keyword arguments for stations_timeseries</em>) – Parameters for stations_timeseries API request.
-Required if <a href="#id3"><span class="problematic" id="id4">``</span></a>data=None`.</p></li>
+Required if <code class="docutils literal notranslate"><span class="pre">data=None</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -699,6 +701,10 @@ If None, use the default color cycle.</p></li>
 <dd><p>3-panel plot showing wind timeseries (wind speed/gust, direction, quiver)</p>
 <p>Consider resampling the data to smooth it out and so times with no
 data is not shown in the plot.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;30min&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;1H&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </div>
