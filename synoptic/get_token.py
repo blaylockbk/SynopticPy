@@ -7,7 +7,9 @@ Synoptic API Token
 The first time you import a synoptic.services function, it will check
 the API token in the config file. You can manually update that file, or
 let this script help you update it. 
+
 """
+
 import configparser
 from pathlib import Path
 import requests
@@ -120,7 +122,7 @@ def config_token(new_token=None):
     Returns
     -------
     A valid API token if it passes test_token. Else, None.
-    
+
     """
     # Get the current token value to display
     config = configparser.ConfigParser()
