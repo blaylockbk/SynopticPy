@@ -67,6 +67,7 @@ html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     'github_url': 'https://github.com/blaylockbk/SynopticPy',
     "twitter_url": "https://twitter.com/blaylockbk",
+    "navbar_align": "left",
 }
 
 html_logo = "_static/SynopticPy_logo.png"

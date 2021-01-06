@@ -6,7 +6,7 @@
 ## Make Sphinx documents for pyBKB_NRL
 
 # Load the conda environment
-conda activate basic
+#conda activate basic
 #conda info
 
 # Make the html docs
