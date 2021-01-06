@@ -6,6 +6,10 @@
 Welcome to SynopticPy Docs's documentation!
 ===========================================
 
+.. note::
+   **This is a work in progress.** I'm doing SynopticPy with the PyData theme
+   and HRRR-B with the ReadTheDocs theme.
+
 .. toctree::
    :maxdepth: 2
    :caption: 🏡 Home
