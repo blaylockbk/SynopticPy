@@ -506,7 +506,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         
     \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
-        **Must include ``start`` and ``end`` argument *or* ``recent``.**  
+        **Must include `start` and ``end`` argument *or* ``recent``.**  
     start, end : datetime
         Start and end of time series
     recent : int or timedelta
@@ -524,7 +524,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     >>> stations_timeseries(stid='KMRY', recent=60, vars='air_temp', obtimezone='Local', units='temp|F')
     
     Plot Air Temperature
-    
+
     >>> import matplotlib.pyplot as plt
     >>> from matplotlib.dates import DateFormatter
     >>> df = stations_timeseries(stid='WBB', recent=300)
