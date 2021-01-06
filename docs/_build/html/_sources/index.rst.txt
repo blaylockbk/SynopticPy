@@ -11,10 +11,6 @@ Welcome to SynopticPy Docs's documentation!
    and HRRR-B with the ReadTheDocs theme.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: 🏡 Home
-
-.. toctree::
    :glob:
    :maxdepth: 1
    :caption: ⚙ Code

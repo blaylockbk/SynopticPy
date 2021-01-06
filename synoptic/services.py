@@ -505,8 +505,8 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
             more specific information, like how each set is derived.        
         
     \*\*params : keyword arguments
-        Synoptic API arguments used to ``specify`` the data request.
-        **Must include `start` and ``end`` argument *or* ``recent``.**  
+        Synoptic API arguments used to specify the data request.
+        Must include ``start`` and ``end`` argument *or* ``recent``.  
     start, end : datetime
         Start and end of time series
     recent : int or timedelta
