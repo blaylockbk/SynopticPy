@@ -66,13 +66,11 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
 html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     'github_url': 'https://github.com/blaylockbk/SynopticPy',
-    #'logo_only': False,
-    #'navigation_depth': 5,
-    #'collapse_navigation': False,
+    "twitter_url": "https://twitter.com/blaylockbk",
 }
 
-#html_logo = "_static/WeatherBalloon.gif"
-#html_favicon = "_static/wxicon.png"
+html_logo = "_static/SynopticPy_logo.png"
+html_favicon = "_static/wxicon.png"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
