@@ -3,21 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SynopticPy Docs's documentation!
-===========================================
+SynopticPy Functions
+====================
 
 .. toctree::
+   :hidden:
    :maxdepth: 2
-   :caption: 🏡 Home
 
-.. toctree::
-   :glob:
-   :maxdepth: 1
-   :caption: ⚙ Code
+.. automodule:: synoptic.services
+.. automodule:: synoptic.plots
+.. automodule:: synoptic.get_token
 
-   /synoptic
-
-.. include:: ../README.md
 
 
 Indices and tables

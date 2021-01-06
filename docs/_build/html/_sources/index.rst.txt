@@ -7,13 +7,17 @@ Welcome to SynopticPy Docs's documentation!
 ===========================================
 
 .. toctree::
-   :hidden:
    :maxdepth: 2
+   :caption: 🏡 Home
 
-.. automodule:: synoptic.services
-.. automodule:: synoptic.plots
-.. automodule:: synoptic.get_token
+.. toctree::
+   :glob:
+   :maxdepth: 1
+   :caption: ⚙ Code
 
+   /synoptic
+
+.. include:: ../README.md
 
 
 Indices and tables
