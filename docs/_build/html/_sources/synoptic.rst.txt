@@ -13,12 +13,3 @@ SynopticPy Functions
 .. automodule:: synoptic.services
 .. automodule:: synoptic.plots
 .. automodule:: synoptic.get_token
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

@@ -18,11 +18,3 @@ Welcome to SynopticPy Docs's documentation!
    /synoptic
 
 .. include:: ../README.md
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
