@@ -204,7 +204,7 @@ Below are some more common ones. Read the API docs to  see others.
 May be a single ID or list of IDs.
 <code class="docutils literal notranslate"><span class="pre">['KSLC',</span> <span class="pre">'UKBKB',</span> <span class="pre">'KMRY']</span></code> <em>or</em> <code class="docutils literal notranslate"><span class="pre">'KSLC'</span></code></p>
 </dd>
-<dt>state<span class="classifier">str or list</span></dt><dd><p>String or list of abbreviated state strings, i.e. [‘UT’,’CA’]</p>
+<dt>state<span class="classifier">str or list</span></dt><dd><p>String or list of abbreviated state strings, i.e. <code class="docutils literal notranslate"><span class="pre">['UT','CA']</span></code></p>
 </dd>
 <dt>radius<span class="classifier">str</span></dt><dd><p>Only return stations within a great-circle distance from a
 specified lat/lon point or station (by STID). May be in form
@@ -231,7 +231,8 @@ limit=1 will only return the nearest station.</p>
 </div>
 <div class="section" id="other-common-parameters">
 <h3>Other Common Parameters<a class="headerlink" href="#other-common-parameters" title="Permalink to this headline">¶</a></h3>
-<dl class="simple">
+<blockquote>
+<div><dl class="simple">
 <dt>units<span class="classifier">{‘metric’, ‘english’}</span></dt><dd><p>See documentation for more custom unit selection.
 An example of a custom unit is <code class="docutils literal notranslate"><span class="pre">units='temp|F'</span></code> to set just
 the temperature to degrees Fahrenheit.
@@ -239,8 +240,9 @@ For <code class="docutils literal notranslate"><span class="pre">units='temp|K,p
 pressures will be in hecto Pascals (mb, or hPa).</p>
 </dd>
 </dl>
-<p>obtimezone : {‘UTC’, ‘local’}
-status : {‘active’, ‘inactive’}</p>
+<p>obtimezone : {‘UTC’, ‘local’}</p>
+<p>status : {‘active’, ‘inactive’}</p>
+</div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>These Datetimes have timezone information. When plotting,
@@ -248,10 +250,9 @@ I haven’t had issues with Pandas 1.1.0 and matplotlib 3.3.0,
 but for earlier version, matplotlib doesn’t like the DatetimeIndex
 with timezone information. In that case, you can remove the datetime
 information with something like this:</p>
-<dl class="simple">
-<dt>… code-block::</dt><dd><p>df.index.tz_localize(None)</p>
-</dd>
-</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 <p><strong>Functions:</strong></p>
 <table class="longtable table autosummary">
@@ -341,7 +342,7 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>**param</strong> (<em>keyword arguments</em>) – </p></li>
 <li><p><strong>id</strong> (<em>int</em><em> or </em><em>list of int</em>) – Filter by network number.</p></li>
-<li><p><strong>shortname</strong> (<em>str</em><em> or </em><em>list of str</em>) – Netork shortname, i.e. ‘NWS/FAA’, ‘RAWS’, ‘UTAH DOT’,</p></li>
+<li><p><strong>shortname</strong> (<em>str</em><em> or </em><em>list of str</em>) – Network shortname, i.e. ‘NWS/FAA’, ‘RAWS’, ‘UTAH DOT’,</p></li>
 </ul>
 </dd>
 </dl>
@@ -356,7 +357,7 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>**params</strong> (<em>keyword arguments</em>) – </p></li>
+<li><p><strong>/*/*params</strong> – </p></li>
 <li><p><strong>id</strong> (<em>int</em>) – Select just the network type you want</p></li>
 </ul>
 </dd>
@@ -413,8 +414,9 @@ the most recent value will be renamed.</p>
 </dl>
 <p>False - Perserve the original index names.</p>
 </p></li>
-<li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
-<strong>Must include ``within``.</strong></p></li>
+<li><p><strong>/*/*params</strong> – <p>Synoptic API arguments used to specify the data request.
+<strong>Must include ``within``.</strong></p>
+</p></li>
 <li><p><strong>within</strong> (<em>int</em>) – Number of minutes to consider.</p></li>
 <li><p><strong>Others</strong> (<em>obtimezone</em><em>, </em><em>units</em><em>, </em><em>STATION SELECTION PARAMETERS:</em>) – </p></li>
 <li><p><strong>https</strong> (<em>//developers.synopticdata.com/mesonet/v2/station-selectors/</em>) – </p></li>
@@ -435,8 +437,9 @@ the most recent value will be renamed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
-e.g., sensorvars, obrange, obtimezone, etc.</p></li>
+<li><p><strong>/*/*params</strong> – <p>Synoptic API arguments used to specify the data request.
+e.g., sensorvars, obrange, obtimezone, etc.</p>
+</p></li>
 <li><p><strong>Others</strong> (<em>STATION SELECTION PARAMETERS</em>) – </p></li>
 <li><p><strong>https</strong> (<em>//developers.synopticdata.com/mesonet/v2/station-selectors/</em>) – </p></li>
 </ul>
@@ -461,8 +464,9 @@ the most recent value will be renamed.</p>
 </dl>
 <p>False - Perserve the original index names.</p>
 </p></li>
-<li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
-<strong>Must include ``attime`` and ``within``</strong></p></li>
+<li><p><strong>/*/*params</strong> – <p>Synoptic API arguments used to specify the data request.
+<strong>Must include ``attime`` and ``within``</strong></p>
+</p></li>
 <li><p><strong>attime</strong> (<em>datetime</em>) – Datetime you want to the the nearest observations for.</p></li>
 <li><p><strong>within</strong> (<em>int</em>) – How long ago is the oldest observation you want to receive, in minutes.</p></li>
 <li><p><strong>Other</strong> (<em>obtimezone</em><em>, </em><em>units</em><em>, </em><em>STATION SELECTION PARAMETERS:</em>) – </p></li>
@@ -483,8 +487,9 @@ the most recent value will be renamed.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/precipitation/">https://developers.synopticdata.com/mesonet/v2/stations/precipitation/</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
+<dd class="field-odd"><p><strong>/*/*params</strong> – <p>Synoptic API arguments used to specify the data request.
 Requires <cite>start</cite> and <cite>end</cite> <em>or</em> <cite>recent</cite>.</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -506,7 +511,7 @@ column with the most non-NaN values will be renamed.</p>
 <p>False - Perserve the original column names.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Observations returned from the Synotpic API are returned
+<p>Observations returned from the Synoptic API are returned
 with set numbers (“air_temp_set_1”, “air_temp_set_2”,
 “dew_point_temperature_set_1d”, etc.). The set number refers
 to a different observing method (maybe a station has two
@@ -524,7 +529,7 @@ You may also look at the ‘SENSOR_VARIABLES’ attribute for
 more specific information, like how each set is derived.</p>
 </div>
 </dd>
-<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>params<span class="classifier">keyword arguments</span></dt><dd><p>Synoptic API arguments used to specify the data request.
+<dt>/<a href="#id41"><span class="problematic" id="id42">*</span></a>/<a href="#id43"><span class="problematic" id="id44">*</span></a>params<span class="classifier">keyword arguments</span></dt><dd><p>Synoptic API arguments used to specify the data request.
 <strong>Must include ``start`` and ``end`` argument *or* ``recent``.</strong></p>
 </dd>
 <dt>start, end<span class="classifier">datetime</span></dt><dd><p>Start and end of time series</p>
@@ -573,9 +578,10 @@ Or, give a timedelta. For example: <code class="docutils literal notranslate"><s
 ‘qctypes’, ‘timeseries’, ‘variables’}</p></li>
 <li><p><strong>verbose</strong> (<em>{True</em><em>, </em><em>False</em><em>, </em><em>'HIDE'</em><em>, </em><em>'hide'}</em>) – Print extra details to the screen.
 If ‘HIDE’, then the token will be hidden.</p></li>
-<li><p><strong>**params</strong> (<em>keyword arguments</em>) – API request parameters (arguments).
+<li><p><strong>/*/*params</strong> – <p>API request parameters (arguments).
 Lists will be converted to a comma-separated string.
-Datetimes (datetime or pandas) will be parsed by f-string to YYYYmmddHHMM.</p></li>
+Datetimes (datetime or pandas) will be parsed by f-string to YYYYmmddHHMM.</p>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -647,7 +653,7 @@ but if you just need the map.</p>
 If None, then the user must supply param keywords to make
 the API request for stations_timeseries here.</p></li>
 <li><p><strong>params</strong> (<em>keyword arguments for stations_timeseries</em>) – Parameters for stations_metadata API request.
-Required if <a href="#id3"><span class="problematic" id="id4">``</span></a>data=None`.</p></li>
+Required if <a href="#id53"><span class="problematic" id="id54">``</span></a>data=None`.</p></li>
 </ul>
 </dd>
 </dl>
@@ -667,7 +673,7 @@ data, too. Use the map_metadata function instead.</p>
 If None, then the user must supply param keywords to make
 the API request for stations_timeseries here.</p></li>
 <li><p><strong>params</strong> (<em>keyword arguments for stations_timeseries</em>) – Parameters for stations_timeseries API request.
-Required if <a href="#id5"><span class="problematic" id="id6">``</span></a>data=None`.</p></li>
+Required if <a href="#id55"><span class="problematic" id="id56">``</span></a>data=None`.</p></li>
 </ul>
 </dd>
 </dl>

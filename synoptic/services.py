@@ -29,7 +29,7 @@ https://developers.synopticdata.com/mesonet/v2/station-selectors/
         May be a single ID or list of IDs.
         ``['KSLC', 'UKBKB', 'KMRY']`` *or* ``'KSLC'``
     state : str or list
-        String or list of abbreviated state strings, i.e. ['UT','CA']
+        String or list of abbreviated state strings, i.e. ``['UT','CA']``
     radius : str
         Only return stations within a great-circle distance from a 
         specified lat/lon point or station (by STID). May be in form
@@ -53,14 +53,16 @@ https://developers.synopticdata.com/mesonet/v2/station-selectors/
     
 Other Common Parameters
 -----------------------
-units : {'metric', 'english'}
-    See documentation for more custom unit selection.
-    An example of a custom unit is ``units='temp|F'`` to set just
-    the temperature to degrees Fahrenheit.
-    For ``units='temp|K,pres|mb'``,temperatures to Kelvin and
-    pressures will be in hecto Pascals (mb, or hPa).
-obtimezone : {'UTC', 'local'}
-status : {'active', 'inactive'}
+    units : {'metric', 'english'}
+        See documentation for more custom unit selection.
+        An example of a custom unit is ``units='temp|F'`` to set just
+        the temperature to degrees Fahrenheit.
+        For ``units='temp|K,pres|mb'``,temperatures to Kelvin and
+        pressures will be in hecto Pascals (mb, or hPa).
+
+    obtimezone : {'UTC', 'local'}
+    
+    status : {'active', 'inactive'}
 
 .. note::
     These Datetimes have timezone information. When plotting,
@@ -69,7 +71,8 @@ status : {'active', 'inactive'}
     with timezone information. In that case, you can remove the datetime
     information with something like this:
     
-    ... code-block::
+    .. code-block:: python
+
         df.index.tz_localize(None)
 
 """
@@ -325,7 +328,7 @@ def synoptic_api(service, verbose=True, **params):
     verbose : {True, False, 'HIDE', 'hide'}
         Print extra details to the screen.
         If 'HIDE', then the token will be hidden.
-    **params : keyword arguments
+    /*/*params : keyword arguments
         API request parameters (arguments).
         Lists will be converted to a comma-separated string.
         Datetimes (datetime or pandas) will be parsed by f-string to YYYYmmddHHMM.
@@ -429,12 +432,13 @@ def stations_metadata(verbose=True, **params):
 
     Parameters
     ----------
-    **params : keyword arguments
+    /*/*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         e.g., sensorvars, obrange, obtimezone, etc.
         
     Others: STATION SELECTION PARAMETERS
     https://developers.synopticdata.com/mesonet/v2/station-selectors/
+
     """
     assert any([i in _stn_selector for i in params]), \
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
@@ -483,7 +487,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         False - Perserve the original column names.
         
         .. note:: 
-            Observations returned from the Synotpic API are returned 
+            Observations returned from the Synoptic API are returned 
             with set numbers ("air_temp_set_1", "air_temp_set_2",
             "dew_point_temperature_set_1d", etc.). The set number refers
             to a different observing method (maybe a station has two 
@@ -500,7 +504,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
             You may also look at the 'SENSOR_VARIABLES' attribute for 
             more specific information, like how each set is derived.        
         
-    **params : keyword arguments
+    /*/*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include ``start`` and ``end`` argument *or* ``recent``.**  
     start, end : datetime
@@ -527,6 +531,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     >>> plt.plot(df['dew_point_temperature'])
     >>> plt.gca().xaxis.set_major_formatter(DateFormatter('%b %d\n%H:%M'))
     >>> plt.legend()
+
     """
     check1 = 'start' in params and 'end' in params
     check2 = 'recent' in params
@@ -624,7 +629,7 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
           Where there are both value_1 and value_1d for a variable, only
           the most recent value will be renamed. 
         False - Perserve the original index names.
-    **params : keyword arguments
+    /*/*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include ``attime`` and ``within``**   
     attime : datetime
@@ -638,6 +643,7 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     Examples
     --------
     >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+
     """
     assert 'attime' in params, "🤔 `attime` is a required parameter (datetime)."
     assert any([i in _stn_selector for i in params]), \
@@ -669,7 +675,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
           Where there are both value_1 and value_1d for a variable, only
           the most recent value will be renamed. 
         False - Perserve the original index names.
-    **params : keyword arguments
+    /*/*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include ``within``.**
     within : int
@@ -681,6 +687,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     Examples
     --------
     >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+
     """
     assert any([i in _stn_selector for i in params]), \
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
@@ -704,9 +711,10 @@ def stations_precipitation(verbose=True, **params):
 
     Parameters
     ----------
-    **params : keyword arguments
+    /*/*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         Requires `start` and `end` *or* `recent`.    
+
     """
     print("🙋🏼‍♂️ HI! THIS FUNCTION IS NOT COMPLETED YET. WILL JUST RETURN JSON.")
     
@@ -735,7 +743,8 @@ def networks(verbose=True, **params):
     id : int or list of int
         Filter by network number.
     shortname : str or list of str
-        Netork shortname, i.e. 'NWS/FAA', 'RAWS', 'UTAH DOT',         
+        Network shortname, i.e. 'NWS/FAA', 'RAWS', 'UTAH DOT',         
+
     """
     # Get the data
     web = synoptic_api('networks', verbose=verbose, **params)
@@ -760,9 +769,10 @@ def networktypes(verbose=True, **params):
     
     Parameters
     ----------
-    **params : keyword arguments
+    /*/*params : keyword arguments
     id : int
         Select just the network type you want
+
     """
     
     # Get the data
@@ -809,6 +819,7 @@ def qctypes(verbose=True, **params):
     ----------
     **param : keyword arguments
         Available parameters include `id` and `shortname`
+
     """
     # Get the data
     web = synoptic_api('qctypes', verbose=verbose, **params)
@@ -857,6 +868,7 @@ def auth(helpme=True, verbose=True, **params):
     
     Disable a token (not sure why this doesn't do anything)
     >>> auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
+
     """
     if helpme:
         web = 'https://developers.synopticdata.com/settings/'

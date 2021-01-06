@@ -173,26 +173,26 @@ and HRRR-B with the ReadTheDocs theme.</p>
 </div>
 <p><a href="#id51"><span class="problematic" id="id52">|![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/Balloon_logo/balloon_bkb_sm.png)|**Brian Blaylock**&lt;br&gt;🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)&lt;br&gt; 🎉This is my first PyPI package|</span></a>
 <a href="#id53"><span class="problematic" id="id54">|:--|</span></a>:–|</p>
-<p>## ☁ Synoptic API for Python (_unofficial_)</p>
+<p># ☁ Synoptic API for Python (_unofficial_)</p>
 <p>![](<a class="reference external" href="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png">https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png</a>)</p>
 <p>The [Synoptic Mesonet API](<a class="reference external" href="https://synopticdata.com/mesonet-api">https://synopticdata.com/mesonet-api</a>) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is _free_ up to 5,000 API requests and 5 million service units each month. That’s a generous amount, but if you need even more data, a [paid tier](<a class="reference external" href="https://synopticdata.com/pricing">https://synopticdata.com/pricing</a>) is available (through Synoptic, not me).</p>
-<p>&gt; #### 🌐 Register for a free account at the Synoptic API Webpage
+<p>&gt; ### 🌐 Register for a free account at the Synoptic API Webpage
 &gt;&gt; <a class="reference external" href="https://developers.synopticdata.com">https://developers.synopticdata.com</a>
 &gt;
 &gt; You will need to obtain an API token before using this python package.</p>
 <p>I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a <strong>[Pandas DataFrame](https://pandas.pydata.org/docs/)</strong>. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](<a class="reference external" href="https://github.com/mesowx/MesoPy">https://github.com/mesowx/MesoPy</a>) python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more <em>ready-to-use</em>.</p>
-<p>#### Contributing Guidelines (and disclaimer)
+<p>### Contributing Guidelines (and disclaimer)
 Since this package is a work in progress, it is distributed “as is.” I do not make any guarantee it will work for you out of the box. In fact, this is my first experience publishing a package to PyPI. Any revisions I make are purely for my benefit. Sorry if I break something, but I usually only push updates to GitHub if the code is in a reasonably functional state (at least, in the way I use it).</p>
 <p>With that said, I am happy to share this project with you. You are welcome to open issues and submit pull requests, but know that I may or may not get around to doing anything about it. If this is helpful to you in any way, I’m glad.</p>
 <p>—</p>
-<p>## 🐍 Installation and Conda Environment
-#### Option 1: pip
+<p># 🐍 Installation and Conda Environment
+### Option 1: pip
 Install the last published version from PyPI. This requires the following are already installed:
 <cite>numpy</cite>, <cite>pandas</cite>, <cite>requests</cite>. It’s optional, but you will want <cite>matplotlib</cite>, and <cite>cartopy</cite>, too.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`bash</span>
 <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">SynopticPy</span>
 <span class="pre">`</span></code></p>
-<p>#### Option 2: conda
+<p>### Option 2: conda
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](<a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html">https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html</a>).</p>
 <p>I have provided a sample Anaconda [environment.yml](<a class="reference external" href="https://github.com/blaylockbk/SynopticPy/blob/master/environment.yml">https://github.com/blaylockbk/SynopticPy/blob/master/environment.yml</a>) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file…there are two ways to install SynopticPy with pip. Comment out the lines you don’t want.</p>
 <p>For the latest development code:
@@ -225,9 +225,9 @@ For the latest published version
 <p><code class="docutils literal notranslate"><span class="pre">`bash</span>
 <span class="pre">conda</span> <span class="pre">env</span> <span class="pre">update</span> <span class="pre">-f</span> <span class="pre">environment.yml</span>
 <span class="pre">`</span></code></p>
-<p>&gt; #### Alternative “Install” Method
+<p>&gt; ### Alternative “Install” Method
 &gt; There are several other ways to “install” a python package so you can import them. One alternatively is you can <cite>git clone https://github.com/blaylockbk/SynopticPy.git</cite> this repository to any directory. To import the package, you will need to update your PYTHONPATH environment variable to find the directory you put this package or add the line <cite>sys.path.append(“/path/to/SynotpicPy”)</cite> at the top of your python script.</p>
-<p>## 🔨 Setup</p>
+<p># 🔨 Setup</p>
 <p>Before you can retrieve data from the Synoptic API, <strong>you need to register as a Synoptic user and obtain a _token_</strong>. Follow the instructions at the [Getting Started Page](<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">https://developers.synopticdata.com/mesonet/v2/getting-started/</a>). When you have a token, edit <cite>synoptic/config.cfg</cite> with your personal API <strong>token</strong>, _not your API <a href="#id55"><span class="problematic" id="id56">key_</span></a>.  The config file should look should look something like this:</p>
 <p><code class="docutils literal notranslate"><span class="pre">`</span>
 <span class="pre">[Synoptic]</span>
@@ -236,16 +236,16 @@ For the latest published version
 <p>If you don’t do this step, don’t worry. When you import <cite>synoptic.services</cite>,
 a quick check will make sure the token in the config file is valid. If not,
 you will be prompted to update the token in the config file.</p>
-<p>### 📝 Jupyter Notebook Examples</p>
+<p>## 📝 Jupyter Notebook Examples</p>
 <p>I have provided a number of [notebooks](<a class="reference external" href="https://github.com/blaylockbk/SynopticPy/tree/master/notebooks">https://github.com/blaylockbk/SynopticPy/tree/master/notebooks</a>) on GitHub that contain some practical examples for importing and using these functions to get and show station data.</p>
 <div class="section" id="id15">
 <h2>—<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
-<p>## <cite>synoptic/</cite></p>
-<p>### ⚙ <cite>config.cfg</cite>
+<p># <cite>synoptic/</cite></p>
+<p>## ⚙ <cite>config.cfg</cite>
 A configuration file with your Synoptic API token. This token is required to make any data request from the Synoptic API.</p>
-<p>### 🎟 <cite>get_token.py</cite>
+<p>## 🎟 <cite>get_token.py</cite>
 This function performs a test on the token in the <cite>config.cfg</cite> file. If the token is valid, you are good to go. If not, then you will be prompted to edit the <cite>config.cfg</cite> file when you import any function from <cite>synoptic.services</cite>.</p>
-<p>### 👨🏻‍💻 <cite>services.py</cite>
+<p>## 👨🏻‍💻 <cite>services.py</cite>
 This is the main module you will interacti with. It contains functions for making API requests and returns the data as a Pandas DataFrame.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">#</span> <span class="pre">Import</span> <span class="pre">all</span> <span class="pre">functions</span>
@@ -256,7 +256,7 @@ or
 <span class="pre">#</span> <span class="pre">Import</span> <span class="pre">a</span> <span class="pre">single</span> <span class="pre">function</span> <span class="pre">(prefered)</span>
 <span class="pre">from</span> <span class="pre">synotpic.services</span> <span class="pre">import</span> <span class="pre">stations_timeseries</span>
 <span class="pre">`</span></code></p>
-<p>#### Available Functions
+<p>### Available Functions
 There is a separate function for each of the Synoptic Mesonet API services as described in the [Synotpic documentation](<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/">https://developers.synopticdata.com/mesonet/v2/</a>).</p>
 <ol class="arabic simple">
 <li><dl class="simple">
@@ -303,15 +303,15 @@ There is a separate function for each of the Synoptic Mesonet API services as de
 </div>
 <div class="section" id="id16">
 <h2>—<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
-<p>### 🧭 Function Parameters
+<p>## 🧭 Function Parameters
 Function arguments are stitched together to create a web query. The parameters you can use to filter the data depend on the API service. Synoptic’s [API Explorer](<a class="reference external" href="https://developers.synopticdata.com/mesonet/explorer/">https://developers.synopticdata.com/mesonet/explorer/</a>) can help you determine what parameters can be used for each service.</p>
 <p>If the Synoptic API is new to you, I recommend you become familiar with the [Station Selector arguments](<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/station-selectors/">https://developers.synopticdata.com/mesonet/v2/station-selectors/</a>) first. These parameters key in on specific stations or a set of stations within an area of interest (<cite>stid</cite>, <cite>radius</cite>, <cite>vars</cite>, <cite>state</cite>, etc.).</p>
-<p>### 🤹🏻‍♂️ Examples
+<p>## 🤹🏻‍♂️ Examples
 Some things you should know first:
 1. All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do <cite>stid=[‘WBB’, ‘KSLC’, ‘KMRY’]</cite>, and that will be converted to a comma separated list <cite>stid=’WBB,KSLC,KMRY’</cite> required for the API request URL.
 1. Any input that is a datetime object (any datetime that can be parsed with f-string, <cite>f’{DATE:%Y%m%d%H%M}’</cite>) will be converted to a string required by the API (e.g., <cite>start=datetime(2020,1,1)</cite> will be converted to <cite>start=’YYYYmmddHHMM’</cite> when the query is made.)
 1. For services that requires the <cite>within</cite> or <cite>recent</cite> arguments, these must be given in minutes. You may give integers for those arguments, but converting time to minutes is done automatically if you input a datetime.timedelta or a pandas datetime. For example, if you set <cite>within=timedelta(hours=1)</cite> or <cite>recent=pd.to_timedelta(‘1d’)</cite>, the function will convert the value to minutes for you.</p>
-<p>&gt; #### ❓ What if I don’t know a station’s ID?
+<p>&gt; ### ❓ What if I don’t know a station’s ID?
 &gt; MesoWest is your friend if you don’t know what stations are available or what they are named: <a class="reference external" href="https://mesowest.utah.edu/">https://mesowest.utah.edu/</a>.</p>
 <p>To get a time series of air temperature and wind speed for the last 10 hours for the William Browning Building (WBB) you can do…</p>
 <p><a href="#id17"><span class="problematic" id="id18">``</span></a><a href="#id19"><span class="problematic" id="id20">`</span></a>python
@@ -361,7 +361,7 @@ within=60)</p>
 <span class="pre">&gt;</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">within=60)</span>
 <span class="pre">&gt;`</span></code>
 &gt; Use whichever is more convenient for you. I often use both methods. It depends on what I am doing.</p>
-<p>### ♻ Returned Data: Variable Names
+<p>## ♻ Returned Data: Variable Names
 The raw data retrieved from the Synoptic API is converted from JSON to a Pandas DataFrame.</p>
 <p>If you look at the raw JSON returned, you will see that the observation values are returned as “sets” and “values”, (e.g., <cite>air_temp_set_1</cite>, <cite>pressure_set_1d</cite>, <cite>wind_speed_value_1</cite>, etc.). This is because some stations have more than one sensor for a variable (e.g., wind at more than one level at a single site) or is reported at more than one interval (e.g., ozone at 1 hr and 15 min intervals). Time series requests return “sets” and nearest time requests return “values”.</p>
 <p>I don’t really like dealing with the set and value labels. Almost always, I want the <strong>set</strong> or <strong>value</strong> with the _most_ data or the _most <a href="#id57"><span class="problematic" id="id58">recent_</span></a> observation. <strong>My functions, by default, will strip the `set_1` and `value_1` from the labels on the returned data. If there are more than one set or value, however, then the “set” and “value” labels will be retained for those extra sets.</strong></p>
@@ -373,11 +373,11 @@ The raw data retrieved from the Synoptic API is converted from JSON to a Pandas 
 <p>In short, all sets and values are always returned, but column labels are simplified for the columns that I am most likely to use.</p>
 <p>For the renamed columns, it is up to the user to know if the data is a derived quantity and which set/value it is. To find out, look for attributes “SENSOR_VARIABLES” and “RENAME” in the DataFrame attributes (<cite>df.attrs</cite>), or look at the raw JSON.</p>
 <p>Doing this makes sense to me, but if you are confused and don’t trust what I’m doing, you can turn this “relabeling” off with <cite>rename_set_1=False</cite> and <cite>rename_value_1=False</cite> (for the appropriate function).</p>
-<p>### 🌐 Latitude and Longitude
+<p>## 🌐 Latitude and Longitude
 I should mention, <cite>LATITUDE</cite> and <cite>LONGITUDE</cite> in the raw JSON is renamed to <cite>latitude</cite> and <cite>longitude</cite> (lowercase) to match [CF convention](<a class="reference external" href="http://cfconventions.org/">http://cfconventions.org/</a>).</p>
-<p>### 💨 U and V Wind Components
+<p>## 💨 U and V Wind Components
 If the returned data contains variables for both <cite>wind_speed</cite> and <cite>wind_direction</cite>, then the DataFrame will compute and return the U and V wind components as <cite>wind_u</cite> and <cite>wind_v</cite>.</p>
-<p>### ⏲ Timezone
+<p>## ⏲ Timezone
 The default timezone the data is returned is in UTC time. You may change the time to local time with the parameter <cite>obtimezone=local</cite>. Pandas will return the data with a timezone-aware index. However, I found that matplotlib plotting functions convert this time back to UTC. To plot by local time, you need to use the <cite>tz_localize(None)</cite> method to make it unaware of timezone and plot local time correctly. For example, compare the two plots created with the following:</p>
 <p><a href="#id37"><span class="problematic" id="id38">``</span></a><a href="#id39"><span class="problematic" id="id40">`</span></a>python
 import matplotlib.pyplot as plt
@@ -393,7 +393,7 @@ plt.plot(df.index.tz_localize(None), df.air_temp, label=’tz unaware (as local 
 plt.legend()
 <a href="#id41"><span class="problematic" id="id42">``</span></a>`
 ![](<a class="reference external" href="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master//images/tz_localize.png">https://raw.githubusercontent.com/blaylockbk/SynopticPy/master//images/tz_localize.png</a>)</p>
-<p>### ✅ How to set Synoptic’s quality control checks
+<p>## ✅ How to set Synoptic’s quality control checks
 By default, only basic QC range checks are applied to the data before it is returned by the API. These basic checks remove physically implausible data like removing a 300 degree temperature instead of returning the value.</p>
 <p>You can add additional QC checks that more stringently remove “bad” data that might not be representative of the area or caused by a faulty sensor. However, you can’t expect every bad observation will be removed (or every good observation will be retained).</p>
 <ul class="simple">
@@ -434,8 +434,8 @@ df.attrs[‘QC_SUMMARY’]
 <span class="pre">qc_mask</span> <span class="pre">=</span> <span class="pre">np.array([x</span> <span class="pre">is</span> <span class="pre">None</span> <span class="pre">for</span> <span class="pre">x</span> <span class="pre">in</span> <span class="pre">df.attrs['QC']['wind_speed_set_1']])</span>
 <span class="pre">df</span> <span class="pre">=</span> <span class="pre">df.loc[qc_mask]</span>
 <span class="pre">`</span></code></p>
-<p>### 📈 <cite>plots.py</cite>
-#### <strong>*These are a work in progress*</strong>
+<p>## 📈 <cite>plots.py</cite>
+### <strong>*These are a work in progress*</strong>
 Some helpers for plotting data from the Synoptic API.</p>
 <p><code class="docutils literal notranslate"><span class="pre">`python</span>
 <span class="pre">#</span> <span class="pre">Import</span> <span class="pre">all</span> <span class="pre">functions</span>
