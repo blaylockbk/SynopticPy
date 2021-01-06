@@ -328,7 +328,7 @@ def synoptic_api(service, verbose=True, **params):
     verbose : {True, False, 'HIDE', 'hide'}
         Print extra details to the screen.
         If 'HIDE', then the token will be hidden.
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
         API request parameters (arguments).
         Lists will be converted to a comma-separated string.
         Datetimes (datetime or pandas) will be parsed by f-string to YYYYmmddHHMM.
@@ -432,7 +432,7 @@ def stations_metadata(verbose=True, **params):
 
     Parameters
     ----------
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         e.g., sensorvars, obrange, obtimezone, etc.
         
@@ -504,7 +504,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
             You may also look at the 'SENSOR_VARIABLES' attribute for 
             more specific information, like how each set is derived.        
         
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include ``start`` and ``end`` argument *or* ``recent``.**  
     start, end : datetime
@@ -629,7 +629,7 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
           Where there are both value_1 and value_1d for a variable, only
           the most recent value will be renamed. 
         False - Perserve the original index names.
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include ``attime`` and ``within``**   
     attime : datetime
@@ -675,7 +675,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
           Where there are both value_1 and value_1d for a variable, only
           the most recent value will be renamed. 
         False - Perserve the original index names.
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include ``within``.**
     within : int
@@ -711,7 +711,7 @@ def stations_precipitation(verbose=True, **params):
 
     Parameters
     ----------
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         Requires `start` and `end` *or* `recent`.    
 
@@ -769,7 +769,7 @@ def networktypes(verbose=True, **params):
     
     Parameters
     ----------
-    /*/*params : keyword arguments
+    \*\*params : keyword arguments
     id : int
         Select just the network type you want
 
