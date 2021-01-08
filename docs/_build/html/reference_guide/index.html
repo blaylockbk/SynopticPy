@@ -410,7 +410,12 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/latest/">https://developers.synopticdata.com/mesonet/v2/stations/latest/</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>rename_value_1</strong> (<em>bool</em>) – </p>
+<dd class="field-odd"><p><strong>rename_value_1</strong> (<em>bool</em>) – -True: Rename the DataFrame index to not include the value_1
+or value_1d in the name. I prefer these names to more easily
+key in on the variables I want.
+Where there are both value_1 and value_1d for a variable, only
+the most recent value will be renamed.
+- False: Perserve the original index names.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
