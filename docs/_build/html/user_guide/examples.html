@@ -212,6 +212,10 @@
             <a href="#quality-control-checks" class="nav-link">✅ Quality Control Checks</a>
         </li>
     
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#plots-py-these-are-a-work-in-progress" class="nav-link">📈 plots.py These are a work in progress</a>
+        </li>
+    
     </ul>
 </nav>
 
@@ -398,6 +402,19 @@ what each QC check means and how many are flagged…</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Identify which ones &quot;passed&quot; the QC checks (these have None in the QC array)</span>
 <span class="n">qc_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;QC&#39;</span><span class="p">][</span><span class="s1">&#39;wind_speed_set_1&#39;</span><span class="p">]])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">qc_mask</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="plots-py-these-are-a-work-in-progress">
+<h2>📈 <code class="docutils literal notranslate"><span class="pre">plots.py</span></code> <em><strong>These are a work in progress</strong></em><a class="headerlink" href="#plots-py-these-are-a-work-in-progress" title="Permalink to this headline">¶</a></h2>
+<p>Some helpers for plotting data from the Synoptic API.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import all functions</span>
+<span class="kn">import</span> <span class="nn">synoptic.plots</span> <span class="k">as</span> <span class="nn">sp</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import individual functions</span>
+<span class="kn">from</span> <span class="nn">synoptic.plots</span> <span class="kn">import</span> <span class="n">plot_timeseries</span>
 </pre></div>
 </div>
 </div>
