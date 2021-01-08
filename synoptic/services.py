@@ -11,6 +11,7 @@ Pandas.DataFrame. Requires a `Synoptic API token
 <https://synopticlabs.org/api/guides/?getstarted>`_
 
 .. tip::
+
     Before you get started, please become familiar with the
     `Synoptic API developers documentation 
     <https://developers.synopticdata.com/mesonet/v2/>`_.
