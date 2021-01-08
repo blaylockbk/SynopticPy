@@ -40,7 +40,7 @@
     <link rel="shortcut icon" href="../_static/wxicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="🤹🏻‍♂️ Usage Examples" href="example.html" />
+    <link rel="next" title="🤹🏻‍♂️ Usage Examples" href="examples.html" />
     <link rel="prev" title="🐍 Installation and Conda Environment" href="install.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -136,7 +136,7 @@
           
             
                 <li class="">
-                    <a href="example.html">🤹🏻‍♂️ Usage Examples</a>
+                    <a href="examples.html">🤹🏻‍♂️ Usage Examples</a>
                 </li>
             
           
@@ -170,6 +170,10 @@
             <a href="#register-for-a-synoptic-developers-account-and-obtain-a-token" class="nav-link">Register for a Synoptic developers account and obtain a token</a>
         </li>
     
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#configure-synopticpy-with-your-token" class="nav-link">Configure SynopticPy with your token</a>
+        </li>
+    
     </ul>
 </nav>
 
@@ -194,7 +198,36 @@
 <h1>🔨 Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="register-for-a-synoptic-developers-account-and-obtain-a-token">
 <h2>Register for a Synoptic developers account and obtain a token<a class="headerlink" href="#register-for-a-synoptic-developers-account-and-obtain-a-token" title="Permalink to this headline">¶</a></h2>
-<p>Before</p>
+<p>Before you can retrieve data from the Synoptic API, <strong>you need to register as a Synoptic user and obtain a <em>token</em></strong>. Follow the instructions at the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Getting Started Page</a>.</p>
+<ol class="simple">
+<li><p>Go to the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Get Started</a> page and click <strong>Sign Up Now!</strong> to register for an account.</p></li>
+<li><p>After registering for your account, go to your <a class="reference external" href="https://developers.synopticdata.com/settings/">profile settings</a> and locate your public token. You may also generate a new token in the “Manage Tokens” tab, if desired.</p></li>
+<li><p>Copy a public token (not your key!).</p></li>
+</ol>
+</div>
+<div class="section" id="configure-synopticpy-with-your-token">
+<h2>Configure SynopticPy with your token<a class="headerlink" href="#configure-synopticpy-with-your-token" title="Permalink to this headline">¶</a></h2>
+<p>SynopticPy needs to know your token. The first time you import <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code> it will help you setup your token in its config file.</p>
+<ol class="simple">
+<li><p>Open python in a terminal and type the following:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">synoptic.services</span>
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>You will be prompted with instructions for aquiring an API token, and then it will ask you to input your token. Remember to enter you API <strong>token</strong> and <em>not your API key</em>.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>What is your Synoptic API token? &gt;&gt;&gt;
+</pre></div>
+</div>
+<ol class="simple">
+<li><p>The script updates a config file located at <code class="docutils literal notranslate"><span class="pre">~/.config/SynopticPy/config.cfg</span></code>. If you are having problems, that file should look something like this:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Synoptic</span><span class="p">]</span>
+<span class="n">token</span> <span class="o">=</span> <span class="mi">1234567890</span><span class="n">abcdefg</span>
+</pre></div>
+</div>
+<p>Every time you import a <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code> function it does a quick check to make sure the token in that file is valid. If everything looks good, the next time you import the module you won’t be asked for the token because it is saved in that config file.</p>
 </div>
 </div>
 
@@ -205,7 +238,7 @@
               <div class='prev-next-bottom'>
                 
     <a class='left-prev' id="prev-link" href="install.html" title="previous page">🐍 Installation and Conda Environment</a>
-    <a class='right-next' id="next-link" href="example.html" title="next page">🤹🏻‍♂️ Usage Examples</a>
+    <a class='right-next' id="next-link" href="examples.html" title="next page">🤹🏻‍♂️ Usage Examples</a>
 
               </div>
               
