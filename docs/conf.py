@@ -67,7 +67,7 @@ html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     'github_url': 'https://github.com/blaylockbk/SynopticPy',
     "twitter_url": "https://twitter.com/blaylockbk",
-    "navbar_align": "left",
+    #"navbar_align": "left",
     "external_links": [
       {"name": "GOES-2-go", "url": "https://blaylockbk.github.io/goes2go/_build/html/"},
       {"name": "HRRR-B", "url": "https://blaylockbk.github.io/HRRR_archive_download/_build/html/"}
