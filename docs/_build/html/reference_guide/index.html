@@ -328,13 +328,25 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dl>
 <p class="rubric">Examples</p>
 <p>List all tokens
-&gt;&gt;&gt; auth(helpme=False, apikey=’YOUR_API_KEY’, list=1)</p>
+.. code:: python</p>
+<blockquote>
+<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’, list=1)</p>
+</div></blockquote>
 <p>Create new token (tokens are disabled after 10 years)
-&gt;&gt;&gt; auth(helpme=False, apikey=’YOUR_API_KEY’)</p>
+.. code:: python</p>
+<blockquote>
+<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’)</p>
+</div></blockquote>
 <p>Create new token with expiration date
-&gt;&gt;&gt; auth(helpme=False, apikey=’YOUR_API_KEY’, expire=datetime(2021,1,1))</p>
+.. code:: python</p>
+<blockquote>
+<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’, expire=datetime(2021,1,1))</p>
+</div></blockquote>
 <p>Disable a token (not sure why this doesn’t do anything)
-&gt;&gt;&gt; auth(helpme=False, apikey=’YOUR_API_KEY’, disable=’TOKEN’)</p>
+.. code:: python</p>
+<blockquote>
+<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’, disable=’TOKEN’)</p>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
@@ -428,7 +440,7 @@ the most recent value will be renamed.
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stations_nearesttime</span><span class="p">(</span><span class="n">attime</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">within</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stations_nearesttime</span><span class="p">(</span><span class="n">attime</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">within</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -479,7 +491,7 @@ the most recent value will be renamed.</p></li>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stations_nearesttime</span><span class="p">(</span><span class="n">attime</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">within</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stations_nearesttime</span><span class="p">(</span><span class="n">attime</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">within</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -602,10 +614,10 @@ YYYYmmddHHMM.</p></li>
 </dl>
 <p class="rubric">Examples</p>
 <p>To read the json data for metadata for a station</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">synoptic_api</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">synoptic_api</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">synoptic_api</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="s1">&#39;KSLC&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">synoptic_api</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="s1">&#39;KSLC&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </pre></div>
 </div>
 </dd></dl>

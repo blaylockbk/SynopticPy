@@ -358,9 +358,13 @@ def synoptic_api(service, verbose=True, **params):
     --------
     To read the json data for metadata for a station
     
-    >>> synoptic_api('metadata', stid='WBB').json()
+    .. code:: python
     
-    >>> synoptic_api('metadata', stid=['WBB', 'KSLC']).json()
+        synoptic_api('metadata', stid='WBB').json()
+    
+    .. code:: python
+        
+        synoptic_api('metadata', stid=['WBB', 'KSLC']).json()
     
     '''   
     help_url = 'https://developers.synopticdata.com/mesonet/v2/'
@@ -666,7 +670,9 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     
     Examples
     --------
-    >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+    .. code:: python
+    
+        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
 
     """
     assert 'attime' in params, "🤔 `attime` is a required parameter (datetime)."
@@ -713,7 +719,9 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     Examples
     --------
     
-    >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+    .. code:: python
+    
+        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
 
     """
     assert any([i in _stn_selector for i in params]), \
@@ -888,16 +896,24 @@ def auth(helpme=True, verbose=True, **params):
     Examples
     --------
     List all tokens
-    >>> auth(helpme=False, apikey='YOUR_API_KEY', list=1)
+    .. code:: python
+    
+        auth(helpme=False, apikey='YOUR_API_KEY', list=1)
     
     Create new token (tokens are disabled after 10 years)
-    >>> auth(helpme=False, apikey='YOUR_API_KEY')
+    .. code:: python
+    
+        auth(helpme=False, apikey='YOUR_API_KEY')
     
     Create new token with expiration date
-    >>> auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
+    .. code:: python
+        
+        auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
     
     Disable a token (not sure why this doesn't do anything)
-    >>> auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
+    .. code:: python
+        
+        auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
 
     """
     if helpme:
