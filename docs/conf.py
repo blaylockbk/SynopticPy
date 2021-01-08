@@ -83,7 +83,7 @@ html_favicon = "_static/wxicon.png"
 html_static_path = ['_static']
 
 html_css_files = [
-    'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',
+    #'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', ## DON"T NEED TO RELOAD BOOTSTRAP AGAIN FOR SOME THEMES!
 ]
 
 html_js_files = [
