@@ -422,14 +422,17 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rename_value_1</strong> (<em>bool</em>) – Option to rename the DataFrame index to not include the
+<li><p><strong>rename_value_1</strong> (<em>bool</em>) – <p>Option to rename the DataFrame index to not include the
 <code class="docutils literal notranslate"><span class="pre">value_1</span></code> or <code class="docutils literal notranslate"><span class="pre">value_1d</span></code> in the name. I prefer that the
 column names strips this part of the string to more easily key
 in on the variables I want. For situations where there are both
 <code class="docutils literal notranslate"><span class="pre">value_1</span></code> and <code class="docutils literal notranslate"><span class="pre">value_1d</span></code> for a variable, only the most
-recent value will be renamed.
-- True: strip <code class="docutils literal notranslate"><span class="pre">value_1</span></code> from the column variable names.
-- False: Perserve the original index names.</p></li>
+recent value will be renamed.</p>
+<ul>
+<li><p>True: Strip <code class="docutils literal notranslate"><span class="pre">value_1</span></code> from the column variable names.</p></li>
+<li><p>False: Perserve the original index names.</p></li>
+</ul>
+</p></li>
 <li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
 <strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">within</span></code>.</p></li>
 <li><p><strong>within</strong> (<em>int</em>) – Number of minutes to consider.</p></li>

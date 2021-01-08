@@ -707,8 +707,10 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
         in on the variables I want. For situations where there are both
         ``value_1`` and ``value_1d`` for a variable, only the most 
         recent value will be renamed.
-        - True: strip ``value_1`` from the column variable names.
+
+        - True: Strip ``value_1`` from the column variable names.
         - False: Perserve the original index names.
+        
     \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include** ``within``.
