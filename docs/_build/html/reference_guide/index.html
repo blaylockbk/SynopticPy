@@ -410,24 +410,26 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/latest/">https://developers.synopticdata.com/mesonet/v2/stations/latest/</a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rename_value_1</strong> (<em>bool</em>) – <dl class="simple">
+<dd class="field-odd"><p><strong>rename_value_1</strong> (<em>bool</em>) – <dl class="simple">
 <dt>-True: Rename the DataFrame index to not include the value_1</dt><dd><p>or value_1d in the name. I prefer these names to more easily
 key in on the variables I want.
 Where there are both value_1 and value_1d for a variable, only
 the most recent value will be renamed.</p>
 </dd>
 </dl>
-<ul>
+<ul class="simple">
 <li><p>False: Perserve the original index names.</p></li>
 </ul>
-</p></li>
-<li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
-<strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">within</span></code>.</p></li>
-<li><p><strong>within</strong> (<em>int</em>) – Number of minutes to consider.</p></li>
-</ul>
+</p>
 </dd>
 </dl>
+<p>Other params include <code class="docutils literal notranslate"><span class="pre">obtimezone</span></code>, <code class="docutils literal notranslate"><span class="pre">units</span></code>, and any
+<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/station-selectors/">Station Selector</a>
+parameter.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stations_nearesttime</span><span class="p">(</span><span class="n">attime</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">within</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">

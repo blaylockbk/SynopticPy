@@ -705,12 +705,17 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
           the most recent value will be renamed. 
         - False: Perserve the original index names.
 
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        **Must include** ``within``.
-    within : int
-        Number of minutes to consider.
+
     
+    Other params include ``obtimezone``, ``units``, and any
+    `Station Selector
+    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`_
+    parameter.
+
+    Examples
+    --------
+    
+    >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
 
     """
     assert any([i in _stn_selector for i in params]), \
