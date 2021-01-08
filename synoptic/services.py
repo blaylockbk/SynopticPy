@@ -701,14 +701,12 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     Parameters
     ----------
     rename_value_1 : bool
-        
         -True: Rename the DataFrame index to not include the value_1
         or value_1d in the name. I prefer these names to more easily
         key in on the variables I want. 
         Where there are both value_1 and value_1d for a variable, only
         the most recent value will be renamed. 
         - False: Perserve the original index names.
-
     \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include** ``within``.
@@ -916,7 +914,7 @@ def auth(helpme=True, verbose=True, **params):
         auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
     
     Disable a token (not sure why this doesn't do anything)
-    
+
     .. code:: python
         
         auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
