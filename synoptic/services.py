@@ -330,8 +330,8 @@ def synoptic_api(service, verbose=True, **params):
     '''
     Request data from the Synoptic API. Returns a **requests** object.
         
-    API References
-    --------------
+    References
+    ----------
     - https://developers.synopticdata.com/mesonet/v2/
     - https://developers.synopticdata.com/mesonet/explorer/
     
