@@ -532,7 +532,21 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         Or, give a timedelta. For example: ``recent=timedelta(day=2)` 
         or ``recent=pd.to_timedelta('1D')``
    
-
+    
+    
+    Examples
+    --------
+    >>> stations_timeseries(stid='WBB', recent=100)
+    >>> stations_timeseries(radius='UKBKB,10', vars='air_temp', recent=100)
+    >>> stations_timeseries(stid='KMRY', recent=60, vars='air_temp', obtimezone='Local', units='temp|F')
+    
+    >>> import matplotlib.pyplot as plt
+    >>> from matplotlib.dates import DateFormatter
+    >>> df = stations_timeseries(stid='WBB', recent=300)
+    >>> plt.plot(df['air_temp'])
+    >>> plt.plot(df['dew_point_temperature'])
+    >>> plt.gca().xaxis.set_major_formatter(DateFormatter('%b %d\n%H:%M'))
+    >>> plt.legend()
 
     """
     check1 = 'start' in params and 'end' in params
