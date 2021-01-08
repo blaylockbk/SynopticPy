@@ -88,6 +88,7 @@ def test_token(verbose=True, configure_on_fail=True):
         print(f'🦁🐯🐻 oh my! {_config_path} looks weird, but I will add a new section')
         config.add_section('Synoptic')
         config.set('Synoptic', 'token', '')
+        token = config.get('Synoptic', 'token')
     if token == '':
         # There isn't an API token defined, so configure one.
         return config_token()
@@ -101,7 +102,7 @@ def test_token(verbose=True, configure_on_fail=True):
     response = json['SUMMARY']['RESPONSE_MESSAGE']
     
     if response == 'OK':
-        if verbose: print(f"🔓 API Access Enabled Response is {response}.")
+        if verbose: print(f"🔓 API Access Enabled. Response is [{response}].")
         return token
     else:
         print(f"🤦🏻‍♂️ Failed: {token} is not valid. {response}")

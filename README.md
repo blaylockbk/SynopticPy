@@ -91,14 +91,11 @@ I have provided a number of [notebooks](https://github.com/blaylockbk/SynopticPy
 
 # `synoptic/`
 
-## ⚙ `config.cfg`
-A configuration file with your Synoptic API token. This token is required to make any data request from the Synoptic API.
-
 ## 🎟 `get_token.py`
 This function performs a test on the token in the `config.cfg` file. If the token is valid, you are good to go. If not, then you will be prompted to edit the `config.cfg` file when you import any function from `synoptic.services`.
 
 ## 👨🏻‍💻 `services.py`
-This is the main module you will interacti with. It contains functions for making API requests and returns the data as a Pandas DataFrame.
+This is the main module you will interact with. It contains functions for making API requests and returns the data as a Pandas DataFrame.
 
 ```python
 # Import all functions
