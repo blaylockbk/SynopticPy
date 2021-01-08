@@ -10,7 +10,7 @@ You likely wont need to do anything with these functions.
 The first time you import a ``synoptic.services`` function, it will 
 ask you for your API token and store that information in 
 ``~/.config/SynopticPy/config.cfg``. You may edit that config file if
-you need. Please refer to the :ref:`user-guide`. for more info.
+you need. Please refer to the :ref:`User Guide`. for more info.
 
 """
 
