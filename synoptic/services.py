@@ -711,8 +711,8 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     within : int
         Number of minutes to consider.
     
-    Other params include obtimezone, units, and any
-    `Station Selector <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
+    Other params include ``obtimezone``, ``units``, and any
+    `StationSelector <http://link>`_ 
     parameter.
 
     Examples
