@@ -34,5 +34,6 @@ I wrote these functions to conveniently access data from the Synoptic API and co
 
 If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.
 
-**Best of Luck 🍀**  
+**Best of Luck 🍀**
+
 -Brian

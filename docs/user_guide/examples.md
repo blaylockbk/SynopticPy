@@ -132,7 +132,7 @@ plt.legend()
 ```
 ![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master//images/tz_localize.png)
 
-## ✅ How to set Synoptic's quality control checks
+## ✅ Quality Control Checks
 By default, only basic QC range checks are applied to the data before it is returned by the API. These basic checks remove physically implausible data like removing a 300 degree temperature instead of returning the value. 
 
 You can add additional QC checks that more stringently remove "bad" data that might not be representative of the area or caused by a faulty sensor. However, you can't expect every bad observation will be removed (or every good observation will be retained).
