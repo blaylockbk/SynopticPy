@@ -697,17 +697,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     Parameters
     ----------
     rename_value_1 : bool
-
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        **Must include** ``within``.
-    within : int
-        Number of minutes to consider.
-    
-    Other params include ``obtimezone``, ``units``, and any
-    `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`_
-    parameter.
+        
 
     Examples
     --------
