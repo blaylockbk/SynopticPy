@@ -520,8 +520,9 @@ Requires <cite>start</cite> and <cite>end</cite> <em>or</em> <cite>recent</cite>
 <dd><blockquote>
 <div><p>Get station data for time series.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/">https://developers.synopticdata.com/mesonet/v2/stations/timeseries/</a></p>
-<dl>
-<dt>rename_set_1<span class="classifier">bool</span></dt><dd><ul class="simple">
+<p>rename_set_1 : bool</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>True: Rename the DataFrame columns to not include the set_1
 or set_1d in the name. I prefer these names to more easily
 key in on the variables I want.
@@ -548,7 +549,8 @@ show how the columns were renamed.
 You may also look at the ‘SENSOR_VARIABLES’ attribute for
 more specific information, like how each set is derived.</p>
 </div>
-</dd>
+</div></blockquote>
+<dl class="simple">
 <dt>**params<span class="classifier">keyword arguments</span></dt><dd><p>Synoptic API arguments used to specify the data request.
 <strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> argument <em>or</em> <code class="docutils literal notranslate"><span class="pre">recent</span></code>.</p>
 </dd>

@@ -496,6 +496,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     Parameters
     ----------
     rename_set_1 : bool
+        
         - True: Rename the DataFrame columns to not include the set_1
           or set_1d in the name. I prefer these names to more easily
           key in on the variables I want. 
