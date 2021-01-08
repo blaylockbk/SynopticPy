@@ -20,7 +20,7 @@ Station Selector Parameters
 The fundamental method for specifying the data you query is done with
 **station selector arguments**. Below are some of the more common 
 paramaters. Read `Station Selectors
-<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`_ 
+<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__ 
 in the API documents for all options and capabilities.
 
     stid : str or list
@@ -534,7 +534,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
    
     Other params include ``obtimezone``, ``units``, and any
     `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`_
+    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
     parameter.
     
     Examples
@@ -665,7 +665,7 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
         
     Other params include ``obtimezone``, ``units``, and any
     `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`_
+    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
     parameter.
     
     Examples
@@ -711,9 +711,8 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     within : int
         Number of minutes to consider.
     
-    Other params include ``obtimezone``, ``units``, and any
-    `StationSelector <http://link>`_ 
-    parameter.
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
 
     Examples
     --------
@@ -747,10 +746,8 @@ def stations_precipitation(verbose=True, **params):
         Synoptic API arguments used to specify the data request.
         Requires `start` and `end` *or* `recent`.
 
-    Other params include ``obtimezone``, ``units``, and any
-    `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`_
-    parameter.
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
 
     """
     print("🙋🏼‍♂️ HI! THIS FUNCTION IS NOT COMPLETED YET. WILL JUST RETURN JSON.")
