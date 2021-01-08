@@ -2,13 +2,15 @@
 ## January 8, 2020
 
 """
-==================
-Synoptic API Token
-==================
+=====================
+🎟 Synoptic API Token
+=====================
+SynopticPy needs to know your public Synoptic API token.
+You likely wont need to do anything with these functions. 
 The first time you import a ``synoptic.services`` function, it will 
-check the API token in the users config file. You can manually update 
-that file at ``~/.config/SynopticPy/config.cfg``, or let this script 
-help you update it interactively.
+ask you for your API token and store that information in 
+``~/.config/SynopticPy/config.cfg``. You may edit that config file if
+you need. Please refer to the :ref:`user-guide`. for more info.
 
 """
 
@@ -69,6 +71,7 @@ def test_token(verbose=True, configure_on_fail=True):
         - True: Help the user update the config file with ``config_token``
         - False: Do not update (prevents infinant loop if user keeps
         adding an invalid token).
+
     verbose : bool
         - True: Print details as this function runs.
         - False: Do not print anything if the token check passes.
