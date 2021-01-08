@@ -705,6 +705,12 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
         the most recent value will be renamed. 
         - False: Perserve the original index names.
 
+    \*\*params : keyword arguments
+        Synoptic API arguments used to specify the data request.
+        **Must include** ``within``.
+    within : int
+        Number of minutes to consider.
+    
 
 
     Examples
