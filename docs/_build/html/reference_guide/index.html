@@ -412,16 +412,18 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rename_value_1</strong> (<em>bool</em>) – <dl class="simple">
-<dt>True - Rename the DataFrame index to not include the value_1</dt><dd><p>or value_1d in the name. I prefer these names to more easily
+<dt>-True: Rename the DataFrame index to not include the value_1</dt><dd><p>or value_1d in the name. I prefer these names to more easily
 key in on the variables I want.
 Where there are both value_1 and value_1d for a variable, only
 the most recent value will be renamed.</p>
 </dd>
 </dl>
-<p>False - Perserve the original index names.</p>
+<ul>
+<li><p>False: Perserve the original index names.</p></li>
+</ul>
 </p></li>
 <li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
-<strong>Must include ``within``.</strong></p></li>
+<strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">within</span></code>.</p></li>
 <li><p><strong>within</strong> (<em>int</em>) – Number of minutes to consider.</p></li>
 <li><p><strong>params include obtimezone</strong> (<em>Other</em>) – </p></li>
 <li><p><strong>units</strong> – </p></li>
@@ -463,17 +465,17 @@ e.g., sensorvars, obrange, obtimezone, etc.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rename_value_1</strong> (<em>bool</em>) – <dl class="simple">
-<dt>True - Rename the DataFrame index to not include the value_1</dt><dd><p>or value_1d in the name. I prefer these names to more easily
+<li><p><strong>rename_value_1</strong> (<em>bool</em>) – <ul>
+<li><p>True: Rename the DataFrame index to not include the value_1
+or value_1d in the name. I prefer these names to more easily
 key in on the variables I want.
 Where there are both value_1 and value_1d for a variable, only
-the most recent value will be renamed.</p>
-</dd>
-</dl>
-<p>False - Perserve the original index names.</p>
+the most recent value will be renamed.</p></li>
+<li><p>False: Perserve the original index names.</p></li>
+</ul>
 </p></li>
 <li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
-<strong>Must include ``attime`` and ``within``</strong></p></li>
+<strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">attime</span></code> and <code class="docutils literal notranslate"><span class="pre">within</span></code></p></li>
 <li><p><strong>attime</strong> (<em>datetime</em>) – Datetime you want to the the nearest observations for.</p></li>
 <li><p><strong>within</strong> (<em>int</em>) – How long ago is the oldest observation you want to receive, in minutes.</p></li>
 <li><p><strong>params include obtimezone</strong> (<em>Other</em>) – </p></li>
@@ -548,7 +550,7 @@ more specific information, like how each set is derived.</p>
 </div>
 </dd>
 <dt>**params<span class="classifier">keyword arguments</span></dt><dd><p>Synoptic API arguments used to specify the data request.
-Must include <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> argument <em>or</em> <code class="docutils literal notranslate"><span class="pre">recent</span></code>.</p>
+<strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> argument <em>or</em> <code class="docutils literal notranslate"><span class="pre">recent</span></code>.</p>
 </dd>
 <dt>start, end<span class="classifier">datetime</span></dt><dd><p>Start and end of time series</p>
 </dd>
