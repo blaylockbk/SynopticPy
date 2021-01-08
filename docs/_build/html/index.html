@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to SynopticPy Docs’s documentation! &#8212; SynopticPy Docs 0.1 documentation</title>
+    <title>— &#8212; SynopticPy Docs 0.1 documentation</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -133,7 +133,11 @@
     <ul class="nav section-nav flex-column">
     
         <li class="nav-item toc-entry toc-h2">
-            <a href="#id15" class="nav-link">—</a>
+            <a href="" class="nav-link"></a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#" class="nav-link">—</a>
         </li>
     
         <li class="nav-item toc-entry toc-h2">
@@ -153,8 +157,7 @@
               
               <div>
                 
-  <div class="section" id="welcome-to-synopticpy-docs-s-documentation">
-<h1>Welcome to SynopticPy Docs’s documentation!<a class="headerlink" href="#welcome-to-synopticpy-docs-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <img alt="_images/SynopticPy_logo.png" src="_images/SynopticPy_logo.png" />
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>This is a work in progress.</strong> I’m doing SynopticPy with the PyData theme
@@ -163,7 +166,17 @@ and HRRR-B with the ReadTheDocs theme.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">⚙ Code</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="synoptic.html">SynopticPy Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="synoptic.html">SynopticPy Functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="synoptic.html#services">Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="synoptic.html#synoptic-api-documentation">Synoptic API Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="synoptic.html#station-selector-parameters">Station Selector Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="synoptic.html#other-common-parameters">Other Common Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="synoptic.html#plots">Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="synoptic.html#synoptic-api-token">Synoptic API Token</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <p>📔 [Documentation](<a class="reference external" href="https://blaylockbk.github.io/SynopticPy/_build/html/">https://blaylockbk.github.io/SynopticPy/_build/html/</a>)</p>
@@ -235,7 +248,7 @@ you will be prompted to update the token in the config file.</p>
 <p>## 📝 Jupyter Notebook Examples</p>
 <p>I have provided a number of [notebooks](<a class="reference external" href="https://github.com/blaylockbk/SynopticPy/tree/master/notebooks">https://github.com/blaylockbk/SynopticPy/tree/master/notebooks</a>) on GitHub that contain some practical examples for importing and using these functions to get and show station data.</p>
 <div class="section" id="id15">
-<h2>—<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<h1>—<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h1>
 <p># <cite>synoptic/</cite></p>
 <p>## ⚙ <cite>config.cfg</cite>
 A configuration file with your Synoptic API token. This token is required to make any data request from the Synoptic API.</p>
@@ -298,7 +311,7 @@ There is a separate function for each of the Synoptic Mesonet API services as de
 1. ~~🏗 <cite>stations_qcsegments</cite> - Quality control for a period [Synoptic Docs 🔗](<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/qcsegments/)~~">https://developers.synopticdata.com/mesonet/v2/stations/qcsegments/)~~</a></p>
 </div>
 <div class="section" id="id16">
-<h2>—<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<h1>—<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h1>
 <p>## 🧭 Function Parameters
 Function arguments are stitched together to create a web query. The parameters you can use to filter the data depend on the API service. Synoptic’s [API Explorer](<a class="reference external" href="https://developers.synopticdata.com/mesonet/explorer/">https://developers.synopticdata.com/mesonet/explorer/</a>) can help you determine what parameters can be used for each service.</p>
 <p>If the Synoptic API is new to you, I recommend you become familiar with the [Station Selector arguments](<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/station-selectors/">https://developers.synopticdata.com/mesonet/v2/station-selectors/</a>) first. These parameters key in on specific stations or a set of stations within an area of interest (<cite>stid</cite>, <cite>radius</cite>, <cite>vars</cite>, <cite>state</cite>, etc.).</p>
@@ -446,7 +459,6 @@ or
 <p>If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.</p>
 <p><strong>Best of Luck 🍀</strong>
 -Brian</p>
-</div>
 </div>
 
 
