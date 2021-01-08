@@ -14,9 +14,11 @@ API Reference
 
 .. toctree::
    :glob:
-   :maxdepth: 2
+   :maxdepth: 3
+   :hidden:
 
    /reference_guide
+   /contribute
 
 The `Synoptic Mesonet API <https://synopticdata.com/mesonet-api>`_ (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is free up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a paid tier is available (through Synoptic, not me).
 
