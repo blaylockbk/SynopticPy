@@ -2,10 +2,11 @@
 ## September 1, 2020
 
 """
-=====
-Plots
-=====
+==========
+📈 Plots
+==========
 Quick plots from the Synoptic API
+
 """
 import numpy as np
 import matplotlib.pyplot as plt

@@ -2,9 +2,9 @@
 ## January 8, 2020
 
 """
-=====================
-🎟 Synoptic API Token
-=====================
+======================
+🎫 Synoptic API Token
+======================
 SynopticPy needs to know your public Synoptic API token.
 You likely wont need to do anything with these functions. 
 The first time you import a ``synoptic.services`` function, it will 

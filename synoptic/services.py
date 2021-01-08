@@ -10,9 +10,11 @@ Get mesonet data from the `Synoptic API services
 Pandas.DataFrame. Requires a `Synoptic API token 
 <https://synopticlabs.org/api/guides/?getstarted>`_
 
-Before you get started, please become familiar with the
-`Synoptic API developers documentation 
-<https://developers.synopticdata.com/mesonet/v2/>`_.
+.. info::
+
+    Before you get started, please become familiar with the
+    `Synoptic API developers documentation 
+    <https://developers.synopticdata.com/mesonet/v2/>`_.
 
 
 Station Selector Parameters
@@ -671,7 +673,7 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     Examples
     --------
     .. code:: python
-    
+
         stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
 
     """
