@@ -561,24 +561,25 @@ Or, give a timedelta. For example: <code class="docutils literal notranslate"><s
 <span class="pre">or</span> <span class="pre">``recent=pd.to_timedelta('1D')</span></code></p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="s1">&#39;UKBKB,10&#39;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;KMRY&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">obtimezone</span><span class="o">=</span><span class="s1">&#39;Local&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;temp|F&#39;</span><span class="p">)</span>
+<p>Other params include <code class="docutils literal notranslate"><span class="pre">obtimezone</span></code>, <code class="docutils literal notranslate"><span class="pre">units</span></code>, and any
+<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/station-selectors/">Station Selector</a>
+parameter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">stations_timeseries</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="s1">&#39;UKBKB,10&#39;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;KMRY&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">obtimezone</span><span class="o">=</span><span class="s1">&#39;Local&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;temp|F&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">DateFormatter</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dew_point_temperature&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">DateFormatter</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dew_point_temperature&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span>
 </pre></div>
 </div>
 </div></blockquote>
-<dl>
-<dt>%H:%M’))</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
+<dl class="simple">
+<dt>%H:%M’))</dt><dd><p>plt.legend()</p>
 </dd>
 </dl>
 </dd></dl>
