@@ -68,11 +68,13 @@ def test_token(verbose=True, configure_on_fail=True):
     Parameters
     ----------
     configure_on_fail : bool
+        
         - True: Help the user update the config file with ``config_token``
         - False: Do not update (prevents infinant loop if user keeps
         adding an invalid token).
 
     verbose : bool
+        
         - True: Print details as this function runs.
         - False: Do not print anything if the token check passes.
 
