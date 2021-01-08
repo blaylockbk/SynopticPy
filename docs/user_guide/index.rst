@@ -5,8 +5,8 @@ User Guide
 .. toctree::
    :maxdepth: 4
 
-   install.md
-   setup.md
+   install
+   setup
    examples
-   contribute.md
+   contribute
 
