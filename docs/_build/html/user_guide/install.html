@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Guide &#8212; SynopticPy Docs 0.1 documentation</title>
+    <title>🐍 Installation and Conda Environment &#8212; SynopticPy Docs 0.1 documentation</title>
     
   <link rel="stylesheet" href="../_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -40,8 +40,8 @@
     <link rel="shortcut icon" href="../_static/wxicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="👨🏻‍🏭 Contributing Guidelines" href="contribute.html" />
-    <link rel="prev" title="The Synoptic API for Python (unofficial)" href="../index.html" />
+    <link rel="next" title="Reference Guide" href="../reference_guide.html" />
+    <link rel="prev" title="👨🏻‍🏭 Contributing Guidelines" href="contribute.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -64,7 +64,7 @@
         
         
         <li class="nav-item active">
-            <a class="nav-link" href="">User Guide</a>
+            <a class="nav-link" href="index.html">User Guide</a>
         </li>
         
         <li class="nav-item ">
@@ -129,8 +129,8 @@
             
           
             
-                <li class="">
-                    <a href="install.html">🐍 Installation and Conda Environment</a>
+                <li class="active">
+                    <a href="">🐍 Installation and Conda Environment</a>
                 </li>
             
           
@@ -147,9 +147,24 @@
           
           <div class="d-none d-xl-block col-xl-2 bd-toc">
               
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
 
 <nav id="bd-toc-nav">
     <ul class="nav section-nav flex-column">
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#option-1-pip" class="nav-link">Option 1: pip</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#option-2-conda" class="nav-link">Option 2: conda</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#alternative-install-method" class="nav-link">Alternative “Install” Method</a>
+        </li>
     
     </ul>
 </nav>
@@ -157,7 +172,7 @@
 
 
 <div class="tocsection editthispage">
-    <a href="https://github.com/blaylockbk/SynopticPy/edit/master/docs/user_guide/index.rst">
+    <a href="https://github.com/blaylockbk/SynopticPy/edit/master/docs/user_guide/install.md">
         <i class="fas fa-pencil-alt"></i> Edit this page
     </a>
 </div>
@@ -171,18 +186,45 @@
               
               <div>
                 
-  <div class="section" id="user-guide">
-<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="contribute.html">👨🏻‍🏭 Contributing Guidelines</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">🐍 Installation and Conda Environment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#option-1-pip">Option 1: pip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#option-2-conda">Option 2: conda</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#alternative-install-method">Alternative “Install” Method</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="installation-and-conda-environment">
+<h1>🐍 Installation and Conda Environment<a class="headerlink" href="#installation-and-conda-environment" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="option-1-pip">
+<h2>Option 1: pip<a class="headerlink" href="#option-1-pip" title="Permalink to this headline">¶</a></h2>
+<p>Install the last published version from PyPI. This requires the following are already installed:<br /><code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">pandas</span></code>, <code class="docutils literal notranslate"><span class="pre">requests</span></code>. It’s optional, but you will want <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, and <code class="docutils literal notranslate"><span class="pre">cartopy</span></code>, too.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install SynopticPy
+</pre></div>
+</div>
+</div>
+<div class="section" id="option-2-conda">
+<h2>Option 2: conda<a class="headerlink" href="#option-2-conda" title="Permalink to this headline">¶</a></h2>
+<p>If conda environments are new to you, I suggest you become familiar with <a class="reference external" href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html">managing conda environments</a>.</p>
+<p>I have provided a sample Anaconda <a class="reference external" href="https://github.com/blaylockbk/SynopticPy/blob/master/environment.yml">environment.yml</a> file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file…there are two ways to install SynopticPy with pip. Comment out the lines you don’t want.</p>
+<p>For the latest development code:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">pip</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">git+https://github.com/blaylockbk/SynopticPy.git</span>
+</pre></div>
+</div>
+<p>For the latest published version</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span> <span class="nt">pip</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">SynopticPy</span>
+</pre></div>
+</div>
+<p>First, create the virtual environment with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda env create -f environment.yml
+</pre></div>
+</div>
+<p>Then, activate the <code class="docutils literal notranslate"><span class="pre">synoptic</span></code> environment. Don’t confuse this <em>environment</em> name with the <em>package</em> name.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate synoptic
+</pre></div>
+</div>
+<p>Occasionally, you might want to update all the packages in the environment.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda env update -f environment.yml
+</pre></div>
+</div>
+</div>
+<div class="section" id="alternative-install-method">
+<h2>Alternative “Install” Method<a class="headerlink" href="#alternative-install-method" title="Permalink to this headline">¶</a></h2>
+<p>There are several other ways to “install” a python package so you can import them. One alternatively is you can <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/blaylockbk/SynopticPy.git</span></code> this repository to any directory. To import the package, you will need to update your PYTHONPATH environment variable to find the directory you put this package or add the line <code class="docutils literal notranslate"><span class="pre">sys.path.append(&quot;/path/to/SynotpicPy&quot;)</span></code> at the top of your python script.</p>
 </div>
 </div>
 
@@ -192,8 +234,8 @@
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="../index.html" title="previous page">The Synoptic API for Python (unofficial)</a>
-    <a class='right-next' id="next-link" href="contribute.html" title="next page">👨🏻‍🏭 Contributing Guidelines</a>
+    <a class='left-prev' id="prev-link" href="contribute.html" title="previous page">👨🏻‍🏭 Contributing Guidelines</a>
+    <a class='right-next' id="next-link" href="../reference_guide.html" title="next page">Reference Guide</a>
 
               </div>
               

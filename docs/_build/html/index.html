@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>☁ The Synoptic API for Python (unofficial) &#8212; SynopticPy Docs 0.1 documentation</title>
+    <title>The Synoptic API for Python (unofficial) &#8212; SynopticPy Docs 0.1 documentation</title>
     
   <link rel="stylesheet" href="_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
 
@@ -140,14 +140,6 @@
     <ul class="nav section-nav flex-column">
     
         <li class="nav-item toc-entry toc-h2">
-            <a href="#api-reference" class="nav-link">API Reference</a>
-        </li>
-    
-        <li class="nav-item toc-entry toc-h2">
-            <a href="#contributing-guidelines" class="nav-link">Contributing Guidelines</a>
-        </li>
-    
-        <li class="nav-item toc-entry toc-h2">
             <a href="#install" class="nav-link">🐍 Install</a>
         </li>
     
@@ -181,23 +173,18 @@
                 
   <img alt="_images/SynopticPy_logo.png" src="_images/SynopticPy_logo.png" />
 <div class="section" id="the-synoptic-api-for-python-unofficial">
-<h1>☁ The Synoptic API for Python (unofficial)<a class="headerlink" href="#the-synoptic-api-for-python-unofficial" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="api-reference">
-<h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
+<h1>The Synoptic API for Python (unofficial)<a class="headerlink" href="#the-synoptic-api-for-python-unofficial" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 <p>The <a class="reference external" href="https://synopticdata.com/mesonet-api">Synoptic Mesonet API</a> (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is free up to 5,000 API requests and 5 million service units each month. That’s a generous amount, but if you need even more data, a paid tier is available (through Synoptic, not me).</p>
+<div class="figure align-default">
+<a class="reference internal image-reference" href="_images/synoptic_logo.png"><img alt="_images/synoptic_logo.png" src="_images/synoptic_logo.png" style="width: 300px;" /></a>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>🌐 Register for a free account at the <a class="reference external" href="https://developers.synopticdata.com">Synoptic API Webpage</a>. You will need to obtain an API token before using this python package.</p>
 </div>
 <p>I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a <a class="reference external" href="https://pandas.pydata.org/docs/">Pandas DataFrame</a>. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete <a class="reference external" href="https://github.com/mesowx/MesoPy">MesoPy</a> python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more ready-to-use.</p>
-</div>
-<div class="section" id="contributing-guidelines">
-<h2>Contributing Guidelines<a class="headerlink" href="#contributing-guidelines" title="Permalink to this headline">¶</a></h2>
-<p>Since this package is a work in progress, it is distributed “as is.” I do not make any guarantee it will work for you out of the box. In fact, this is my first experience publishing a package to PyPI. Any revisions I make are purely for my benefit. Sorry if I break something, but I usually only push updates to GitHub if the code is in a reasonably functional state (at least, in the way I use it).</p>
-<p>With that said, I am happy to share this project with you. You are welcome to open issues and submit pull requests, but know that I may or may not get around to doing anything about it. If this is helpful to you in any way, I’m glad.</p>
-</div>
 <div class="section" id="install">
 <h2>🐍 Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
 <p>Option 1</p>

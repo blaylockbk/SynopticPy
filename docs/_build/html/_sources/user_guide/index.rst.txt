@@ -6,3 +6,4 @@ User Guide
    :maxdepth: 2
 
    contribute
+   install.md
