@@ -532,10 +532,8 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         Or, give a timedelta. For example: ``recent=timedelta(day=2)` 
         or ``recent=pd.to_timedelta('1D')``
    
-    Other params include ``obtimezone``, ``units``, and any
-    `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
-    parameter.
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
     
     Examples
     --------
@@ -663,10 +661,8 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     within : int
         How long ago is the oldest observation you want to receive, in minutes.
         
-    Other params include ``obtimezone``, ``units``, and any
-    `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
-    parameter.
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
     
     Examples
     --------
@@ -711,10 +707,8 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     within : int
         Number of minutes to consider.
     
-    Other params include ``obtimezone``, ``units``, and any
-    `Station Selector
-    <https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
-    parameter.
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
 
     Examples
     --------
