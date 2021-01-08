@@ -7,6 +7,5 @@ User Guide
 
    install.md
    setup.md
-   example.md
    contribute.md
 
