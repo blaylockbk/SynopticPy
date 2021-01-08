@@ -517,12 +517,12 @@ Requires <cite>start</cite> and <cite>end</cite> <em>or</em> <cite>recent</cite>
 <dl class="py function">
 <dt id="synoptic.services.stations_timeseries">
 <code class="sig-prename descclassname">synoptic.services.</code><code class="sig-name descname">stations_timeseries</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">rename_set_1</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">params</span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_timeseries" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Get station data for time series.</p>
+<dd><p>Get station data for time series.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/">https://developers.synopticdata.com/mesonet/v2/stations/timeseries/</a></p>
-<p>rename_set_1 : bool</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rename_set_1</strong> (<em>bool</em>) – <ul>
 <li><p>True: Rename the DataFrame columns to not include the set_1
 or set_1d in the name. I prefer these names to more easily
 key in on the variables I want.
@@ -549,40 +549,15 @@ show how the columns were renamed.
 You may also look at the ‘SENSOR_VARIABLES’ attribute for
 more specific information, like how each set is derived.</p>
 </div>
-</div></blockquote>
-<dl class="simple">
-<dt>**params<span class="classifier">keyword arguments</span></dt><dd><p>Synoptic API arguments used to specify the data request.
-<strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> argument <em>or</em> <code class="docutils literal notranslate"><span class="pre">recent</span></code>.</p>
-</dd>
-<dt>start, end<span class="classifier">datetime</span></dt><dd><p>Start and end of time series</p>
-</dd>
-<dt>recent<span class="classifier">int or timedelta</span></dt><dd><p>If int, given as minutes for recent observations.
+</p></li>
+<li><p><strong>**params</strong> (<em>keyword arguments</em>) – Synoptic API arguments used to specify the data request.
+<strong>Must include</strong> <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> argument <em>or</em> <code class="docutils literal notranslate"><span class="pre">recent</span></code>.</p></li>
+<li><p><strong>start</strong> (<em>datetime</em>) – Start and end of time series</p></li>
+<li><p><strong>end</strong> (<em>datetime</em>) – Start and end of time series</p></li>
+<li><p><strong>recent</strong> (<em>int</em><em> or </em><em>timedelta</em>) – If int, given as minutes for recent observations.
 Or, give a timedelta. For example: <code class="docutils literal notranslate"><span class="pre">recent=timedelta(day=2)`</span>
-<span class="pre">or</span> <span class="pre">``recent=pd.to_timedelta('1D')</span></code></p>
-</dd>
-</dl>
-<p>Other params include <code class="docutils literal notranslate"><span class="pre">obtimezone</span></code>, <code class="docutils literal notranslate"><span class="pre">units</span></code>, and any
-<a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/station-selectors/">Station Selector</a>
-parameter.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="s1">&#39;UKBKB,10&#39;</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;KMRY&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="n">obtimezone</span><span class="o">=</span><span class="s1">&#39;Local&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;temp|F&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Plot Air Temperature</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">DateFormatter</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="n">recent</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dew_point_temperature&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span>
-</pre></div>
-</div>
-</div></blockquote>
-<dl>
-<dt>%H:%M’))</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-</pre></div>
-</div>
+<span class="pre">or</span> <span class="pre">``recent=pd.to_timedelta('1D')</span></code></p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
