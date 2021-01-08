@@ -1,5 +1,7 @@
 # 🤹🏻‍♂️ Usage Examples
 
+## Import Functions
+
 There is a separate function for each of the Synoptic Mesonet API services as described in the [Synotpic documentation](https://developers.synopticdata.com/mesonet/v2/).
 
 Import all the functions with
@@ -177,16 +179,3 @@ qc_mask = np.array([x is None for x in df.attrs['QC']['wind_speed_set_1']])
 df = df.loc[qc_mask]
 ```
 
-## 📈 `plots.py`
-### ***These are a work in progress***
-Some helpers for plotting data from the Synoptic API. 
-
-```python
-# Import all functions
-import synoptic.plots as sp
-```
-or
-```python
-# Import individual functions
-from synoptic.plots import plot_timeseries
-```

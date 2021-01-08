@@ -167,6 +167,10 @@
     <ul class="nav section-nav flex-column">
     
         <li class="nav-item toc-entry toc-h2">
+            <a href="#import-functions" class="nav-link">Import Functions</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
             <a href="#jupyter-notebook-examples" class="nav-link">📝 Jupyter Notebook Examples</a>
         </li>
     
@@ -208,16 +212,6 @@
             <a href="#quality-control-checks" class="nav-link">✅ Quality Control Checks</a>
         </li>
     
-        <li class="nav-item toc-entry toc-h2">
-            <a href="#plots-py" class="nav-link">📈 plots.py</a><ul class="nav section-nav flex-column">
-                
-        <li class="nav-item toc-entry toc-h3">
-            <a href="#these-are-a-work-in-progress" class="nav-link">These are a work in progress</a>
-        </li>
-    
-            </ul>
-        </li>
-    
     </ul>
 </nav>
 
@@ -240,6 +234,8 @@
                 
   <div class="section" id="usage-examples">
 <h1>🤹🏻‍♂️ Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="import-functions">
+<h2>Import Functions<a class="headerlink" href="#import-functions" title="Permalink to this headline">¶</a></h2>
 <p>There is a separate function for each of the Synoptic Mesonet API services as described in the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/">Synotpic documentation</a>.</p>
 <p>Import all the functions with</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">synoptic.services</span> <span class="k">as</span> <span class="nn">ss</span>
@@ -248,6 +244,7 @@
 <p>or import a specific function like</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">synoptic.services</span> <span class="kn">import</span> <span class="n">stations_timeseries</span>
 </pre></div>
+</div>
 </div>
 <div class="section" id="jupyter-notebook-examples">
 <h2>📝 Jupyter Notebook Examples<a class="headerlink" href="#jupyter-notebook-examples" title="Permalink to this headline">¶</a></h2>
@@ -402,22 +399,6 @@ what each QC check means and how many are flagged…</p>
 <span class="n">qc_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;QC&#39;</span><span class="p">][</span><span class="s1">&#39;wind_speed_set_1&#39;</span><span class="p">]])</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">qc_mask</span><span class="p">]</span>
 </pre></div>
-</div>
-</div>
-<div class="section" id="plots-py">
-<h2>📈 <code class="docutils literal notranslate"><span class="pre">plots.py</span></code><a class="headerlink" href="#plots-py" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="these-are-a-work-in-progress">
-<h3><em><strong>These are a work in progress</strong></em><a class="headerlink" href="#these-are-a-work-in-progress" title="Permalink to this headline">¶</a></h3>
-<p>Some helpers for plotting data from the Synoptic API.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import all functions</span>
-<span class="kn">import</span> <span class="nn">synoptic.plots</span> <span class="k">as</span> <span class="nn">sp</span>
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import individual functions</span>
-<span class="kn">from</span> <span class="nn">synoptic.plots</span> <span class="kn">import</span> <span class="n">plot_timeseries</span>
-</pre></div>
-</div>
 </div>
 </div>
 </div>
