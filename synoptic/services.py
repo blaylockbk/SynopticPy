@@ -898,21 +898,25 @@ def auth(helpme=True, verbose=True, **params):
     Examples
     --------
     List all tokens
+
     .. code:: python
     
         auth(helpme=False, apikey='YOUR_API_KEY', list=1)
     
     Create new token (tokens are disabled after 10 years)
+
     .. code:: python
     
         auth(helpme=False, apikey='YOUR_API_KEY')
     
     Create new token with expiration date
+
     .. code:: python
         
         auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
     
     Disable a token (not sure why this doesn't do anything)
+    
     .. code:: python
         
         auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')

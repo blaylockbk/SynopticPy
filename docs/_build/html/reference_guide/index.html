@@ -330,26 +330,22 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<p>List all tokens
-.. code:: python</p>
-<blockquote>
-<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’, list=1)</p>
-</div></blockquote>
-<p>Create new token (tokens are disabled after 10 years)
-.. code:: python</p>
-<blockquote>
-<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’)</p>
-</div></blockquote>
-<p>Create new token with expiration date
-.. code:: python</p>
-<blockquote>
-<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’, expire=datetime(2021,1,1))</p>
-</div></blockquote>
-<p>Disable a token (not sure why this doesn’t do anything)
-.. code:: python</p>
-<blockquote>
-<div><p>auth(helpme=False, apikey=’YOUR_API_KEY’, disable=’TOKEN’)</p>
-</div></blockquote>
+<p>List all tokens</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth</span><span class="p">(</span><span class="n">helpme</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">,</span> <span class="nb">list</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create new token (tokens are disabled after 10 years)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth</span><span class="p">(</span><span class="n">helpme</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create new token with expiration date</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth</span><span class="p">(</span><span class="n">helpme</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">,</span> <span class="n">expire</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Disable a token (not sure why this doesn’t do anything)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">auth</span><span class="p">(</span><span class="n">helpme</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">apikey</span><span class="o">=</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">,</span> <span class="n">disable</span><span class="o">=</span><span class="s1">&#39;TOKEN&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
