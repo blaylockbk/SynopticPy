@@ -13,7 +13,6 @@ API Reference
 -------------
 
 .. toctree::
-   :glob:
    :maxdepth: 3
    :hidden:
 
