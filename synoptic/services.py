@@ -702,7 +702,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     ----------
     rename_value_1 : bool
         Specify if ``value_1`` will be renamed.
-        -True: Rename the DataFrame index to not include the value_1
+        - True: Rename the DataFrame index to not include the value_1
         or value_1d in the name. I prefer these names to more easily
         key in on the variables I want. 
         Where there are both value_1 and value_1d for a variable, only
