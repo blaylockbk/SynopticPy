@@ -14,7 +14,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../..'))
 
-import sphinx_rtd_theme
+#import sphinx_rtd_theme
+import pydata_sphinx_theme
 
 
 # -- Project information -----------------------------------------------------
@@ -30,16 +31,28 @@ release = '0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_rtd_theme',
-              'nbsphinx',
-              'sphinx.ext.autodoc',
-              'sphinx.ext.autosectionlabel',
-              'sphinx.ext.napoleon',
-              #'sphinx.ext.jsmath',    # Can't seem to get the math function to work
-              'recommonmark', 
-              'autodocsumm',
-              'sphinx_markdown_tables'
+extensions = [
+    #'sphinx_rtd_theme',     # I'm not using this theme, use pydata_sphinx_theme
+    'nbsphinx',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.napoleon',
+    #'sphinx.ext.jsmath',    # Can't seem to get the math function to work
+    'recommonmark', 
+    'autodocsumm',
+    'sphinx_markdown_tables'
 ]
+
+# Set up mapping for other projects' docs
+intersphinx_mapping = {
+    'metpy': ('https://unidata.github.io/MetPy/latest/', None),
+    'pint': ('https://pint.readthedocs.io/en/stable/', None),
+    'matplotlib': ('https://matplotlib.org/', None),
+    'python': ('https://docs.python.org/3/', None),
+    'numpy': ('https://numpy.org/doc/stable/', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
+    'xarray': ('https://xarray.pydata.org/en/stable/', None)
+}
 
 source_suffix = {
     '.rst': 'restructuredtext',
@@ -64,26 +77,40 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
 #
 #html_theme = "sphinx_rtd_theme"
 html_theme = "pydata_sphinx_theme"
+
 html_theme_options = {
     'github_url': 'https://github.com/blaylockbk/SynopticPy',
-    "twitter_url": "https://twitter.com/blaylockbk",
-    #"navbar_align": "left",
+    'twitter_url': "https://twitter.com/blaylockbk",
+    'search_bar_position': 'navbar',
+    "use_edit_page_button": True,
+    "show_toc_level": 1,
     "external_links": [
       {"name": "GOES-2-go", "url": "https://blaylockbk.github.io/goes2go/_build/html/"},
       {"name": "HRRR-B", "url": "https://blaylockbk.github.io/HRRR_archive_download/_build/html/"}
   ]
 }
 
+html_sidebars = {
+}
+
 html_logo = "_static/SynopticPy_logo.png"
 html_favicon = "_static/wxicon.png"
+
+html_context = {
+    'github_user': 'blaylockbk',
+    'github_repo': 'SynopticPy',
+    'github_version': 'master',  # Make changes to the master branch
+    "doc_path": "docs",
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ['_static', '../images']
 
 html_css_files = [
-    #'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', ## DON"T NEED TO RELOAD BOOTSTRAP AGAIN FOR SOME THEMES!
+    # 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',  # the pydata theme already does this DO NOT LOAD IT AGAIN!
+    'brian_style.css'
 ]
 
 html_js_files = [
@@ -97,3 +124,13 @@ autodoc_default_options = {
 }
 
 autodoc_mock_imports = ["xesmf", "siphon", "imageio"]
+
+# -- Auto-convert markdown pages to demo --------------------------------------
+import recommonmark
+from recommonmark.transform import AutoStructify
+
+
+def setup(app):
+    app.add_transform(AutoStructify)
+
+# ^^I actually don't know what the above did, if it did anything
