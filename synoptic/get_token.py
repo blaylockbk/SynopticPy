@@ -1,32 +1,37 @@
 ## Brian Blaylock
-## September 11, 2020
+## January 8, 2020
+
 """
-==================
-Synoptic API Token
-==================
-The first time you import a synoptic.services function, it will check
-the API token in the config file. You can manually update that file, or
-let this script help you update it. 
+======================
+🎫 Synoptic API Token
+======================
+SynopticPy needs to know your public Synoptic API token.
+You likely wont need to do anything with these functions. 
+The first time you import a ``synoptic.services`` function, it will 
+ask you for your API token and store that information in 
+``~/.config/SynopticPy/config.cfg``. You may edit that config file if
+you need. Please refer to the :ref:`User Guide`. for more info.
+
 """
+
 import configparser
 from pathlib import Path
 import requests
 
-## Config File
-## -----------
-# Brian's has a special configuration file that is not passed to GitHub.
-# If that doesn't exist, then the default config file in this `synoptic`
-# directory is used.
-brians_config = Path('~').expanduser() / 'BB_credentials.cfg'
-default_config = Path(__file__).parent / 'config.cfg'
+config = configparser.ConfigParser()
 
-if brians_config.is_file():
-    _config_path = brians_config.resolve()
-else:
-    _config_path = default_config.resolve()
+# Config File contains the user's Synoptic API Token
+_config_path = Path('~').expanduser() / '.config' / 'SynopticPy' / 'config.cfg'
 
-
-print(_config_path)
+# Create the config file if it doesn't exists and set an empty token.
+if not _config_path.exists():
+    _config_path.parent.mkdir(parents=True)
+    _config_path.touch()
+    config.read(_config_path)
+    config.add_section('Synoptic')
+    config.set('Synoptic', 'token', '')
+    with open(_config_path, 'w') as configfile:
+        config.write(configfile)
 
 msg = f'''
     | Dear SynopticPy User,
@@ -53,31 +58,41 @@ msg = f'''
 
 def test_token(verbose=True, configure_on_fail=True):
     """
-    Test that the token in ``./config.cfg`` can get data from Synoptic.
+    Test that the token can get data from Synoptic.
     
     If the test fails, the user is prompted with instructions to acquire
     a valid token. The user will be asked what the token is, and will
-    save that info into the config file.
+    save that info into the config file located at 
+    ``~/.config/SynopticPy/config.cfg``.
     
     Parameters
     ----------
     configure_on_fail : bool
-        True - Help the user update the config file with ``config_token``
-        False - Don't update (prevents infinant loop if user keeps
-                adding an invalid token).
+        
+        - True: Help the user update the config file with ``config_token``
+        - False: Do not update (prevents infinant loop if user keeps adding an invalid token).
+
     verbose : bool
-        True - Print lots of details as this function runs.
-        False - Don't print anything if the token check passes.
+        
+        - True: Print details as this function runs.
+        - False: Do not print anything if the token check passes.
 
     Returns
     -------
     A valid API token
+
     """
     
     # Get the token from config.cfg
-    config = configparser.ConfigParser()
+    #config = configparser.ConfigParser()
     config.read(_config_path)
-    token = config.get('Synoptic', 'token')
+    try:
+        token = config.get('Synoptic', 'token')
+    except:
+        print(f'🦁🐯🐻 oh my! {_config_path} looks weird, but I will add a new section')
+        config.add_section('Synoptic')
+        config.set('Synoptic', 'token', '')
+        token = config.get('Synoptic', 'token')
     if token == '':
         # There isn't an API token defined, so configure one.
         return config_token()
@@ -91,7 +106,7 @@ def test_token(verbose=True, configure_on_fail=True):
     response = json['SUMMARY']['RESPONSE_MESSAGE']
     
     if response == 'OK':
-        if verbose: print(f"👨🏻‍🎓 Passed. Response is {response}.")
+        if verbose: print(f"🔓 API Access Enabled. Response is [{response}].")
         return token
     else:
         print(f"🤦🏻‍♂️ Failed: {token} is not valid. {response}")
@@ -118,10 +133,11 @@ def config_token(new_token=None):
 
     Returns
     -------
-    A valid API token if it passes test_token. Else, None.
+    A valid API token, if it passes ``test_token``. Else, None.
+
     """
     # Get the current token value to display
-    config = configparser.ConfigParser()
+    #config = configparser.ConfigParser()
     config.read(_config_path)
     token = config.get('Synoptic', 'token')
 

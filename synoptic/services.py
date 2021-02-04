@@ -2,34 +2,36 @@
 ## August 13, 2020    COVID-19 Era
 
 """
-========
-Services
-========
-Get mesonet data from the Synoptic API services and return as Pandas.DataFrame.
+==================
+👨🏻‍💻 Services
+==================
+Get mesonet data from the `Synoptic API services 
+<https://developers.synopticdata.com/>`_ and return data as a
+Pandas.DataFrame. Requires a `Synoptic API token 
+<https://synopticlabs.org/api/guides/?getstarted>`_
 
-    https://developers.synopticdata.com/
+.. tip::
 
-Requires a Synoptic API token. You can get your own token here:
-
-    https://synopticlabs.org/api/guides/?getstarted
-
-Synoptic API Documentation
---------------------------
-https://developers.synopticdata.com/mesonet/v2/
+    Before you get started, please become familiar with the
+    `Synoptic API developers documentation 
+    <https://developers.synopticdata.com/mesonet/v2/>`_.
 
 
 Station Selector Parameters
 ---------------------------
-Queried station data can be refined with "Station Selector" arguments.
-Below are some more common ones. Read the API docs to  see others.
-https://developers.synopticdata.com/mesonet/v2/station-selectors/
+The fundamental method for specifying the data you query is done with
+**station selector arguments**. Below are some of the more common 
+paramaters. Read `Station Selectors
+<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__ 
+in the API documents for all options and capabilities.
 
     stid : str or list
         Specify which stations you want to get data for by Station ID.
         May be a single ID or list of IDs.
         ``['KSLC', 'UKBKB', 'KMRY']`` *or* ``'KSLC'``
     state : str or list
-        String or list of abbreviated state strings, i.e. ['UT','CA']
+        String or list of abbreviated state strings, 
+        i.e. ``['UT','CA']``
     radius : str
         Only return stations within a great-circle distance from a 
         specified lat/lon point or station (by STID). May be in form
@@ -37,30 +39,37 @@ https://developers.synopticdata.com/mesonet/v2/station-selectors/
     vars : str or list
         Filter stations by the variables they report.
         i.e., ``['air_temp', 'wind_speed', 'wind_direction', etc.]``
-        https://developers.synopticdata.com/about/station-variables/
+        Look at the `docs for more variables 
+        <https://developers.synopticdata.com/about/station-variables/>`_.
     varsoperator : {'and', 'or'}
-        Define how `vars` is understood.
-        Default is 'or', means any station with any variable is used.
-        while 'and' means a station must report every variable to be listed.
+        Define how  ``vars`` is understood.
+        Default ``'or'`` means any station with any variable is used.
+        However, ``'and'`` means a station must report every variable 
+        to be listed.
     network - int
-        Network ID number. (See network API service)
-        https://developers.synopticdata.com/about/station-providers/
+        Network ID number. See `network API service 
+        <https://developers.synopticdata.com/about/station-providers/>`_
+        for more information.
     limit : int
-        Specify how many of the closest stations you want to recieve.
-        limit=1 will only return the nearest station.
+        Specify how many of the closest stations you want to receive.
+        ``limit=1`` will only return the nearest station.
     bbox : [lonmin, latmin, lonmax, lonmin]
         Get stations within a bounding box.
     
 Other Common Parameters
 -----------------------
-units : {'metric', 'english'}
-    See documentation for more custom unit selection.
-    An example of a custom unit is ``units='temp|F'`` to set just
-    the temperature to degrees Fahrenheit.
-    For ``units='temp|K,pres|mb'``,temperatures to Kelvin and
-    pressures will be in hecto Pascals (mb, or hPa).
-obtimezone : {'UTC', 'local'}
-status : {'active', 'inactive'}
+    units : {'metric', 'english'}
+        See `documentation 
+        <https://developers.synopticdata.com/mesonet/v2/stations/latest/>`_
+        for more details on custom units selection.
+        An example of a custom unit is ``units='temp|F'`` to set just
+        the temperature to degrees Fahrenheit.
+        For ``units='temp|K,pres|mb'``,temperatures to Kelvin and
+        pressures will be in hecto Pascals (mb, or hPa).
+    obtimezone : {'UTC', 'local'}
+        Specify the time to be UTC or the station's local time.
+    status : {'active', 'inactive'}
+        Specify if the statation is active or inactive.
 
 .. note::
     These Datetimes have timezone information. When plotting,
@@ -69,7 +78,8 @@ status : {'active', 'inactive'}
     with timezone information. In that case, you can remove the datetime
     information with something like this:
     
-    ... code-block::
+    .. code-block:: python
+
         df.index.tz_localize(None)
 
 """
@@ -84,16 +94,22 @@ import pandas as pd
 
 from synoptic.get_token import token
 
-## Available API Services
-## https://developers.synopticdata.com/mesonet/v2/
-_service = {'auth', 'networks', 'networktypes', 'variables', 'qctypes'}
-_stations = {'metadata', 'timeseries', 'precipitation', 'nearesttime', 'latest'}
+# Available API Services
+# https://developers.synopticdata.com/mesonet/v2/
+_service = {
+    'auth', 'networks', 'networktypes', 'variables', 'qctypes'
+}
+_stations = {
+    'metadata', 'timeseries', 'precipitation', 'nearesttime', 'latest'
+}
 _service.update(_stations)
 
-## Station Selector Parameters
-_stn_selector = {'stid', 'country', 'state', 'country', 'status', 'nwszone',
-                 'nwsfirezone', 'cwa', 'gacc', 'subgacc', 'vars', 'varsoperator',
-                 'network', 'radius', 'limit', 'bbox', 'fields'}
+# Station Selector Parameters Set
+_stn_selector = {
+    'stid', 'country', 'state', 'country', 'status', 'nwszone',
+    'nwsfirezone', 'cwa', 'gacc', 'subgacc', 'vars', 'varsoperator',
+    'network', 'radius', 'limit', 'bbox', 'fields'
+}
 
 def spddir_to_uv(wspd, wdir):
     """
@@ -107,6 +123,7 @@ def spddir_to_uv(wspd, wdir):
     Returns
     -------
     u and v wind components
+
     """        
     if isinstance(wspd, list) or isinstance(wdir, list):
         wspd = np.array(wspd, dtype=float)
@@ -136,7 +153,8 @@ def _rename_set_1(df):
     Remove the 'set_1' and 'set_1d' from column names
     Sets 2+ will retain their full names. 
     The user should refer to SENSOR_VARIABLES to see which
-    varibales are derived
+    variables are derived
+
     """
 
     ## Get list of current column names
@@ -186,13 +204,15 @@ def _rename_value_1(df):
     """
     Rename Variable Row (index) Names
     
-    Remove the 'value_1' and 'value_1d' from column names
+    Remove the ``value_1`` and ``value_1d`` from column names. 
     Values 2+ will retain their full names. If both
-    'value_1' and 'value_1d' are returned, the newest
-    observation will be used as the main index while the older
-    will preserve the _value label.
+    ``value_1`` and ``value_1d`` are returned, the newest observation
+    will be used as the main index while the older will preserve the
+    ``_value`` label.
+
     The user should refer to SENSOR_VARIABLES to see which
     variables are derived.
+
     """
 
     ## Get list of current column names
@@ -238,7 +258,8 @@ def _rename_value_1(df):
 
 def _parse_latest_nearesttime(data, rename_value_1):
     """
-    Parsing JSON for `latest` and `nearesttime` is the same.
+    Parsing JSON for ``latest`` and ``nearesttime`` is the same.
+
     """
     # Here's a dictionary to store all SENSOR_VARIABLES and RENAMED
     # WARNING: Some of these could be overwritten
@@ -309,10 +330,10 @@ def _parse_latest_nearesttime(data, rename_value_1):
     
 def synoptic_api(service, verbose=True, **params):
     '''
-    Request data from the Synoptic API. Returns a *requests* object.
+    Request data from the Synoptic API. Returns a **requests** object.
         
-    API References
-    --------------
+    References
+    ----------
     - https://developers.synopticdata.com/mesonet/v2/
     - https://developers.synopticdata.com/mesonet/explorer/
     
@@ -323,12 +344,13 @@ def synoptic_api(service, verbose=True, **params):
         'nearesttime', 'networks', 'networktypes', 'precipitation',
         'qctypes', 'timeseries', 'variables'}
     verbose : {True, False, 'HIDE', 'hide'}
-        Print extra details to the screen.
-        If 'HIDE', then the token will be hidden.
-    **params : keyword arguments
+        Print extra details to the screen. If 'HIDE', then details will
+        be printed, but the token will be hidden.
+    \*\*params : keyword arguments
         API request parameters (arguments).
         Lists will be converted to a comma-separated string.
-        Datetimes (datetime or pandas) will be parsed by f-string to YYYYmmddHHMM.
+        Datetimes (datetime or pandas) will be parsed by f-string to
+        YYYYmmddHHMM.
     
     Returns
     -------
@@ -338,9 +360,13 @@ def synoptic_api(service, verbose=True, **params):
     --------
     To read the json data for metadata for a station
     
-    >>> synoptic_api('metadata', stid='WBB').json()
+    .. code:: python
     
-    >>> synoptic_api('metadata', stid=['WBB', 'KSLC']).json()
+        synoptic_api('metadata', stid='WBB').json()
+    
+    .. code:: python
+        
+        synoptic_api('metadata', stid=['WBB', 'KSLC']).json()
     
     '''   
     help_url = 'https://developers.synopticdata.com/mesonet/v2/'
@@ -429,12 +455,13 @@ def stations_metadata(verbose=True, **params):
 
     Parameters
     ----------
-    **params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         e.g., sensorvars, obrange, obtimezone, etc.
         
     Others: STATION SELECTION PARAMETERS
     https://developers.synopticdata.com/mesonet/v2/station-selectors/
+
     """
     assert any([i in _stn_selector for i in params]), \
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
@@ -475,15 +502,16 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     Parameters
     ----------
     rename_set_1 : bool
-        True - Rename the DataFrame columns to not include the set_1
+        
+        - True: Rename the DataFrame columns to not include the set_1
           or set_1d in the name. I prefer these names to more easily
           key in on the variables I want. 
           Where there are both set_1 and set_1d for a variable, only the
           column with the most non-NaN values will be renamed. 
-        False - Perserve the original column names.
+        - False: Perserve the original column names.
         
         .. note:: 
-            Observations returned from the Synotpic API are returned 
+            Observations returned from the Synoptic API are returned 
             with set numbers ("air_temp_set_1", "air_temp_set_2",
             "dew_point_temperature_set_1d", etc.). The set number refers
             to a different observing method (maybe a station has two 
@@ -500,9 +528,9 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
             You may also look at the 'SENSOR_VARIABLES' attribute for 
             more specific information, like how each set is derived.        
         
-    **params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
-        **Must include ``start`` and ``end`` argument *or* ``recent``.**  
+        **Must include** ``start`` and ``end`` argument *or* ``recent``.  
     start, end : datetime
         Start and end of time series
     recent : int or timedelta
@@ -510,23 +538,28 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         Or, give a timedelta. For example: ``recent=timedelta(day=2)` 
         or ``recent=pd.to_timedelta('1D')``
    
-    Others: obtimezone, units, and STATION SELECTION PARAMETERS
-    https://developers.synopticdata.com/mesonet/v2/station-selectors/
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
     
     Examples
     --------
-    >>> stations_timeseries(stid='WBB', recent=100)
-    >>> stations_timeseries(radius='UKBKB,10', vars='air_temp', recent=100)
-    >>> stations_timeseries(stid='KMRY', recent=60, vars='air_temp', obtimezone='Local', units='temp|F')
+
+    .. code:: python
+
+        stations_timeseries(stid='WBB', recent=100)
+        stations_timeseries(radius='UKBKB,10', vars='air_temp', recent=100)
+        stations_timeseries(stid='KMRY', recent=60, vars='air_temp', obtimezone='Local', units='temp|F')
     
-    Plot Air Temperature
-    >>> import matplotlib.pyplot as plt
-    >>> from matplotlib.dates import DateFormatter
-    >>> df = stations_timeseries(stid='WBB', recent=300)
-    >>> plt.plot(df['air_temp'])
-    >>> plt.plot(df['dew_point_temperature'])
-    >>> plt.gca().xaxis.set_major_formatter(DateFormatter('%b %d\n%H:%M'))
-    >>> plt.legend()
+    .. code:: python
+        
+        import matplotlib.pyplot as plt
+        from matplotlib.dates import DateFormatter
+        df = stations_timeseries(stid='WBB', recent=300)
+        plt.plot(df['air_temp'])
+        plt.plot(df['dew_point_temperature'])
+        plt.gca().xaxis.set_major_formatter(DateFormatter('%b %d %H:%M'))
+        plt.legend()
+
     """
     check1 = 'start' in params and 'end' in params
     check2 = 'recent' in params
@@ -618,26 +651,31 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     Parameters
     ----------
     rename_value_1 : bool
-        True - Rename the DataFrame index to not include the value_1
+        
+        - True: Rename the DataFrame index to not include the value_1
           or value_1d in the name. I prefer these names to more easily
           key in on the variables I want. 
           Where there are both value_1 and value_1d for a variable, only
           the most recent value will be renamed. 
-        False - Perserve the original index names.
-    **params : keyword arguments
+        - False: Perserve the original index names.
+
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
-        **Must include ``attime`` and ``within``**   
+        **Must include** ``attime`` and ``within``
     attime : datetime
         Datetime you want to the the nearest observations for.
     within : int
         How long ago is the oldest observation you want to receive, in minutes.
         
-    Other: obtimezone, units, STATION SELECTION PARAMETERS:
-    https://developers.synopticdata.com/mesonet/v2/station-selectors/
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
     
     Examples
     --------
-    >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+    .. code:: python
+
+        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+
     """
     assert 'attime' in params, "🤔 `attime` is a required parameter (datetime)."
     assert any([i in _stn_selector for i in params]), \
@@ -663,24 +701,32 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     Parameters
     ----------
     rename_value_1 : bool
-        True - Rename the DataFrame index to not include the value_1
-          or value_1d in the name. I prefer these names to more easily
-          key in on the variables I want. 
-          Where there are both value_1 and value_1d for a variable, only
-          the most recent value will be renamed. 
-        False - Perserve the original index names.
-    **params : keyword arguments
+        Option to rename the DataFrame index to not include the 
+        ``value_1`` or ``value_1d`` in the name. I prefer that the
+        column names strips this part of the string to more easily key
+        in on the variables I want. For situations where there are both
+        ``value_1`` and ``value_1d`` for a variable, only the most 
+        recent value will be renamed.
+
+        - True: Strip ``value_1`` from the column variable names.
+        - False: Perserve the original index names.
+        
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
-        **Must include ``within``.**
+        **Must include** ``within``.
     within : int
         Number of minutes to consider.
     
-    Others: obtimezone, units, STATION SELECTION PARAMETERS:
-    https://developers.synopticdata.com/mesonet/v2/station-selectors/
-        
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
+
     Examples
     --------
-    >>> stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+    
+    .. code:: python
+    
+        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
+
     """
     assert any([i in _stn_selector for i in params]), \
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
@@ -704,9 +750,13 @@ def stations_precipitation(verbose=True, **params):
 
     Parameters
     ----------
-    **params : keyword arguments
+    \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
-        Requires `start` and `end` *or* `recent`.    
+        Requires `start` and `end` *or* `recent`.
+
+    Other params include ``obtimezone``, ``units``, and any Station 
+    Selector parameter.
+
     """
     print("🙋🏼‍♂️ HI! THIS FUNCTION IS NOT COMPLETED YET. WILL JUST RETURN JSON.")
     
@@ -735,13 +785,17 @@ def networks(verbose=True, **params):
     id : int or list of int
         Filter by network number.
     shortname : str or list of str
-        Netork shortname, i.e. 'NWS/FAA', 'RAWS', 'UTAH DOT',         
+        Network shortname, i.e. 'NWS/FAA', 'RAWS', 'UTAH DOT',         
+
     """
     # Get the data
     web = synoptic_api('networks', verbose=verbose, **params)
     data = web.json()
     
     df = pd.DataFrame(data['MNET'])
+    df['ID'] = df['ID'].astype(int)
+    df['CATEGORY'] = df['CATEGORY'].astype(int)
+    df['REPORTING_STATIONS'] = df['REPORTING_STATIONS'].astype(int)
     df.set_index('ID', inplace=True)
     df['LAST_OBSERVATION'] = pd.to_datetime(df.LAST_OBSERVATION)
     df.attrs['SUMMARY'] = data['SUMMARY']
@@ -757,9 +811,10 @@ def networktypes(verbose=True, **params):
     
     Parameters
     ----------
-    **params : keyword arguments
+    \*\*params : keyword arguments
     id : int
         Select just the network type you want
+
     """
     
     # Get the data
@@ -805,7 +860,8 @@ def qctypes(verbose=True, **params):
     Parameters
     ----------
     **param : keyword arguments
-        Available parameters include `id` and `shortname`
+        Available parameters include ``id`` and ``shortname``
+
     """
     # Get the data
     web = synoptic_api('qctypes', verbose=verbose, **params)
@@ -844,16 +900,29 @@ def auth(helpme=True, verbose=True, **params):
     Examples
     --------
     List all tokens
-    >>> auth(helpme=False, apikey='YOUR_API_KEY', list=1)
+
+    .. code:: python
+    
+        auth(helpme=False, apikey='YOUR_API_KEY', list=1)
     
     Create new token (tokens are disabled after 10 years)
-    >>> auth(helpme=False, apikey='YOUR_API_KEY')
+
+    .. code:: python
+    
+        auth(helpme=False, apikey='YOUR_API_KEY')
     
     Create new token with expiration date
-    >>> auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
+
+    .. code:: python
+        
+        auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
     
     Disable a token (not sure why this doesn't do anything)
-    >>> auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
+
+    .. code:: python
+        
+        auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
+
     """
     if helpme:
         web = 'https://developers.synopticdata.com/settings/'
@@ -863,9 +932,11 @@ def auth(helpme=True, verbose=True, **params):
         web = synoptic_api('auth', verbose=verbose, **params)
         data = web.json()
         return data
-    
+
+
+
 # Other Services
 #---------------
 # stations_precipitation : *NOT FINISHED
 # stations_latency : *NOT CURRENTLY AVAILABLE
-# stations_qcsegments :
+# stations_qcsegments : ???

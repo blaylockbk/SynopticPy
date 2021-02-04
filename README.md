@@ -1,3 +1,4 @@
+📔 [Documentation](https://blaylockbk.github.io/SynopticPy/_build/html/)
 
 |![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/Balloon_logo/balloon_bkb_sm.png)|**Brian Blaylock**<br>🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)<br> 🎉This is my first PyPI package|
 |:--|:--|
@@ -90,14 +91,11 @@ I have provided a number of [notebooks](https://github.com/blaylockbk/SynopticPy
 
 # `synoptic/`
 
-## ⚙ `config.cfg`
-A configuration file with your Synoptic API token. This token is required to make any data request from the Synoptic API.
-
 ## 🎟 `get_token.py`
 This function performs a test on the token in the `config.cfg` file. If the token is valid, you are good to go. If not, then you will be prompted to edit the `config.cfg` file when you import any function from `synoptic.services`.
 
 ## 👨🏻‍💻 `services.py`
-This is the main module you will interacti with. It contains functions for making API requests and returns the data as a Pandas DataFrame.
+This is the main module you will interact with. It contains functions for making API requests and returns the data as a Pandas DataFrame.
 
 ```python
 # Import all functions
@@ -265,11 +263,31 @@ Some tips:
 For example:
 
 ```python
-stations_timeseries(stid='UKBKB', recent=60, qc_checks='synopticlabs')
+df = stations_timeseries(stid='UKBKB', recent=60, qc_checks='synopticlabs')
 ```
 or
 ```python
-stations_timeseries(stid='UKBKB', recent=60, qc_checks='all')
+df = stations_timeseries(stid='UKBKB', recent=60, qc_checks='all')
+```
+
+Look at the QC_SUMMARY in the DataFrame attributes to see some info about
+what each QC check means and how many are flagged...
+```python
+df.attrs['QC_SUMMARY']
+>>>{'QC_SHORTNAMES': {'18': 'ma_stat_cons_check', '16': 'ma_temp_cons_check'},
+    'QC_CHECKS_APPLIED': ['all'],
+    'PERCENT_OF_TOTAL_OBSERVATIONS_FLAGGED': 2.03,
+    'QC_SOURCENAMES': {'18': 'MADIS', '16': 'MADIS'},
+    'TOTAL_OBSERVATIONS_FLAGGED': 750.0,
+    'QC_NAMES': {'18': 'MADIS Spatial Consistency Check', '16': 'MADIS Temporal Consistency Check'}}
+```
+
+You might be able to find a better way to mask out those QC'ed values, but here is one method for the QC check for *wind_speed_set_1*:
+
+```python
+# Identify which ones "passed" the QC checks (these have None in the QC array)
+qc_mask = np.array([x is None for x in df.attrs['QC']['wind_speed_set_1']])
+df = df.loc[qc_mask]
 ```
 
 ## 📈 `plots.py`
