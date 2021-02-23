@@ -400,29 +400,42 @@ def synoptic_api(service, verbose=True, **params):
         if isinstance(value, list) and key not in ['obrange']:
             params[key] = ','.join(value)
 
-    ## 3) Datetimes should be string: 'YYYYmmddHHMM' (obrange is 'YYYYmmdd')
+    ## 3) Datetimes should be converted to string: 'YYYYmmddHHMM' (obrange is 'YYYYmmdd')
     for i in ['start', 'end', 'expire', 'attime']:
-        if i in params and not isinstance(params[i], str):
+        if i in params:
+            date = params[i]
+            if isinstance(date, str) and len(date) >= 8 and date.isnumeric():
+                # Put into a string that is recognized by Pandas
+                date = f"{date[:8]} {date[8:]}"   # formatted as "YYYYmmdd HH"
+            try:
+                # Try to convert input to a Pandas Datetime
+                params[i] = pd.to_datetime(date)
+            except:
+                warnings.warn(f"🐼 Pandas could not parse [{i}={date}] as a datetime.")
+            # Format the datetime as a Synoptic-recognized string.
             params[i] = f"{params[i]:%Y%m%d%H%M}"
+    ## 4) Special case for 'obrange' parameter dates...
     if 'obrange' in params and not isinstance(params['obrange'], str): 
         # obrange could be one date or a list of two dates.
         if not hasattr(params['obrange'], '__len__'):
             params['obrange'] = [params['obrange']]
         params['obrange'] = ','.join([f'{i:%Y%m%d}' for i in params['obrange']])    
     
-    if 'recent' in params:
-        if hasattr(params['recent'], 'seconds'):
-            # If recent is a timedelta or pd.timedelta, convert to minutes.
-            params['recent'] = params['recent'] / timedelta(minutes=1)
-        # recent must be an int in minutes.
-        params['recent'] = np.ceil(params['recent']).astype(int) 
-
-    if 'within' in params:
-        if hasattr(params['within'], 'seconds'):
-            # If within is a timedelta or pd.timedelta, convert to minutes.
-            params['within'] = params['within'] / timedelta(minutes=1)
-        # within must be an int in minutes.
-        params['within'] = np.ceil(params['within']).astype(int) 
+    ## 5) Timedeltas should be converted to int in minutes...
+    for i in ['recent', 'within']:
+        if i in params:
+            dt = params[i]
+            if isinstance(dt, (int, float)):
+                dt = timedelta(minutes=dt)
+            try:
+                # Try to convert input to Pandas timedelta
+                params[i] = pd.to_timedelta(dt)
+            except:
+                warnings.warn(f"🐼 Pandas could not parse [{i}={dt}] as a timedelta.")
+            # Format the datetime as a Synoptic-recognized int of minutes
+            to_minutes = np.ceil(params[i] / timedelta(minutes=1)).astype(int) 
+            params[i] = to_minutes
+            if verbose: print(f'Checking for data {i}={params[i]} minutes.')
 
     ########################
     # Make the API request #
@@ -531,12 +544,16 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
     \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include** ``start`` and ``end`` argument *or* ``recent``.  
-    start, end : datetime
+    start, end : datetime, pandas Timestamp, or pandas.to_datetime-parsable str
         Start and end of time series
-    recent : int or timedelta
+    recent : int, timedelta, or Pandas Timedelta
         If int, given as minutes for recent observations.
-        Or, give a timedelta. For example: ``recent=timedelta(day=2)` 
-        or ``recent=pd.to_timedelta('1D')``
+        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`
+        and ``recent=pd.to_timedelta('1D')``.
+        Or, give a pandas-recognized timedelta-string, like '1W' for one
+        week, '1h' for one hour, etc. ``recent='1D'`` for one day.
+        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html
+        for additional units.
    
     Other params include ``obtimezone``, ``units``, and any Station 
     Selector parameter.
@@ -662,10 +679,17 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include** ``attime`` and ``within``
-    attime : datetime
+    attime : datetime, pandas Timestamp, or pandas.to_datetime-parsable str
         Datetime you want to the the nearest observations for.
-    within : int
-        How long ago is the oldest observation you want to receive, in minutes.
+    within : int, timedelta, or Pandas Timedelta
+        How long ago is the oldest observation you want to receive?
+        If int, given as minutes for recent observations.
+        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`
+        and ``recent=pd.to_timedelta('1D')``.
+        Or, give a pandas-recognized timedelta-string, like '1W' for one
+        week, '1h' for one hour, etc. ``recent='1D'`` for one day.
+        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html
+        for additional units.
         
     Other params include ``obtimezone``, ``units``, and any Station 
     Selector parameter.
@@ -682,7 +706,6 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
 
     params.setdefault('within', 60)
-    if verbose: print(f'Checking for data within {params["within"]} minutes.')
     
     # Get the data
     web = synoptic_api('nearesttime', verbose=verbose, **params)
@@ -714,8 +737,14 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     \*\*params : keyword arguments
         Synoptic API arguments used to specify the data request.
         **Must include** ``within``.
-    within : int
-        Number of minutes to consider.
+    within : int, timedelta, or Pandas Timedelta
+        If int, given as minutes for recent observations.
+        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`
+        and ``recent=pd.to_timedelta('1D')``.
+        Or, give a pandas-recognized timedelta-string, like '1W' for one
+        week, '1h' for one hour, etc. ``recent='1D'`` for one day.
+        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html
+        for additional units.
     
     Other params include ``obtimezone``, ``units``, and any Station 
     Selector parameter.
@@ -732,7 +761,6 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     f"🤔 Please assign a station selector (i.e., {_stn_selector})"
     
     params.setdefault('within', 60)
-    if verbose: print(f'Checking for data within {params["within"]} minutes.')
 
     # Get the data
     web = synoptic_api('latest', verbose=verbose, **params)
@@ -932,7 +960,6 @@ def auth(helpme=True, verbose=True, **params):
         web = synoptic_api('auth', verbose=verbose, **params)
         data = web.json()
         return data
-
 
 
 # Other Services
