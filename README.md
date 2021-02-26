@@ -8,7 +8,7 @@
 <!-- Badges -->
 [![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
 ![](https://img.shields.io/github/license/blaylockbk/SynopticPy)
-![](https://img.shields.io/pypi/dm/SynopticPy)
+[![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886)
 
 
 ![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png)
