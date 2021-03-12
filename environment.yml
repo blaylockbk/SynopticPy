@@ -21,6 +21,7 @@ dependencies:
   # Development Version from GitHub
   - pip:
     - git+https://github.com/blaylockbk/SynopticPy.git
+    - git+https://github.com/blaylockbk/Carpenter_Workshop.git  # "Can I borrow your hammer?"
     
   # Or, latest release from PyPI
   #- pip:

@@ -20,6 +20,7 @@ from synoptic.services import stations_timeseries
 
 I have provided a number of [notebooks on GitHub](https://github.com/blaylockbk/SynopticPy/tree/master/notebooks) that contain some practical examples for importing and using these functions to get and show station data.
 
+[![Binder](https://binder.pangeo.io/badge_logo.svg)](https://binder.pangeo.io/v2/gh/blaylockbk/SynopticPy/master)
 
 ## 🧭 Function Parameters
 Function arguments are stitched together to create a web query. The parameters you can use to filter the data depend on the API service. Synoptic's [API Explorer](https://developers.synopticdata.com/mesonet/explorer/) can help you determine what parameters can be used for each service.
