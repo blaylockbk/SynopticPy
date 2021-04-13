@@ -625,7 +625,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         df.dropna(how='all', inplace=True)
         
         
-        # In the DataFrame attributes, Convert some strings to flaot/int
+        # In the DataFrame attributes, Convert some strings to float/int
         # (i.e., ELEVATION, latitude, longitude) BUT NOT STID!
         for k, v in df.attrs.items():
             if isinstance(v, str) and k not in ['STID']:
