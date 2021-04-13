@@ -395,10 +395,11 @@ def synoptic_api(service, verbose=True, **params):
     params = {k.lower(): v for k, v in params.items()}
     
     ## 2) Join lists as comma separated strings.
-    ##    For example, stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY').
+    ##    For example, stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
+    ##                 radius=[40, -100, 10] --> radius='40,-100,10'
     for key, value in params.items():           
         if isinstance(value, list) and key not in ['obrange']:
-            params[key] = ','.join(value)
+            params[key] = ','.join([str(i) for i in value])
 
     ## 3) Datetimes should be converted to string: 'YYYYmmddHHMM' (obrange is 'YYYYmmdd')
     for i in ['start', 'end', 'expire', 'attime']:
