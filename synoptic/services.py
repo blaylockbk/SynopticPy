@@ -505,6 +505,7 @@ def stations_metadata(verbose=True, **params):
     df.attrs['UNITS'] = {'ELEVATION': 'ft'}
     df.attrs['SUMMARY'] = data['SUMMARY']
     df.attrs['params'] = params
+    df.attrs['service'] = 'stations_metadata'
     return df.transpose().sort_index()
 
 def stations_timeseries(verbose=True, rename_set_1=True, **params):
@@ -651,6 +652,7 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
                 df.attrs[i] = data[i]
         df.attrs['SENSOR_VARIABLES'] = senvars
         df.attrs['params'] = params
+        df.attrs['service'] = 'stations_timeseries'
         
         Z.append(df)
         
@@ -714,6 +716,7 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     
     df = _parse_latest_nearesttime(data, rename_value_1)
     df.attrs['params'] = params
+    df.attrs['service'] = 'stations_nearesttime'
     return df
 
 def stations_latest(verbose=True, rename_value_1=True, **params):
@@ -769,6 +772,7 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     
     df = _parse_latest_nearesttime(data, rename_value_1)
     df.attrs['params'] = params
+    df.attrs['service'] = 'stations_latest'
     return df
 
 def stations_precipitation(verbose=True, **params):
@@ -829,6 +833,7 @@ def networks(verbose=True, **params):
     df['LAST_OBSERVATION'] = pd.to_datetime(df.LAST_OBSERVATION)
     df.attrs['SUMMARY'] = data['SUMMARY']
     df.attrs['params'] = params
+    df.attrs['service'] = 'networks'
     return df
 
 def networktypes(verbose=True, **params):
@@ -854,6 +859,7 @@ def networktypes(verbose=True, **params):
     df.set_index('ID', inplace=True)
     df.attrs['SUMMARY'] = data['SUMMARY']
     df.attrs['params'] = params
+    df.attrs['service'] = 'networktypes'
     return df
 
 def variables(verbose=True, **params):
@@ -877,6 +883,7 @@ def variables(verbose=True, **params):
     #df.set_index('vid', inplace=True)
     df.attrs['SUMMARY'] = data['SUMMARY']
     df.attrs['params'] = params
+    df.attrs['service'] = 'variables'
     return df
 
 def qctypes(verbose=True, **params):
@@ -902,6 +909,7 @@ def qctypes(verbose=True, **params):
     df.sort_index(inplace=True)
     df.attrs['SUMMARY'] = data['SUMMARY']
     df.attrs['params'] = params
+    df.attrs['service'] = 'qctypes'
     return df
 
 def auth(helpme=True, verbose=True, **params):
