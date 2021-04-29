@@ -12,6 +12,7 @@
 #
 import os
 import sys
+from datetime import datetime
 sys.path.insert(0, os.path.abspath('../..'))
 
 #import sphinx_rtd_theme
@@ -21,7 +22,7 @@ import pydata_sphinx_theme
 # -- Project information -----------------------------------------------------
 
 project = 'SynopticPy Docs'
-copyright = '2021, Brian K. Blaylock'
+copyright = f'{datetime.utcnow():%Y}, Brian K. Blaylock'
 author = 'Brian K. Blaylock'
 
 release = '0.1'
@@ -81,7 +82,6 @@ html_theme = "pydata_sphinx_theme"
 html_theme_options = {
     'github_url': 'https://github.com/blaylockbk/SynopticPy',
     'twitter_url': "https://twitter.com/blaylockbk",
-    "use_edit_page_button": True,
     "navbar_end": ["navbar-icon-links.html", "search-field.html"],
     "google_analytics_id": "G-HBCJD6ZZKM",
     "use_edit_page_button": True,
