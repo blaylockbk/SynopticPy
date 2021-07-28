@@ -88,7 +88,7 @@ html_theme_options = {
     "show_toc_level": 1,
     "external_links": [
       {"name": "GOES-2-go", "url": "https://blaylockbk.github.io/goes2go/_build/html/"},
-      {"name": "HRRR-B", "url": "https://blaylockbk.github.io/HRRR_archive_download/_build/html/"}
+      {"name": "Herbie", "url": "https://blaylockbk.github.io/Herbie/_build/html/"}
   ]
 }
 
