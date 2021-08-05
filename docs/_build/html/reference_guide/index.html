@@ -22,13 +22,13 @@
       
 
     
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/brian_style.css" />
     
   <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
 
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -89,7 +89,7 @@
     </li>
     
     <li class="nav-item">
-        <a class="nav-link nav-external" href="https://blaylockbk.github.io/HRRR_archive_download/_build/html/">HRRR-B<i class="fas fa-external-link-alt"></i></a>
+        <a class="nav-link nav-external" href="https://blaylockbk.github.io/Herbie/_build/html/">Herbie<i class="fas fa-external-link-alt"></i></a>
     </li>
     
 </ul>
@@ -330,7 +330,7 @@ information with something like this:</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#synoptic.services.stations_timeseries" title="synoptic.services.stations_timeseries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stations_timeseries</span></code></a>([verbose, rename_set_1])</p></td>
 <td><p>Get station data for time series.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#synoptic.services.synoptic_api" title="synoptic.services.synoptic_api"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synoptic_api</span></code></a>(service[, verbose])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#synoptic.services.synoptic_api" title="synoptic.services.synoptic_api"><code class="xref py py-obj docutils literal notranslate"><span class="pre">synoptic_api</span></code></a>(service[, verbose, hide_token])</p></td>
 <td><p>Request data from the Synoptic API.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#synoptic.services.variables" title="synoptic.services.variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></a>([verbose])</p></td>
@@ -339,8 +339,8 @@ information with something like this:</p>
 </tbody>
 </table>
 <dl class="py function">
-<dt id="synoptic.services.auth">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">auth</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">helpme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.auth" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.auth">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">helpme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.auth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a DataFrame of authentication controls.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/auth/">https://developers.synopticdata.com/mesonet/v2/auth/</a>
 <a class="reference external" href="https://developers.synopticdata.com/settings/">https://developers.synopticdata.com/settings/</a></p>
@@ -379,8 +379,8 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.networks">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">networks</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.networks" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.networks">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.networks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a DataFrame of available Networks and their metadata</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/networks/">https://developers.synopticdata.com/mesonet/v2/networks/</a>
 <a class="reference external" href="https://developers.synopticdata.com/about/station-network-type/">https://developers.synopticdata.com/about/station-network-type/</a></p>
@@ -396,8 +396,8 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.networktypes">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">networktypes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.networktypes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.networktypes">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">networktypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.networktypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a DataFrame of network types</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/networktypes/">https://developers.synopticdata.com/mesonet/v2/networktypes/</a>
 <a class="reference external" href="https://developers.synopticdata.com/about/station-network-type/">https://developers.synopticdata.com/about/station-network-type/</a></p>
@@ -412,8 +412,8 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.qctypes">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">qctypes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.qctypes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.qctypes">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">qctypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.qctypes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a DataFrame of available quality control (QC) types</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/qctypes/">https://developers.synopticdata.com/mesonet/v2/qctypes/</a>
 <a class="reference external" href="https://developers.synopticdata.com/about/qc/">https://developers.synopticdata.com/about/qc/</a></p>
@@ -425,8 +425,8 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.spddir_to_uv">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">spddir_to_uv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wspd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.spddir_to_uv" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.spddir_to_uv">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">spddir_to_uv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wspd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.spddir_to_uv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the u and v wind components from wind speed and direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -445,8 +445,8 @@ False - Access the <code class="docutils literal notranslate"><span class="pre">
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.stations_latest">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">stations_latest</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_value_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_latest" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.stations_latest">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">stations_latest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_value_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_latest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the latest station data. (Very similar to the nearesttime service.)</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/latest/">https://developers.synopticdata.com/mesonet/v2/stations/latest/</a></p>
 <dl class="field-list simple">
@@ -486,8 +486,8 @@ for additional units.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.stations_metadata">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">stations_metadata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_metadata" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.stations_metadata">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">stations_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get station metadata for stations as a Pandas DataFrame.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/metadata/">https://developers.synopticdata.com/mesonet/v2/stations/metadata/</a></p>
 <dl class="field-list simple">
@@ -503,8 +503,8 @@ e.g., sensorvars, obrange, obtimezone, etc.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.stations_nearesttime">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">stations_nearesttime</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_value_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_nearesttime" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.stations_nearesttime">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">stations_nearesttime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_value_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_nearesttime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get station data nearest a datetime. (Very similar to the latest service.)</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/nearesttime/">https://developers.synopticdata.com/mesonet/v2/stations/nearesttime/</a></p>
 <dl class="field-list simple">
@@ -544,8 +544,8 @@ for additional units.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.stations_precipitation">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">stations_precipitation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_precipitation" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.stations_precipitation">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">stations_precipitation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_precipitation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the precipitation data.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/precipitation/">https://developers.synopticdata.com/mesonet/v2/stations/precipitation/</a></p>
 <dl class="field-list simple">
@@ -563,8 +563,8 @@ Requires <cite>start</cite> and <cite>end</cite> <em>or</em> <cite>recent</cite>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.stations_timeseries">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">stations_timeseries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_set_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_timeseries" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.stations_timeseries">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">stations_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_set_1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.stations_timeseries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get station data for time series.</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/">https://developers.synopticdata.com/mesonet/v2/stations/timeseries/</a></p>
 <dl class="field-list simple">
@@ -634,8 +634,8 @@ for additional units.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.synoptic_api">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">synoptic_api</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.synoptic_api" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.synoptic_api">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">synoptic_api</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hide_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.synoptic_api" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request data from the Synoptic API. Returns a <strong>requests</strong> object.</p>
 <p class="rubric">References</p>
 <ul class="simple">
@@ -648,8 +648,8 @@ for additional units.</p></li>
 <li><p><strong>service</strong> (<em>str</em>) – API service to use, including {‘auth’, ‘latest’, ‘metadata’,
 ‘nearesttime’, ‘networks’, ‘networktypes’, ‘precipitation’,
 ‘qctypes’, ‘timeseries’, ‘variables’}</p></li>
-<li><p><strong>verbose</strong> (<em>{True</em><em>, </em><em>False</em><em>, </em><em>'HIDE'</em><em>, </em><em>'hide'}</em>) – Print extra details to the screen. If ‘HIDE’, then details will
-be printed, but the token will be hidden.</p></li>
+<li><p><strong>verbose</strong> (<em>{True</em><em>, </em><em>False}</em>) – Print extra details to the screen.</p></li>
+<li><p><strong>hide_token</strong> (<em>bool</em>) – If True, the token will be hidden when API URL is printed.</p></li>
 <li><p><strong>**params</strong> (<em>keyword arguments</em>) – API request parameters (arguments).
 Lists will be converted to a comma-separated string.
 Datetimes (datetime or pandas) will be parsed by f-string to
@@ -674,8 +674,8 @@ YYYYmmddHHMM.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.services.variables">
-<code class="sig-prename descclassname"><span class="pre">synoptic.services.</span></code><code class="sig-name descname"><span class="pre">variables</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.variables" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.services.variables">
+<span class="sig-prename descclassname"><span class="pre">synoptic.services.</span></span><span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.services.variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a DataFrame of available station variables</p>
 <p><a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/variables/">https://developers.synopticdata.com/mesonet/v2/variables/</a>
 <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/api-variables/">https://developers.synopticdata.com/mesonet/v2/api-variables/</a></p>
@@ -713,8 +713,8 @@ YYYYmmddHHMM.</p></li>
 </tbody>
 </table>
 <dl class="py function">
-<dt id="synoptic.plots.map_metadata">
-<code class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></code><code class="sig-name descname"><span class="pre">map_metadata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.map_metadata" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.plots.map_metadata">
+<span class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></span><span class="sig-name descname"><span class="pre">map_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.map_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a map of station locations returned from a <code class="docutils literal notranslate"><span class="pre">stations_metadata</span></code>.</p>
 <p>Use this to plot the locations of your requested stations on a map,
 but if you just need the map.</p>
@@ -732,8 +732,8 @@ Required if <code class="docutils literal notranslate"><span class="pre">data=No
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.plots.map_timeseries">
-<code class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></code><code class="sig-name descname"><span class="pre">map_timeseries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.map_timeseries" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.plots.map_timeseries">
+<span class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></span><span class="sig-name descname"><span class="pre">map_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'10m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scatter_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.map_timeseries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a map of station locations returned from a <code class="docutils literal notranslate"><span class="pre">stations_timeseries</span></code>.</p>
 <p>Use this to plot the locations of your requested stations on a map,
 but if you just need the map, don’t bother getting the timeseries
@@ -752,8 +752,8 @@ Required if <code class="docutils literal notranslate"><span class="pre">data=No
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.plots.plot_timeseries">
-<code class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></code><code class="sig-name descname"><span class="pre">plot_timeseries</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'marker':</span> <span class="pre">'.',</span> <span class="pre">'markersize':</span> <span class="pre">3}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.plot_timeseries" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.plots.plot_timeseries">
+<span class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></span><span class="sig-name descname"><span class="pre">plot_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'marker':</span> <span class="pre">'.',</span> <span class="pre">'markersize':</span> <span class="pre">3}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.plot_timeseries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot timeseries from multiple stations on a single plot for each variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -771,8 +771,8 @@ If None, use the default color cycle.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.plots.plot_timeseries_wind">
-<code class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></code><code class="sig-name descname"><span class="pre">plot_timeseries_wind</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.plot_timeseries_wind" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.plots.plot_timeseries_wind">
+<span class="sig-prename descclassname"><span class="pre">synoptic.plots.</span></span><span class="sig-name descname"><span class="pre">plot_timeseries_wind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(10,</span> <span class="pre">5)</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.plots.plot_timeseries_wind" title="Permalink to this definition">¶</a></dt>
 <dd><p>3-panel plot showing wind timeseries (wind speed/gust, direction, quiver)</p>
 <p>Consider resampling the data to smooth it out and so times with no
 data is not shown in the plot.</p>
@@ -807,8 +807,8 @@ you need. Please refer to the <a class="reference internal" href="../user_guide/
 </tbody>
 </table>
 <dl class="py function">
-<dt id="synoptic.get_token.config_token">
-<code class="sig-prename descclassname"><span class="pre">synoptic.get_token.</span></code><code class="sig-name descname"><span class="pre">config_token</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.get_token.config_token" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.get_token.config_token">
+<span class="sig-prename descclassname"><span class="pre">synoptic.get_token.</span></span><span class="sig-name descname"><span class="pre">config_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.get_token.config_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the config.cfg file with your Synoptic API token</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -825,8 +825,8 @@ Else, the config file will be updated with <cite>new_token</cite>.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="synoptic.get_token.test_token">
-<code class="sig-prename descclassname"><span class="pre">synoptic.get_token.</span></code><code class="sig-name descname"><span class="pre">test_token</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configure_on_fail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.get_token.test_token" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="synoptic.get_token.test_token">
+<span class="sig-prename descclassname"><span class="pre">synoptic.get_token.</span></span><span class="sig-name descname"><span class="pre">test_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configure_on_fail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#synoptic.get_token.test_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that the token can get data from Synoptic.</p>
 <p>If the test fails, the user is prompted with instructions to acquire
 a valid token. The user will be asked what the token is, and will
@@ -895,7 +895,7 @@ save that info into the config file located at
     
     <div class="footer-item">
       <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.3.<br/>
 </p>
     </div>
     

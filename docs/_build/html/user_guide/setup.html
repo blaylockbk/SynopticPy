@@ -22,13 +22,13 @@
       
 
     
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/brian_style.css" />
     
   <link rel="preload" as="script" href="../_static/js/index.1c5a1a01449ed65a7b51.js">
 
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
@@ -90,7 +90,7 @@
     </li>
     
     <li class="nav-item">
-        <a class="nav-link nav-external" href="https://blaylockbk.github.io/HRRR_archive_download/_build/html/">HRRR-B<i class="fas fa-external-link-alt"></i></a>
+        <a class="nav-link nav-external" href="https://blaylockbk.github.io/Herbie/_build/html/">Herbie<i class="fas fa-external-link-alt"></i></a>
     </li>
     
 </ul>
@@ -208,6 +208,11 @@
    Configure SynopticPy with your token
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#configure-settings">
+   Configure Settings
+  </a>
+ </li>
 </ul>
 
 </nav>
@@ -217,7 +222,7 @@
                 
 
 <div class="tocsection editthispage">
-    <a href="https://github.com/blaylockbk/SynopticPy/edit/master/docs/user_guide/setup.md">
+    <a href="https://github.com/blaylockbk/SynopticPy/edit/master/docs/user_guide/setup.rst">
         <i class="fas fa-pencil-alt"></i> Edit this page
     </a>
 </div>
@@ -240,36 +245,58 @@
 <h1>🔨 Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="register-for-a-synoptic-developers-account-and-obtain-a-token">
 <h2>Register for a Synoptic developers account and obtain a token<a class="headerlink" href="#register-for-a-synoptic-developers-account-and-obtain-a-token" title="Permalink to this headline">¶</a></h2>
-<p>Before you can retrieve data from the Synoptic API, <strong>you need to register as a Synoptic user and obtain a <em>token</em></strong>. Follow the instructions at the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Getting Started Page</a>.</p>
-<ol class="simple">
-<li><p>Go to the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Get Started</a> page and click <strong>Sign Up Now!</strong> to register for an account.</p></li>
-<li><p>After registering for your account, go to your <a class="reference external" href="https://developers.synopticdata.com/settings/">profile settings</a> and locate your public token. You may also generate a new token in the “Manage Tokens” tab, if desired.</p></li>
-<li><p>Copy a public token (not your key!).</p></li>
-</ol>
+<p>Before you can retrieve data from the Synoptic API, <strong>you need to register as a Synoptic user and obtain a _token_</strong>. Follow the instructions at the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Getting Started Page</a>.
+1. Go to the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Get Started</a> page and click <strong>Sign Up Now!</strong> to register for an account.
+2. After registering for your account, go to your <a class="reference external" href="https://developers.synopticdata.com/settings/">profile settings</a> and locate your public token. You may also generate a new token in the “Manage Tokens” tab, if desired.
+3. Copy a public token (not your key!).</p>
 </div>
 <div class="section" id="configure-synopticpy-with-your-token">
 <h2>Configure SynopticPy with your token<a class="headerlink" href="#configure-synopticpy-with-your-token" title="Permalink to this headline">¶</a></h2>
 <p>SynopticPy needs to know your token. The first time you import <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code> it will help you setup your token in its config file.</p>
-<ol class="simple">
-<li><p>Open python in a terminal and type the following:</p></li>
-</ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">synoptic.services</span>
-</pre></div>
-</div>
-<ol class="simple">
-<li><p>You will be prompted with instructions for aquiring an API token, and then it will ask you to input your token. Remember to enter you API <strong>token</strong> and <em>not your API key</em>.</p></li>
+<p>1. Open python in a terminal and type the following:
+<code class="docutils literal notranslate"><span class="pre">`python</span>
+<span class="pre">import</span> <span class="pre">synoptic.services</span>
+<span class="pre">`</span></code></p>
+<ol class="arabic simple" start="2">
+<li><p>You will be prompted with instructions for acquiring an API token, and then it will ask you to input your token. Remember to enter you API <strong>token</strong> and <em>not your API key</em>.</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>What is your Synoptic API token? &gt;&gt;&gt;
 </pre></div>
 </div>
-<ol class="simple">
-<li><p>The script updates a config file located at <code class="docutils literal notranslate"><span class="pre">~/.config/SynopticPy/config.cfg</span></code>. If you are having problems, that file should look something like this:</p></li>
+<ol class="arabic simple" start="3">
+<li><p>The script updates a config file located at <code class="docutils literal notranslate"><span class="pre">~/.config/SynopticPy/config.toml</span></code>.</p></li>
 </ol>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Synoptic</span><span class="p">]</span>
-<span class="n">token</span> <span class="o">=</span> <span class="mi">1234567890</span><span class="n">abcdefg</span>
+<p>Every time you import a <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code> function it does a quick check to make sure the token in that file is valid. If everything looks good, the next time you import the module you won’t be asked for the token because it is saved in that config file.</p>
+</div>
+<div class="section" id="configure-settings">
+<h2>Configure Settings<a class="headerlink" href="#configure-settings" title="Permalink to this headline">¶</a></h2>
+<p>The config file is created the first time you import <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code>. These are default settings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">default</span><span class="p">]</span>
+<span class="n">verbose</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">hide_token</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">rename_value_1</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">rename_set_1</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;1234567890abcdefghijklmnopqrstuvwxyz&quot;</span>
 </pre></div>
 </div>
-<p>Every time you import a <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code> function it does a quick check to make sure the token in that file is valid. If everything looks good, the next time you import the module you won’t be asked for the token because it is saved in that config file.</p>
+<dl>
+<dt>verbose</dt><dd><p>Print extra info to the screen during the API request.</p>
+</dd>
+<dt>hide_token</dt><dd><p>If true, hide the API token from being printed to the screen.
+If false, your token will be displayed</p>
+</dd>
+<dt>rename_value_1</dt><dd><p>If true, strip “_value_1” and “_value_1d” from the columns variable name. I prefer that the column names strips this part of the string to more easily key in on the variables I want. For situations where there are both
+“_value_1” and “_value_1d” for a variable, only the most recent value will be renamed.</p>
+<p>If false, preserve original column names.</p>
+<p><em>Valid for **stations.latest*</em> and <strong>stations.nearesttime</strong>.*</p>
+</dd>
+<dt>rename_set_1</dt><dd><p>If true, strip “_set_1” and “_set_1d” from the columns variable name. I prefer that the column names strips this part of the string to more easily key in on the variables I want. For situations where there are both “_set_1” and “_set_1d” for a variable, only the column with the most non-NaN values will be renamed.</p>
+<p>If false, preserve original column names.</p>
+<p><em>Valid for **stations.timeseries*</em>.*</p>
+</dd>
+<dt>token</dt><dd><p>Your Synoptic API token.</p>
+</dd>
+</dl>
 </div>
 </div>
 
@@ -310,7 +337,7 @@
     
     <div class="footer-item">
       <p class="sphinx-version">
-Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.5.4.<br/>
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.3.<br/>
 </p>
     </div>
     
