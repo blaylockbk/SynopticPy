@@ -1,19 +1,26 @@
-# 📔 [Documentation](https://blaylockbk.github.io/SynopticPy/_build/html/)
-
-|![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/Balloon_logo/balloon_bkb_sm.png)|**Brian Blaylock**<br>🌐 [Webpage](http://home.chpc.utah.edu/~u0553130/Brian_Blaylock/home.html)<br> 🎉This is my first PyPI package|
-|:--|:--|
+<div
+    align='center'
+>
 
 # ☁ Synoptic API for Python (_unofficial_)
+
+<img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png" width=50%>
 
 <!-- Badges -->
 [![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
 ![](https://img.shields.io/github/license/blaylockbk/SynopticPy)
 [![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886)
+</div>
 
 
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png)
 
-The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is _free_ up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a [paid tier](https://synopticdata.com/pricing) is available (through Synoptic, not me).
+The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. 
+
+# 📔 [SynopticPy Documentation](https://blaylockbk.github.io/SynopticPy/_build/html/)
+
+Synoptic is _free_ up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a [paid tier](https://synopticdata.com/pricing) is available (through Synoptic, not me).
+
+
 
 > ### 🌐 Register for a free account at the Synoptic API Webpage
 >> https://developers.synopticdata.com
