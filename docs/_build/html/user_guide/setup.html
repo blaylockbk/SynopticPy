@@ -245,18 +245,22 @@
 <h1>🔨 Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="register-for-a-synoptic-developers-account-and-obtain-a-token">
 <h2>Register for a Synoptic developers account and obtain a token<a class="headerlink" href="#register-for-a-synoptic-developers-account-and-obtain-a-token" title="Permalink to this headline">¶</a></h2>
-<p>Before you can retrieve data from the Synoptic API, <strong>you need to register as a Synoptic user and obtain a _token_</strong>. Follow the instructions at the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Getting Started Page</a>.
-1. Go to the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Get Started</a> page and click <strong>Sign Up Now!</strong> to register for an account.
-2. After registering for your account, go to your <a class="reference external" href="https://developers.synopticdata.com/settings/">profile settings</a> and locate your public token. You may also generate a new token in the “Manage Tokens” tab, if desired.
-3. Copy a public token (not your key!).</p>
+<p>Before you can retrieve data from the Synoptic API, <strong>you need to register as a Synoptic user and obtain a *token*</strong>. Follow the instructions at the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Getting Started Page</a>.</p>
+<ol class="arabic simple">
+<li><p>Go to the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/getting-started/">Get Started</a> page and click <strong>Sign Up Now!</strong> to register for an account.</p></li>
+<li><p>After registering for your account, go to your <a class="reference external" href="https://developers.synopticdata.com/settings/">profile settings</a> and locate your public token. You may also generate a new token in the “Manage Tokens” tab, if desired.</p></li>
+<li><p>Copy a public token (not your key!).</p></li>
+</ol>
 </div>
 <div class="section" id="configure-synopticpy-with-your-token">
 <h2>Configure SynopticPy with your token<a class="headerlink" href="#configure-synopticpy-with-your-token" title="Permalink to this headline">¶</a></h2>
 <p>SynopticPy needs to know your token. The first time you import <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code> it will help you setup your token in its config file.</p>
-<p>1. Open python in a terminal and type the following:
-<code class="docutils literal notranslate"><span class="pre">`python</span>
-<span class="pre">import</span> <span class="pre">synoptic.services</span>
-<span class="pre">`</span></code></p>
+<ol class="arabic simple">
+<li><p>Open python in a terminal and type the following:</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">synoptic.services</span>
+</pre></div>
+</div>
 <ol class="arabic simple" start="2">
 <li><p>You will be prompted with instructions for acquiring an API token, and then it will ask you to input your token. Remember to enter you API <strong>token</strong> and <em>not your API key</em>.</p></li>
 </ol>
@@ -270,7 +274,8 @@
 </div>
 <div class="section" id="configure-settings">
 <h2>Configure Settings<a class="headerlink" href="#configure-settings" title="Permalink to this headline">¶</a></h2>
-<p>The config file is created the first time you import <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code>. These are default settings:</p>
+<p>The first time you import <code class="docutils literal notranslate"><span class="pre">synoptic.services</span></code>, a new config file is created here: <code class="docutils literal notranslate"><span class="pre">~/.config/SynopticPy/config.toml</span></code></p>
+<p>Is should look something like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">default</span><span class="p">]</span>
 <span class="n">verbose</span> <span class="o">=</span> <span class="n">true</span>
 <span class="n">hide_token</span> <span class="o">=</span> <span class="n">true</span>

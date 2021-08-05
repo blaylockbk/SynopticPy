@@ -4,7 +4,8 @@
 
 Register for a Synoptic developers account and obtain a token
 -------------------------------------------------------------
-Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and obtain a _token_**. Follow the instructions at the `Getting Started Page <https://developers.synopticdata.com/mesonet/v2/getting-started/>`_.
+Before you can retrieve data from the Synoptic API, **you need to register as a Synoptic user and obtain a *token***. Follow the instructions at the `Getting Started Page <https://developers.synopticdata.com/mesonet/v2/getting-started/>`_.
+
 1. Go to the `Get Started <https://developers.synopticdata.com/mesonet/v2/getting-started/>`_ page and click **Sign Up Now!** to register for an account.
 2. After registering for your account, go to your `profile settings <https://developers.synopticdata.com/settings/>`_ and locate your public token. You may also generate a new token in the "Manage Tokens" tab, if desired.
 3. Copy a public token (not your key!).
@@ -14,9 +15,10 @@ Configure SynopticPy with your token
 SynopticPy needs to know your token. The first time you import ``synoptic.services`` it will help you setup your token in its config file.
 
 1. Open python in a terminal and type the following:
-```python
-import synoptic.services
-```
+
+.. code-block:: python
+
+    import synoptic.services
 
 2. You will be prompted with instructions for acquiring an API token, and then it will ask you to input your token. Remember to enter you API **token** and *not your API key*.
 
@@ -30,7 +32,10 @@ Every time you import a ``synoptic.services`` function it does a quick check to 
 
 Configure Settings
 ------------------
-The config file is created the first time you import ``synoptic.services``. These are default settings:
+
+The first time you import ``synoptic.services``, a new config file is created here: ``~/.config/SynopticPy/config.toml``
+
+Is should look something like this:
 
 .. code-block::
 
