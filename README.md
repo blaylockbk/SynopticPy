@@ -2,9 +2,9 @@
     align='center'
 >
 
-# ☁ Synoptic API for Python (_unofficial_)
-
 <img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/SynopticPy_logo.png" width=50%>
+
+# ☁ Synoptic API for Python (_unofficial_)
 
 <!-- Badges -->
 [![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
