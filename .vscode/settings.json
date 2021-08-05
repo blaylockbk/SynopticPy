@@ -1,0 +1,12 @@
+{
+    "workbench.colorCustomizations": {
+        // Colors Based on MesoWest colors
+        // https://mesowest.utah.edu/
+        "activityBar.background": "#990000",
+        "activityBarBadge.background": "#465A9B",
+        "titleBar.activeBackground": "#990000",
+        "statusBar.background": "#990000",
+        "statusBarItem.remoteBackground": "#465A9B"
+
+    }
+}

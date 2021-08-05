@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python=3
   - pip
+  - toml
   - numpy
   - pandas
   - requests
@@ -24,5 +25,4 @@ dependencies:
     - git+https://github.com/blaylockbk/Carpenter_Workshop.git  # "Can I borrow your hammer?"
     
   # Or, latest release from PyPI
-  #- pip:
   #  - SynopticPy    # Release Version

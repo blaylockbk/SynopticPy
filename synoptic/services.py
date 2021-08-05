@@ -92,7 +92,7 @@ import urllib
 import numpy as np
 import pandas as pd
 
-from synoptic.get_token import token
+from synoptic.get_token import config
 
 # Available API Services
 # https://developers.synopticdata.com/mesonet/v2/
@@ -328,7 +328,11 @@ def _parse_latest_nearesttime(data, rename_value_1):
 #=======================================================================
 #=======================================================================
     
-def synoptic_api(service, verbose=True, **params):
+def synoptic_api(
+    service,
+    verbose=config['default'].get('hide_token', True),
+    hide_token=config['default'].get('hide_token', False),
+    **params):
     '''
     Request data from the Synoptic API. Returns a **requests** object.
         
@@ -343,9 +347,10 @@ def synoptic_api(service, verbose=True, **params):
         API service to use, including {'auth', 'latest', 'metadata',
         'nearesttime', 'networks', 'networktypes', 'precipitation',
         'qctypes', 'timeseries', 'variables'}
-    verbose : {True, False, 'HIDE', 'hide'}
-        Print extra details to the screen. If 'HIDE', then details will
-        be printed, but the token will be hidden.
+    verbose : {True, False}
+        Print extra details to the screen.
+    hide_token : bool
+        If True, the token will be hidden when API URL is printed.
     \*\*params : keyword arguments
         API request parameters (arguments).
         Lists will be converted to a comma-separated string.
@@ -383,9 +388,9 @@ def synoptic_api(service, verbose=True, **params):
         
     ## Set API token
     ##--------------
-    ## Default token is set at top of this file, but you may overwrite
-    ## with keyword argument.
-    params.setdefault('token', token)
+    ## Default token is set in the ~/.config/SyonpticPy/config.toml file,
+    ## But you may overwrite it by passing the keyward argument `token=`
+    params.setdefault('token', config['default'].get('token'))
     
     ## Parse parameters
     ##-----------------
@@ -454,14 +459,16 @@ def synoptic_api(service, verbose=True, **params):
     assert code == 1, f"🛑 There are errors in the API request {decode_url}. {msg}"
 
     if verbose:
-        if isinstance(verbose, str) and verbose.upper() == 'HIDE':
+        if hide_token:
             token_idx = decode_url.find('token=')
             decode_url = decode_url.replace(decode_url[token_idx:token_idx+6+32], 'token=🙈HIDDEN')
         print(f'\n 🚚💨 Speedy Delivery from Synoptic API [{service}]: {decode_url}\n')
-    
+
     return f
 
-def stations_metadata(verbose=True, **params):
+def stations_metadata(
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Get station metadata for stations as a Pandas DataFrame.
 
@@ -508,7 +515,10 @@ def stations_metadata(verbose=True, **params):
     df.attrs['service'] = 'stations_metadata'
     return df.transpose().sort_index()
 
-def stations_timeseries(verbose=True, rename_set_1=True, **params):
+def stations_timeseries(
+    verbose=config['default'].get('verbose', True),
+    rename_set_1=config['default'].get('rename_set_1', True),
+    **params):
     """
     Get station data for time series.
 
@@ -662,7 +672,10 @@ def stations_timeseries(verbose=True, rename_set_1=True, **params):
         if verbose: print(f'Returned [{len(Z)}] stations. {[i.attrs["STID"] for i in Z]}')
         return Z
 
-def stations_nearesttime(verbose=True, rename_value_1=True, **params):
+def stations_nearesttime(
+    verbose=config['default'].get('verbose', True),
+    rename_value_1=config['default'].get('rename_value_1', True),
+    **params):
     """
     Get station data nearest a datetime. (Very similar to the latest service.)
 
@@ -719,7 +732,10 @@ def stations_nearesttime(verbose=True, rename_value_1=True, **params):
     df.attrs['service'] = 'stations_nearesttime'
     return df
 
-def stations_latest(verbose=True, rename_value_1=True, **params):
+def stations_latest(
+    verbose=config['default'].get('verbose', True),
+    rename_value_1=config['default'].get('rename_value_1', True),
+    **params):
     """
     Get the latest station data. (Very similar to the nearesttime service.)
     
@@ -775,7 +791,9 @@ def stations_latest(verbose=True, rename_value_1=True, **params):
     df.attrs['service'] = 'stations_latest'
     return df
 
-def stations_precipitation(verbose=True, **params):
+def stations_precipitation(
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Get the precipitation data.
 
@@ -805,7 +823,9 @@ def stations_precipitation(verbose=True, **params):
     
     return data
 
-def networks(verbose=True, **params):
+def networks(
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Return a DataFrame of available Networks and their metadata
     
@@ -836,7 +856,9 @@ def networks(verbose=True, **params):
     df.attrs['service'] = 'networks'
     return df
 
-def networktypes(verbose=True, **params):
+def networktypes(
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Get a DataFrame of network types
     
@@ -862,7 +884,9 @@ def networktypes(verbose=True, **params):
     df.attrs['service'] = 'networktypes'
     return df
 
-def variables(verbose=True, **params):
+def variables(
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Return a DataFrame of available station variables
     
@@ -886,7 +910,9 @@ def variables(verbose=True, **params):
     df.attrs['service'] = 'variables'
     return df
 
-def qctypes(verbose=True, **params):
+def qctypes(
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Return a DataFrame of available quality control (QC) types
     
@@ -912,7 +938,10 @@ def qctypes(verbose=True, **params):
     df.attrs['service'] = 'qctypes'
     return df
 
-def auth(helpme=True, verbose=True, **params):
+def auth(
+    helpme=True,
+    verbose=config['default'].get('verbose', True),
+    **params):
     """
     Return a DataFrame of authentication controls.
     

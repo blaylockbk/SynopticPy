@@ -27,7 +27,7 @@ from synoptic.services import stations_timeseries
 
 __author__ = 'Brian Blaylock'
 __email__ = 'blaylockbk@gmail.com'
-__url__ = 'https://github.com/blaylockbk/Synoptic_API'
+__url__ = 'https://github.com/blaylockbk/SynopticPy'
 
 try:
     from synoptic.accessors import *

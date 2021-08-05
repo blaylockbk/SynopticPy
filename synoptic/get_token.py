@@ -13,25 +13,49 @@ ask you for your API token and store that information in
 you need. Please refer to the :ref:`User Guide`. for more info.
 
 """
-
-import configparser
+import os
+import toml
 from pathlib import Path
 import requests
 
-config = configparser.ConfigParser()
+########################################################################
+# Append Path object with my custom expand method so user can use
+# environment variables in the config file (e.g., ${HOME}).
+def _expand(self):
+    """
+    Fully expand and resolve the Path with the given environment variables.
+    
+    Example
+    -------
+    >>> Path('$HOME').expand()
+    >>> PosixPath('/p/home/blaylock')
+    """
+    return Path(os.path.expandvars(self)).expanduser().resolve()
 
-# Config File contains the user's Synoptic API Token
-_config_path = Path('~').expanduser() / '.config' / 'SynopticPy' / 'config.cfg'
+Path.expand = _expand
 
-# Create the config file if it doesn't exists and set an empty token.
+########################################################################
+# SynopticPy configuration file
+# Configuration file is save in `~/config/SynopticPy/config.toml`
+_config_path = Path('~/.config/SynopticPy/config.toml').expand()
+
+########################################################################
+# Default TOML Configuration
+# (we will ask the user to input their API token interactively)
+default_toml = f"""
+['default']
+verbose = true
+hide_token = true
+rename_value_1 = true
+rename_set_1 = true
+"""
+
+########################################################################
+# If a config file isn't found, make one
 if not _config_path.exists():
-    _config_path.parent.mkdir(parents=True)
-    _config_path.touch()
-    config.read(_config_path)
-    config.add_section('Synoptic')
-    config.set('Synoptic', 'token', '')
-    with open(_config_path, 'w') as configfile:
-        config.write(configfile)
+    with open(_config_path, 'w') as f:
+        toml_string = toml.dump(toml.loads(default_toml), f)
+    print(f'⚙ Created config file [{_config_path}] with default values.')
 
 msg = f'''
     | Dear SynopticPy User,
@@ -82,18 +106,11 @@ def test_token(verbose=True, configure_on_fail=True):
     A valid API token
 
     """
+    # Read the config file and get the token
+    config = toml.load(_config_path)
+    token = config['default'].get('token')
     
-    # Get the token from config.cfg
-    #config = configparser.ConfigParser()
-    config.read(_config_path)
-    try:
-        token = config.get('Synoptic', 'token')
-    except:
-        print(f'🦁🐯🐻 oh my! {_config_path} looks weird, but I will add a new section')
-        config.add_section('Synoptic')
-        config.set('Synoptic', 'token', '')
-        token = config.get('Synoptic', 'token')
-    if token == '':
+    if token is None:
         # There isn't an API token defined, so configure one.
         return config_token()
     
@@ -107,7 +124,7 @@ def test_token(verbose=True, configure_on_fail=True):
     
     if response == 'OK':
         if verbose: print(f"🔓 API Access Enabled. Response is [{response}].")
-        return token
+        return config
     else:
         print(f"🤦🏻‍♂️ Failed: {token} is not valid. {response}")
         print()
@@ -136,13 +153,12 @@ def config_token(new_token=None):
     A valid API token, if it passes ``test_token``. Else, None.
 
     """
-    # Get the current token value to display
-    #config = configparser.ConfigParser()
-    config.read(_config_path)
-    token = config.get('Synoptic', 'token')
+    # Read the config file and get the token
+    config = toml.load(_config_path)
+    token = config['default'].get('token')
 
     print(f"Config File: {_config_path}")
-    if token == '':
+    if token is None:
         print(f"Current Token: 🕵🏻‍♂️ NOT ASSIGNED")
     else:
         print(f"Current Token: {token}")
@@ -151,17 +167,20 @@ def config_token(new_token=None):
         print(msg)
         new_token = input('What is your Synoptic API token? >>> ')
 
-    # Save the new_token to the config.cfg file
-    config['Synoptic']['token'] = new_token
-    with open(_config_path, 'w') as configfile:
-        config.write(configfile)
+    # Save the new_token to the config.toml file
+    config['default'] = {**config['default'], **{'token':new_token}}
+    
+    with open(_config_path, 'w') as f:
+        toml.dump(config, f)
 
     print(f'\nThanks! I will do a quick test...')
+    
     # Don't want to run into an infinite loop, so set config_on_fail=False
-    token = test_token(configure_on_fail=False) 
-    return token
+    config = test_token(configure_on_fail=False) 
+    return config
 
 #####################################
 # Get the token from the config file.
 #####################################
-token = test_token(verbose=False)
+
+config = test_token(verbose=False)
