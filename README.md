@@ -4,7 +4,7 @@
 
 # ☁ Synoptic API for Python (_unofficial_)
 
-<img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/synoptic_logo.png" width=50%>
+<img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/SynopticPy_logo.png" width=50%>
 
 <!-- Badges -->
 [![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
