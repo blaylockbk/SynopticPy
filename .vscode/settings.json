@@ -2,11 +2,19 @@
     "workbench.colorCustomizations": {
         // Colors Based on MesoWest colors
         // https://mesowest.utah.edu/
+        // Synoptic Blue: #2180AF
+        // Synoptic Green: #43A047
+        // Synoptic Yellow: #FADE2A
+        // MesoWest Red: #990000
         "activityBar.background": "#990000",
-        "activityBarBadge.background": "#465A9B",
-        "titleBar.activeBackground": "#990000",
+        "activityBarBadge.background": "#FADE2A",
+        "activityBarBadge.foreground":"#2180AF",
+        "titleBar.activeBackground": "#43A047",
+        "titleBar.activeForeground": "#ffffff",
         "statusBar.background": "#990000",
-        "statusBarItem.remoteBackground": "#465A9B"
+        "statusBarItem.remoteBackground": "#465A9B",
+        "button.background": "#2180AF",
 
     }
 }
+
