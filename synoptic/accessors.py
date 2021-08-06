@@ -25,7 +25,8 @@ try:
     from toolbox.cartopy_tools import common_features, pc
     from paint.standard2 import cm_tmp
 except:
-    warnings.warn('map making not available with cartopy_tools')
+    warnings.warn("map making not available with cartopy_tools")
+
 
 @pd.api.extensions.register_dataframe_accessor("synoptic")
 class SynopticAccessor:
@@ -35,10 +36,10 @@ class SynopticAccessor:
 
     @staticmethod
     def _validate(obj):
-        if obj.attrs['service'] in ['stations_latest', 'stations_nearesttime']:
+        if obj.attrs["service"] in ["stations_latest", "stations_nearesttime"]:
             # verify there is a latitude and a longitude index.
             if "latitude" not in obj.index or "longitude" not in obj.index:
-                raise AttributeError("Must have 'latitude' and 'longitude'.") 
+                raise AttributeError("Must have 'latitude' and 'longitude'.")
         else:
             # verify there is a column latitude and a column longitude
             if "latitude" not in obj.columns or "longitude" not in obj.columns:
@@ -53,13 +54,21 @@ class SynopticAccessor:
 
     def get_stn_column(self):
         """Get df as just STATIONS columns"""
-        return self._obj[a._obj.attrs['STATIONS']]
+        return self._obj[a._obj.attrs["STATIONS"]]
 
     def get_dt_column(self):
         """Get df as just DATETIME columns"""
-        return self._obj[a._obj.attrs['DATETIMES']]
+        return self._obj[a._obj.attrs["DATETIMES"]]
 
-    def plot_map(self, ax=None, color_by=None, show_label='STID', cbar_kw={}, common_features_kw={}, **kw):
+    def plot_map(
+        self,
+        ax=None,
+        color_by=None,
+        show_label="STID",
+        cbar_kw={},
+        common_features_kw={},
+        **kw,
+    ):
         """
         Parameters
         ----------
@@ -72,39 +81,46 @@ class SynopticAccessor:
 
         if ax is None:
             ax = common_features(**common_features_kw)
-        
-        stations = df.attrs['STATIONS']
 
-        kw.setdefault('transform', pc)
-        kw.setdefault('edgecolor', 'k')
-        kw.setdefault('linewidth', .5)
+        stations = df.attrs["STATIONS"]
 
-        cbar_kw.setdefault('fraction', .046)
-        cbar_kw.setdefault('pad', .01)
+        kw.setdefault("transform", pc)
+        kw.setdefault("edgecolor", "k")
+        kw.setdefault("linewidth", 0.5)
+
+        cbar_kw.setdefault("fraction", 0.046)
+        cbar_kw.setdefault("pad", 0.01)
 
         if color_by is not None:
-            kw['c'] = df[stations].loc[color_by]
+            kw["c"] = df[stations].loc[color_by]
         else:
-            kw['c'] = 'tab:blue'
+            kw["c"] = "tab:blue"
 
-        if color_by == 'air_temp':
+        if color_by == "air_temp":
             kw = {**cm_tmp().cmap_kwargs, **kw}
             cbar_kw = {**cm_tmp().cbar_kwargs, **cbar_kw}
-            
-        for stid, info  in df[stations].iteritems():
-            
+
+        for stid, info in df[stations].iteritems():
+
             if color_by is not None:
-                kw['c'] = info[color_by]
-            
+                kw["c"] = info[color_by]
+
             art = ax.scatter(info.longitude, info.latitude, **kw)
             if show_label or show_label is not None:
-                ax.text(info.longitude, info.latitude, f" {info[show_label]}", 
-                        va='center', ha='left', transform=pc, fontfamily='monospace', clip_on=True)
+                ax.text(
+                    info.longitude,
+                    info.latitude,
+                    f" {info[show_label]}",
+                    va="center",
+                    ha="left",
+                    transform=pc,
+                    fontfamily="monospace",
+                    clip_on=True,
+                )
 
         if color_by is not None:
             plt.colorbar(art, ax=ax, **cbar_kw)
-            
-        ax.adjust_extent()
 
+        ax.adjust_extent()
 
         return ax

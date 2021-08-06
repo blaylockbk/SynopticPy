@@ -18,11 +18,15 @@ dependencies:
   - xarray
   - h5py
   - pylint
-  
+
+  # Formatter (I think I prefer Black)
+  - black
+  - autopep8
+
   # Development Version from GitHub
   - pip:
-    - git+https://github.com/blaylockbk/SynopticPy.git
-    - git+https://github.com/blaylockbk/Carpenter_Workshop.git  # "Can I borrow your hammer?"
-    
+      - git+https://github.com/blaylockbk/SynopticPy.git
+      - git+https://github.com/blaylockbk/Carpenter_Workshop.git # "Can I borrow your hammer?"
+
   # Or, latest release from PyPI
   #  - SynopticPy    # Release Version

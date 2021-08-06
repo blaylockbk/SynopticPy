@@ -25,14 +25,14 @@ from synoptic.services import stations_timeseries
 ```
 """
 
-__author__ = 'Brian Blaylock'
-__email__ = 'blaylockbk@gmail.com'
-__url__ = 'https://github.com/blaylockbk/SynopticPy'
+__author__ = "Brian Blaylock"
+__email__ = "blaylockbk@gmail.com"
+__url__ = "https://github.com/blaylockbk/SynopticPy"
 
 try:
     from synoptic.accessors import *
 except:
-    warnings.warn('Could not import synoptic.accessors')
+    warnings.warn("Could not import synoptic.accessors")
     pass
 
 # 🙋🏻‍♂️ Thank you for using SynopticPy!")
