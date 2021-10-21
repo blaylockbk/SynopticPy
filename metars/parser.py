@@ -1,5 +1,7 @@
 ## Graciously provided by Karl Schneider (https://github.com/karlwx)
 ## October 19, 2021
+## Example: https://github.com/karlwx/Model-Scripts/blob/master/SynopticData%20Suface%20Observations.ipynb
+
 
 import fractions
 import re
