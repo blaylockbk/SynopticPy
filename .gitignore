@@ -14,3 +14,4 @@ build/*
 *.egg-info
 MANIFEST
 .eggs/
+core.*

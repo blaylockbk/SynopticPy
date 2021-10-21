@@ -15,6 +15,20 @@
         "statusBarItem.remoteBackground": "#465A9B",
         "button.background": "#2180AF",
 
-    }
+    },
+    "python.formatting.provider": "black",
+
+    "actionButtons": {
+        "reloadButton": null,
+        "loadNpmCommands": false,
+        "commands": [
+            {
+                "name": "Remake Docs",
+                "singleInstance": true,
+                "color": "#FADE2A",
+                "command": "conda activate basic38; cd docs;  ./remake_docs.sh",
+            },
+        ]
+    },
 }
 
