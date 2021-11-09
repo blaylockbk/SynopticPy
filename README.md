@@ -9,7 +9,8 @@
 <!-- Badges -->
 [![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
 ![](https://img.shields.io/github/license/blaylockbk/SynopticPy)
-[![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886) [![Join the chat at https://gitter.im/blaylockbk/SynopticPy](https://badges.gitter.im/blaylockbk/SynopticPy.svg)](https://gitter.im/blaylockbk/SynopticPy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886) 
+<!--[![Join the chat at https://gitter.im/blaylockbk/SynopticPy](https://badges.gitter.im/blaylockbk/SynopticPy.svg)](https://gitter.im/blaylockbk/SynopticPy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
 </div>
 
 
