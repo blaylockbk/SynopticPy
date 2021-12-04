@@ -9,6 +9,11 @@
             "command": "echo Hello ${env:USER} ${env:USERNAME}"
         },
         {
+            "label": "conda activate",
+            "type": "shell",
+            "command": "conda activate synoptic && conda env list"
+        },
+        {
             "label": "build docs",
             "type": "shell",
             "command": "cd docs && ./remake_docs.sh"
