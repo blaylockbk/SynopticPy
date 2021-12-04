@@ -25,7 +25,7 @@ try:
     from toolbox.cartopy_tools import common_features, pc
     from paint.standard2 import cm_tmp
 except:
-    warnings.warn("map making not available with cartopy_tools")
+    warnings.warn("map making not available without Brian's cartopy_tools")
 
 
 @pd.api.extensions.register_dataframe_accessor("synoptic")
@@ -80,7 +80,7 @@ class SynopticAccessor:
         df = self._obj
 
         if ax is None:
-            ax = common_features(**common_features_kw)
+            ax = common_features(**common_features_kw).ax
 
         stations = df.attrs["STATIONS"]
 
