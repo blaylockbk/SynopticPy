@@ -7,6 +7,7 @@ dependencies:
   - toml
   - numpy
   - pandas
+  - geopandas
   - requests
   - matplotlib
   - cartopy
@@ -19,14 +20,17 @@ dependencies:
   - h5py
   - pylint
 
-  # Formatter (I think I prefer Black)
+  # Formatter
   - black
-  - autopep8
+
+  # For testing
+  - pytest
 
   # Development Version from GitHub
   - pip:
       - git+https://github.com/blaylockbk/SynopticPy.git
       - git+https://github.com/blaylockbk/Carpenter_Workshop.git # "Can I borrow your hammer?"
+
 
   # Or, latest release from PyPI
   #  - SynopticPy    # Release Version

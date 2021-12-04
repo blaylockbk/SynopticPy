@@ -6,8 +6,8 @@
 Synoptic API
 ============
 
-Retrieve and plot mesonet data from thousands of stations via the Synoptic Data
-Mesonet API: https://developers.synopticdata.com/mesonet/.
+Retrieve and plot mesonet data from thousands of stations via the
+Synoptic Data Mesonet API: https://developers.synopticdata.com/mesonet/.
 
 Usage
 -----
@@ -28,6 +28,9 @@ from synoptic.services import stations_timeseries
 __author__ = "Brian Blaylock"
 __email__ = "blaylockbk@gmail.com"
 __url__ = "https://github.com/blaylockbk/SynopticPy"
+
+
+# Note to self: Synoptic's config file is created by the get_token.py script
 
 try:
     from synoptic.accessors import *

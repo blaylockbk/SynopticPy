@@ -6,9 +6,9 @@
 🎫 Synoptic API Token
 ======================
 SynopticPy needs to know your public Synoptic API token.
-You likely wont need to do anything with these functions. 
-The first time you import a ``synoptic.services`` function, it will 
-ask you for your API token and store that information in 
+You likely wont need to do anything with these functions.
+The first time you import a ``synoptic.services`` function, it will
+ask you for your API token and store that information in
 ``~/.config/SynopticPy/config.cfg``. You may edit that config file if
 you need. Please refer to the :ref:`User Guide`. for more info.
 
@@ -54,6 +54,13 @@ rename_set_1 = true
 ########################################################################
 # If a config file isn't found, make one
 if not _config_path.exists():
+    print(
+        f" ╭─────────────────────────────────────────────────╮\n"
+        f" │ I'm building SynotpicPy's default config file.  │\n"
+        f" ╰╥────────────────────────────────────────────────╯\n"
+        f" 👷🏻‍♂️"
+    )
+    _config_path.parent.mkdir(parents=True, exist_ok=True)
     with open(_config_path, "w") as f:
         toml_string = toml.dump(toml.loads(default_toml), f)
     print(f"⚙ Created config file [{_config_path}] with default values.")
@@ -61,13 +68,13 @@ if not _config_path.exists():
 msg = f"""
     | Dear SynopticPy User,
     |
-    | Thanks for installing SynopticPy. Before you get started, you 
-    | need to register for a free Synoptic Data account and obtain an 
+    | Thanks for installing SynopticPy. Before you get started, you
+    | need to register for a free Synoptic Data account and obtain an
     | API token. Follow these instructions:
     |
     | 1) Go to https://developers.synopticdata.com/mesonet/v2/getting-started/
     |    and click "Sign Up Now!" to register for an account.
-    | 
+    |
     | 2) Go to your profile settings and locate your public token at
     |    https://developers.synopticdata.com/settings/.
     |    You may also generate a new token in the "Manage Tokens" tab,

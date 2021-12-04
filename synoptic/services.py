@@ -5,24 +5,24 @@
 ==================
 👨🏻‍💻 Services
 ==================
-Get mesonet data from the `Synoptic API services 
+Get mesonet data from the `Synoptic API services
 <https://developers.synopticdata.com/>`_ and return data as a
-Pandas.DataFrame. Requires a `Synoptic API token 
+Pandas.DataFrame. Requires a `Synoptic API token
 <https://synopticlabs.org/api/guides/?getstarted>`_
 
 .. tip::
 
     Before you get started, please become familiar with the
-    `Synoptic API developers documentation 
+    `Synoptic API developers documentation
     <https://developers.synopticdata.com/mesonet/v2/>`_.
 
 
 Station Selector Parameters
 ---------------------------
 The fundamental method for specifying the data you query is done with
-**station selector arguments**. Below are some of the more common 
+**station selector arguments**. Below are some of the more common
 paramaters. Read `Station Selectors
-<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__ 
+<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
 in the API documents for all options and capabilities.
 
     stid : str or list
@@ -30,24 +30,24 @@ in the API documents for all options and capabilities.
         May be a single ID or list of IDs.
         ``['KSLC', 'UKBKB', 'KMRY']`` *or* ``'KSLC'``
     state : str or list
-        String or list of abbreviated state strings, 
+        String or list of abbreviated state strings,
         i.e. ``['UT','CA']``
     radius : str
-        Only return stations within a great-circle distance from a 
+        Only return stations within a great-circle distance from a
         specified lat/lon point or station (by STID). May be in form
         ``"lat,lon,miles"`` *or* ``"stid,miles"``
     vars : str or list
         Filter stations by the variables they report.
         i.e., ``['air_temp', 'wind_speed', 'wind_direction', etc.]``
-        Look at the `docs for more variables 
+        Look at the `docs for more variables
         <https://developers.synopticdata.com/about/station-variables/>`_.
     varsoperator : {'and', 'or'}
         Define how  ``vars`` is understood.
         Default ``'or'`` means any station with any variable is used.
-        However, ``'and'`` means a station must report every variable 
+        However, ``'and'`` means a station must report every variable
         to be listed.
     network - int
-        Network ID number. See `network API service 
+        Network ID number. See `network API service
         <https://developers.synopticdata.com/about/station-providers/>`_
         for more information.
     limit : int
@@ -55,11 +55,11 @@ in the API documents for all options and capabilities.
         ``limit=1`` will only return the nearest station.
     bbox : [lonmin, latmin, lonmax, lonmin]
         Get stations within a bounding box.
-    
+
 Other Common Parameters
 -----------------------
     units : {'metric', 'english'}
-        See `documentation 
+        See `documentation
         <https://developers.synopticdata.com/mesonet/v2/stations/latest/>`_
         for more details on custom units selection.
         An example of a custom unit is ``units='temp|F'`` to set just
@@ -77,7 +77,7 @@ Other Common Parameters
     but for earlier version, matplotlib doesn't like the DatetimeIndex
     with timezone information. In that case, you can remove the datetime
     information with something like this:
-    
+
     .. code-block:: python
 
         df.index.tz_localize(None)
