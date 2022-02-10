@@ -16,7 +16,7 @@ from pydoc import describe
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from synoptic.plots import plot_timeseries
+from synoptic.plots import plot_timeseries, plot_timeseries_wind
 
 
 def parse_extra_arguments(extra_args):
@@ -88,12 +88,9 @@ parser.add_argument(
     type=str,
     nargs="+",
     default="air_temp",
-    help="End datetime of the timeseries",
+    help="List of variables to retrieve",
 )
-parser.add_argument(
-    "--verbose",
-    action='store_true'
-)
+parser.add_argument("-v", "--verbose", action="store_true")
 
 
 args, extra_args = parser.parse_known_args()
@@ -107,6 +104,8 @@ if args.verbose:
 # (end arguments)
 # =======================================================================
 
-plot_timeseries(**vars(args), **extra)
 
-plt.show()
+if __name__ == "__main__":
+    plot_timeseries(**vars(args), **extra)
+
+    plt.show()
