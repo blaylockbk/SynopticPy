@@ -2,35 +2,41 @@ name: synoptic
 channels:
   - conda-forge
 dependencies:
-  - python=3
+  - python=3.10
   - pip
-  - toml
-  - numpy
-  - pandas
-  - geopandas
-  - requests
-  - matplotlib
+  - git
+
+  # Tools
+  # -----
   - cartopy
+  - geopandas
+  - h5py
   - jupyter
   - jupyterlab
-  - netcdf4
-  - scipy
+  - matplotlib
   - metpy
+  - netcdf4
+  - numpy
+  - pandas
+  - requests
+  - scipy
+  - toml
   - xarray
-  - h5py
-  - pylint
 
-  # Formatter
+  # Formatter and Testing
+  # ---------------------
   - black
-
-  # For testing
+  - jupyterlab_code_formatter
+  - isort
+  - pylint
   - pytest
 
-  # Development Version from GitHub
   - pip:
-      - git+https://github.com/blaylockbk/SynopticPy.git
-      - git+https://github.com/blaylockbk/Carpenter_Workshop.git # "Can I borrow your hammer?"
+    # Development Version from GitHub
+    - git+https://github.com/blaylockbk/SynopticPy.git
 
+    # Or, latest release from PyPI
+    #- SynopticPy
 
-  # Or, latest release from PyPI
-  #  - SynopticPy    # Release Version
+    # Borrow some tools from Brian's garage
+    - git+https://github.com/blaylockbk/Carpenter_Workshop.git
