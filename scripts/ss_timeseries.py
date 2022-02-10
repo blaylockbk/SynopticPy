@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/p/home/blaylock/anaconda3/envs/synoptic/bin/python
 
 """
 ========================
