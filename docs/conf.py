@@ -40,9 +40,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.napoleon",
-    #'sphinx.ext.jsmath',    # Can't seem to get the math function to work
     "sphinx_panels",
-    "recommonmark",
     "autodocsumm",
     "sphinx_markdown_tables",
     "myst_parser",
@@ -79,19 +77,18 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".ipynb_checkpoints", ".vscode"]
 
 
-# -- Options for HTML output -------------------------------------------------
+# --- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-# html_theme = "sphinx_rtd_theme"
 html_theme = "pydata_sphinx_theme"
 
 html_theme_options = {
-    "github_url": "https://github.com/blaylockbk/SynopticPy",
+    "github_url": "https://github.com/blaylockbk/goes2go",
     "twitter_url": "https://twitter.com/blaylockbk",
     "navbar_end": ["navbar-icon-links.html", "search-field.html"],
-    "google_analytics_id": "G-HBCJD6ZZKM",
+    "google_analytics_id": "G-NWK8MJNNGX",
     "use_edit_page_button": True,
     "show_toc_level": 1,
     "external_links": [
@@ -120,10 +117,10 @@ html_context = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static", "../images"]
 
-html_css_files = [
-    # 'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css',  # the pydata theme already does this DO NOT LOAD IT AGAIN!
-    "brian_style.css"
-]
+fontawesome_included = True
+panels_add_bootstrap_css = False  # False, because pydata theme already loads it
+
+html_css_files = ["brian_style.css"]
 
 html_js_files = [
     "https://kit.fontawesome.com/f6cc126dcc.js",
@@ -133,6 +130,30 @@ html_js_files = [
 autodoc_default_options = {
     "autosummary": True,  # Include a members "table of contents"
     "members": True,  # Document all functions/members
+    "special-members": "__init__",
 }
 
-autodoc_mock_imports = ["xesmf", "siphon", "imageio"]
+autodoc_mock_imports = [
+    "xesmf",
+    "numpy",
+    "matplotlib",
+    "pandas",
+    "xarray",
+    "cartopy",
+    "cfgrib",
+    "imageio",
+    "siphon",
+]
+
+
+"""
+IMPORTANT NOTES ABOUT PUBLISHING TO GITHUB PAGES
+-----------------------------------------------
+1. Must have an empty file called .nojekell in this directory.
+
+2. Include an index.html file to redirect to the actual html build
+   Something like this in that file (yes, only one line)...
+        <meta http-equiv="Refresh" content="0;url=_build/html/"/>
+
+3.
+"""
