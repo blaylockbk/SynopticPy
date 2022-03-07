@@ -1,0 +1,1254 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>synoptic.services &#8212; SynopticPy Docs 0.1 documentation</title>
+    
+    <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  
+    
+    <link rel="stylesheet"
+      href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin
+      href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+    
+      
+  
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/pydata-sphinx-theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/brian_style.css" />
+    
+    <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://kit.fontawesome.com/f6cc126dcc.js"></script>
+    <link rel="shortcut icon" href="../../_static/wxicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-NWK8MJNNGX"></script>
+<script>
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    gtag('js', new Date());
+                    gtag('config', 'G-NWK8MJNNGX');
+                </script>
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main"><div class="container-xl">
+
+  <div id="navbar-start">
+    
+    
+
+<a class="navbar-brand" href="../../index.html">
+  <img src="../../_static/SynopticPy_logo.png" class="logo" alt="logo">
+</a>
+
+
+    
+  </div>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapsible" aria-controls="navbar-collapsible" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  
+  <div id="navbar-collapsible" class="col-lg-9 collapse navbar-collapse">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <ul id="navbar-main-elements" class="navbar-nav">
+    <li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../user_guide/index.html">
+  User Guide
+ </a>
+</li>
+
+<li class="toctree-l1 nav-item">
+ <a class="reference internal nav-link" href="../../reference_guide/index.html">
+  Reference Guide
+ </a>
+</li>
+
+    
+    <li class="nav-item">
+        <a class="nav-link nav-external" href="https://blaylockbk.github.io/goes2go/_build/html/">GOES-2-go<i class="fas fa-external-link-alt"></i></a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link nav-external" href="https://blaylockbk.github.io/Herbie/_build/html/">Herbie<i class="fas fa-external-link-alt"></i></a>
+    </li>
+    
+</ul>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/blaylockbk/goes2go" rel="noopener" target="_blank" title="GitHub"><span><i class="fab fa-github-square"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://twitter.com/blaylockbk" rel="noopener" target="_blank" title="Twitter"><span><i class="fab fa-twitter-square"></i></span>
+            <label class="sr-only">Twitter</label></a>
+        </li>
+      </ul>
+      </div>
+      
+      <div class="navbar-end-item">
+        <form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+            
+            <!-- Only show if we have sidebars configured, else just a small margin  -->
+            <div class="col-12 col-md-3 bd-sidebar">
+              <div class="sidebar-start-items"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+  <div class="bd-toc-item active">
+    
+  </div>
+</nav>
+              </div>
+              <div class="sidebar-end-items">
+              </div>
+            </div>
+            
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+            
+          </div>
+          
+
+          
+          
+            
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for synoptic.services</h1><div class="highlight"><pre>
+<span></span><span class="c1">## Brian Blaylock</span>
+<span class="c1">## August 13, 2020    COVID-19 Era</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">==================</span>
+<span class="sd">👨🏻‍💻 Services</span>
+<span class="sd">==================</span>
+<span class="sd">Get mesonet data from the `Synoptic API services</span>
+<span class="sd">&lt;https://developers.synopticdata.com/&gt;`_ and return data as a</span>
+<span class="sd">Pandas.DataFrame. Requires a `Synoptic API token</span>
+<span class="sd">&lt;https://synopticlabs.org/api/guides/?getstarted&gt;`_</span>
+
+<span class="sd">.. tip::</span>
+
+<span class="sd">    Before you get started, please become familiar with the</span>
+<span class="sd">    `Synoptic API developers documentation</span>
+<span class="sd">    &lt;https://developers.synopticdata.com/mesonet/v2/&gt;`_.</span>
+
+
+<span class="sd">Station Selector Parameters</span>
+<span class="sd">---------------------------</span>
+<span class="sd">The fundamental method for specifying the data you query is done with</span>
+<span class="sd">**station selector arguments**. Below are some of the more common</span>
+<span class="sd">paramaters. Read `Station Selectors</span>
+<span class="sd">&lt;https://developers.synopticdata.com/mesonet/v2/station-selectors/&gt;`__</span>
+<span class="sd">in the API documents for all options and capabilities.</span>
+
+<span class="sd">    stid : str or list</span>
+<span class="sd">        Specify which stations you want to get data for by Station ID.</span>
+<span class="sd">        May be a single ID or list of IDs.</span>
+<span class="sd">        ``[&#39;KSLC&#39;, &#39;UKBKB&#39;, &#39;KMRY&#39;]`` *or* ``&#39;KSLC&#39;``</span>
+<span class="sd">    state : str or list</span>
+<span class="sd">        String or list of abbreviated state strings,</span>
+<span class="sd">        i.e. ``[&#39;UT&#39;,&#39;CA&#39;]``</span>
+<span class="sd">    radius : str</span>
+<span class="sd">        Only return stations within a great-circle distance from a</span>
+<span class="sd">        specified lat/lon point or station (by STID). May be in form</span>
+<span class="sd">        ``&quot;lat,lon,miles&quot;`` *or* ``&quot;stid,miles&quot;``</span>
+<span class="sd">    vars : str or list</span>
+<span class="sd">        Filter stations by the variables they report.</span>
+<span class="sd">        i.e., ``[&#39;air_temp&#39;, &#39;wind_speed&#39;, &#39;wind_direction&#39;, etc.]``</span>
+<span class="sd">        Look at the `docs for more variables</span>
+<span class="sd">        &lt;https://developers.synopticdata.com/about/station-variables/&gt;`_.</span>
+<span class="sd">    varsoperator : {&#39;and&#39;, &#39;or&#39;}</span>
+<span class="sd">        Define how  ``vars`` is understood.</span>
+<span class="sd">        Default ``&#39;or&#39;`` means any station with any variable is used.</span>
+<span class="sd">        However, ``&#39;and&#39;`` means a station must report every variable</span>
+<span class="sd">        to be listed.</span>
+<span class="sd">    network - int</span>
+<span class="sd">        Network ID number. See `network API service</span>
+<span class="sd">        &lt;https://developers.synopticdata.com/about/station-providers/&gt;`_</span>
+<span class="sd">        for more information.</span>
+<span class="sd">    limit : int</span>
+<span class="sd">        Specify how many of the closest stations you want to receive.</span>
+<span class="sd">        ``limit=1`` will only return the nearest station.</span>
+<span class="sd">    bbox : [lonmin, latmin, lonmax, lonmin]</span>
+<span class="sd">        Get stations within a bounding box.</span>
+
+<span class="sd">Other Common Parameters</span>
+<span class="sd">-----------------------</span>
+<span class="sd">    units : {&#39;metric&#39;, &#39;english&#39;}</span>
+<span class="sd">        See `documentation</span>
+<span class="sd">        &lt;https://developers.synopticdata.com/mesonet/v2/stations/latest/&gt;`_</span>
+<span class="sd">        for more details on custom units selection.</span>
+<span class="sd">        An example of a custom unit is ``units=&#39;temp|F&#39;`` to set just</span>
+<span class="sd">        the temperature to degrees Fahrenheit.</span>
+<span class="sd">        For ``units=&#39;temp|K,pres|mb&#39;``,temperatures to Kelvin and</span>
+<span class="sd">        pressures will be in hecto Pascals (mb, or hPa).</span>
+<span class="sd">    obtimezone : {&#39;UTC&#39;, &#39;local&#39;}</span>
+<span class="sd">        Specify the time to be UTC or the station&#39;s local time.</span>
+<span class="sd">    status : {&#39;active&#39;, &#39;inactive&#39;}</span>
+<span class="sd">        Specify if the statation is active or inactive.</span>
+
+<span class="sd">.. note::</span>
+<span class="sd">    These Datetimes have timezone information. When plotting,</span>
+<span class="sd">    I haven&#39;t had issues with Pandas 1.1.0 and matplotlib 3.3.0,</span>
+<span class="sd">    but for earlier version, matplotlib doesn&#39;t like the DatetimeIndex</span>
+<span class="sd">    with timezone information. In that case, you can remove the datetime</span>
+<span class="sd">    information with something like this:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        df.index.tz_localize(None)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">urllib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">synoptic.get_token</span> <span class="kn">import</span> <span class="n">config</span>
+
+<span class="c1"># Available API Services</span>
+<span class="c1"># https://developers.synopticdata.com/mesonet/v2/</span>
+<span class="n">_service</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;auth&quot;</span><span class="p">,</span> <span class="s2">&quot;networks&quot;</span><span class="p">,</span> <span class="s2">&quot;networktypes&quot;</span><span class="p">,</span> <span class="s2">&quot;variables&quot;</span><span class="p">,</span> <span class="s2">&quot;qctypes&quot;</span><span class="p">}</span>
+<span class="n">_stations</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="s2">&quot;timeseries&quot;</span><span class="p">,</span> <span class="s2">&quot;precipitation&quot;</span><span class="p">,</span> <span class="s2">&quot;nearesttime&quot;</span><span class="p">,</span> <span class="s2">&quot;latest&quot;</span><span class="p">}</span>
+<span class="n">_service</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_stations</span><span class="p">)</span>
+
+<span class="c1"># Station Selector Parameters Set</span>
+<span class="n">_stn_selector</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;stid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;country&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;state&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;country&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nwszone&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;nwsfirezone&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cwa&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gacc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;subgacc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;vars&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;varsoperator&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;network&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;radius&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;limit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bbox&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fields&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="spddir_to_uv"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.spddir_to_uv">[docs]</a><span class="k">def</span> <span class="nf">spddir_to_uv</span><span class="p">(</span><span class="n">wspd</span><span class="p">,</span> <span class="n">wdir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the u and v wind components from wind speed and direction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    wspd, wdir : array_like</span>
+<span class="sd">        Arrays of wind speed and wind direction (in degrees)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    u and v wind components</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wspd</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wdir</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">wspd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wspd</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">wdir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">wdir</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">rad</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">180.0</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="o">-</span><span class="n">wspd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rad</span> <span class="o">*</span> <span class="n">wdir</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="o">-</span><span class="n">wspd</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rad</span> <span class="o">*</span> <span class="n">wdir</span><span class="p">)</span>
+
+    <span class="c1"># If the speed is zero, then u and v should be set to zero (not NaN)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="s2">&quot;__len__&quot;</span><span class="p">):</span>
+        <span class="n">u</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">wspd</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">v</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">wspd</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">wspd</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+<span class="c1"># Rename &quot;set_1&quot; and &quot;value_1&quot; names is a convience I prefer.</span>
+<span class="c1">## You can turn these off in your requests by setting `rename_set_1`</span>
+<span class="c1">## and `rename_value_1` to False in your function call where applicable.</span>
+<span class="k">def</span> <span class="nf">_rename_set_1</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rename Variable Columns Names</span>
+
+<span class="sd">    Remove the &#39;set_1&#39; and &#39;set_1d&#39; from column names</span>
+<span class="sd">    Sets 2+ will retain their full names.</span>
+<span class="sd">    The user should refer to SENSOR_VARIABLES to see which</span>
+<span class="sd">    variables are derived</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">## Get list of current column names</span>
+    <span class="n">dummy_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+    <span class="c1"># Remove &#39;_set_1&#39; and &#39;_set_1d&#39; from column name</span>
+    <span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;_set_1&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dummy_columns</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Number of observations in each column</span>
+    <span class="n">obs_count</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+
+    <span class="c1"># Sometimes, set_1 and set_1d are both returned. In that</span>
+    <span class="c1"># case, we need to determin which column has the most</span>
+    <span class="c1"># observations and use that as the main variable. The set</span>
+    <span class="c1"># with fewer data will retain the &#39;set_1&#39; or &#39;set_1d&#39; label.</span>
+    <span class="n">renames</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">var_names</span><span class="p">):</span>
+        <span class="c1"># Determine all indices this variable type is located</span>
+        <span class="n">var_bool</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_set_1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dummy_columns</span><span class="p">]</span>
+        <span class="n">var_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">var_bool</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># This variable is only listed once. Rename with var_name</span>
+            <span class="n">renames</span><span class="p">[</span><span class="n">dummy_columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var_names</span><span class="p">[</span><span class="n">var_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_idx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># This variable is listed more than once.</span>
+            <span class="c1"># Determine which set has the most non-NaN data and</span>
+            <span class="c1"># rename that column as var_name.</span>
+            <span class="n">max_idx</span> <span class="o">=</span> <span class="n">var_idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">([</span><span class="n">obs_count</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_idx</span><span class="p">])]</span>
+            <span class="k">if</span> <span class="n">max_idx</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+                <span class="c1"># If the current iteration matches the var_idx with</span>
+                <span class="c1"># the most data, rename the column without set number.</span>
+                <span class="n">renames</span><span class="p">[</span><span class="n">dummy_columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var_names</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># If the current iteration does not match the var_idx</span>
+                <span class="c1"># with the most data, then retain the original column</span>
+                <span class="c1"># name with the set number.</span>
+                <span class="n">renames</span><span class="p">[</span><span class="n">dummy_columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">dummy_columns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This case should only occur during my testing.</span>
+            <span class="n">renames</span><span class="p">[</span><span class="n">dummy_columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">dummy_columns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">renames</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;RENAMED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renames</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">_rename_value_1</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Rename Variable Row (index) Names</span>
+
+<span class="sd">    Remove the ``value_1`` and ``value_1d`` from column names.</span>
+<span class="sd">    Values 2+ will retain their full names. If both</span>
+<span class="sd">    ``value_1`` and ``value_1d`` are returned, the newest observation</span>
+<span class="sd">    will be used as the main index while the older will preserve the</span>
+<span class="sd">    ``_value`` label.</span>
+
+<span class="sd">    The user should refer to SENSOR_VARIABLES to see which</span>
+<span class="sd">    variables are derived.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">## Get list of current column names</span>
+    <span class="n">dummy_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="c1"># Remove &#39;_set_1&#39; and &#39;_set_1d&#39; from column name</span>
+    <span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;_value_1&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dummy_rows</span>
+    <span class="p">]</span>
+
+    <span class="c1"># Sometimes, value_1 and value_1d are both returned. In that</span>
+    <span class="c1"># case, we need to determine which is the *newest*</span>
+    <span class="c1"># observations and use that as the main variable. The older value</span>
+    <span class="c1"># will retain the &#39;value_1&#39; or &#39;value_1d&#39; label.</span>
+
+    <span class="n">renames</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">var_names</span><span class="p">):</span>
+        <span class="c1"># Determine all indices this variable type is located</span>
+        <span class="n">var_bool</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_value_1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dummy_rows</span><span class="p">]</span>
+        <span class="n">var_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">var_bool</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># This variable is only listed once. Rename with var_name</span>
+            <span class="n">renames</span><span class="p">[</span><span class="n">dummy_rows</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var_names</span><span class="p">[</span><span class="n">var_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_idx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># This variable is listed more than once.</span>
+            <span class="c1"># Determine which observation is older and</span>
+            <span class="c1"># rename that row as var_name.</span>
+            <span class="n">max_idx</span> <span class="o">=</span> <span class="n">var_idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">([</span><span class="n">df</span><span class="o">.</span><span class="n">date_time</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">var_idx</span><span class="p">])]</span>
+            <span class="k">if</span> <span class="n">max_idx</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+                <span class="c1"># If the current iteration matches the var_idx with</span>
+                <span class="c1"># the most data, rename the column without set number.</span>
+                <span class="n">renames</span><span class="p">[</span><span class="n">dummy_rows</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">var_names</span><span class="p">[</span><span class="n">max_idx</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># If the current iteration does not match the var_idx</span>
+                <span class="c1"># with the most data, then retain the original column</span>
+                <span class="c1"># name with the set number.</span>
+                <span class="n">renames</span><span class="p">[</span><span class="n">dummy_rows</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">dummy_rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># This case for row names that don&#39;t have _value in them (i.e., ELEVATION).</span>
+            <span class="n">renames</span><span class="p">[</span><span class="n">dummy_rows</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">dummy_rows</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">renames</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;RENAMED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renames</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="k">def</span> <span class="nf">_parse_latest_nearesttime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rename_value_1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parsing JSON for ``latest`` and ``nearesttime`` is the same.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Here&#39;s a dictionary to store all SENSOR_VARIABLES and RENAMED</span>
+    <span class="c1"># WARNING: Some of these could be overwritten</span>
+    <span class="n">senvars</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">renamed</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;STATION&quot;</span><span class="p">]:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;OBSERVATIONS&quot;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+
+        <span class="c1"># Add other station info to the DataFrame (i.e., ELEVATION, latitude, etc.)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Attempt to convert values to a float, if possible.</span>
+            <span class="c1"># (i.e, latitude, longitude, elevation, MNET_ID, etc.)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LATITUDE&quot;</span><span class="p">,</span> <span class="s2">&quot;LONGITUDE&quot;</span><span class="p">]:</span>
+                <span class="c1"># lat/lon is lowercase for CF compliant variable name</span>
+                <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span>
+
+        <span class="c1"># Break wind into U and V components, if speed and direction are available</span>
+        <span class="n">senvars</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="s2">&quot;SENSOR_VARIABLES&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span> <span class="ow">in</span> <span class="n">senvars</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;wind_speed&quot;</span><span class="p">,</span> <span class="s2">&quot;wind_direction&quot;</span><span class="p">]]):</span>
+            <span class="k">for</span> <span class="n">i_spd</span><span class="p">,</span> <span class="n">i_dir</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">senvars</span><span class="p">[</span><span class="s2">&quot;wind_speed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">senvars</span><span class="p">[</span><span class="s2">&quot;wind_direction&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">obs</span><span class="p">[</span><span class="n">i_spd</span><span class="p">][</span><span class="s2">&quot;date_time&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">obs</span><span class="p">[</span><span class="n">i_spd</span><span class="p">][</span><span class="s2">&quot;date_time&quot;</span><span class="p">]:</span>
+                    <span class="n">wspd</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="n">i_spd</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                    <span class="n">wdir</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="n">i_dir</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+                    <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">spddir_to_uv</span><span class="p">(</span><span class="n">wspd</span><span class="p">,</span> <span class="n">wdir</span><span class="p">)</span>
+                    <span class="n">this_set</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i_spd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+                    <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;wind_u_</span><span class="si">{</span><span class="n">this_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">obs</span><span class="p">[</span><span class="n">i_spd</span><span class="p">][</span><span class="s2">&quot;date_time&quot;</span><span class="p">],</span> <span class="n">u</span><span class="p">]</span>
+                    <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;wind_v_</span><span class="si">{</span><span class="n">this_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">obs</span><span class="p">[</span><span class="n">i_spd</span><span class="p">][</span><span class="s2">&quot;date_time&quot;</span><span class="p">],</span> <span class="n">v</span><span class="p">]</span>
+
+        <span class="c1"># Convert date_time to datetime object</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;date_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">&quot;date_time&quot;</span><span class="p">])</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">rename_value_1</span><span class="p">:</span>
+            <span class="c1"># Rename Index Rows (remove _value_1 label)</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_rename_value_1</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+            <span class="n">renamed</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">renamed</span><span class="p">,</span> <span class="o">**</span><span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;RENAMED&quot;</span><span class="p">]}</span>
+
+        <span class="n">rename</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">date_time</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="p">[</span><span class="s1">&#39;STID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_date_time&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;STID&quot;</span><span class="p">])</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">rename</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">senvars</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">senvars</span><span class="p">,</span> <span class="o">**</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;SENSOR_VARIABLES&quot;</span><span class="p">]}</span>
+        <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;STATIONS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;date_time&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;DATETIMES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;date_time&quot;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;QC_SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;QC_SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;RENAMED&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">renamed</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SENSOR_VARIABLES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">senvars</span>
+
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="c1"># =======================================================================</span>
+<span class="c1"># =======================================================================</span>
+
+
+<div class="viewcode-block" id="synoptic_api"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.synoptic_api">[docs]</a><span class="k">def</span> <span class="nf">synoptic_api</span><span class="p">(</span>
+    <span class="n">service</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hide_token&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">hide_token</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hide_token&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Request data from the Synoptic API. Returns a **requests** object.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    - https://developers.synopticdata.com/mesonet/v2/</span>
+<span class="sd">    - https://developers.synopticdata.com/mesonet/explorer/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    service : str</span>
+<span class="sd">        API service to use, including {&#39;auth&#39;, &#39;latest&#39;, &#39;metadata&#39;,</span>
+<span class="sd">        &#39;nearesttime&#39;, &#39;networks&#39;, &#39;networktypes&#39;, &#39;precipitation&#39;,</span>
+<span class="sd">        &#39;qctypes&#39;, &#39;timeseries&#39;, &#39;variables&#39;}</span>
+<span class="sd">    verbose : {True, False}</span>
+<span class="sd">        Print extra details to the screen.</span>
+<span class="sd">    hide_token : bool</span>
+<span class="sd">        If True, the token will be hidden when API URL is printed.</span>
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">        API request parameters (arguments).</span>
+<span class="sd">        Lists will be converted to a comma-separated string.</span>
+<span class="sd">        Datetimes (datetime or pandas) will be parsed by f-string to</span>
+<span class="sd">        YYYYmmddHHMM.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A ``requests.models.Response`` object from ``requests.get(URL, params)``</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    To read the json data for metadata for a station</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        synoptic_api(&#39;metadata&#39;, stid=&#39;WBB&#39;).json()</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        synoptic_api(&#39;metadata&#39;, stid=[&#39;WBB&#39;, &#39;KSLC&#39;]).json()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">help_url</span> <span class="o">=</span> <span class="s2">&quot;https://developers.synopticdata.com/mesonet/v2/&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">service</span> <span class="ow">in</span> <span class="n">_service</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;`service` must be one of </span><span class="si">{</span><span class="n">_service</span><span class="si">}</span><span class="s2">. See API documentation </span><span class="si">{</span><span class="n">help_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1">## Service URL</span>
+    <span class="c1">##------------</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="s2">&quot;https://api.synopticdata.com/v2&quot;</span>
+
+    <span class="k">if</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">_stations</span><span class="p">:</span>
+        <span class="n">URL</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">/stations/</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">URL</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1">## Set API token</span>
+    <span class="c1">##--------------</span>
+    <span class="c1">## Default token is set in the ~/.config/SyonpticPy/config.toml file,</span>
+    <span class="c1">## But you may overwrite it by passing the keyward argument `token=`</span>
+    <span class="n">params</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">))</span>
+
+    <span class="c1">## Parse parameters</span>
+    <span class="c1">##-----------------</span>
+    <span class="c1"># Change some keyword parameters to the appropriate request format</span>
+
+    <span class="c1">## 1) Force all param keys to be lower case</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="c1">## 2) Join lists as comma separated strings.</span>
+    <span class="c1">##    For example, stid=[&#39;KSLC&#39;, &#39;KMRY&#39;] --&gt; stid=&#39;KSLC,KRMY&#39;.</span>
+    <span class="c1">##                 radius=[40, -100, 10] --&gt; radius=&#39;40,-100,10&#39;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">]:</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">value</span><span class="p">])</span>
+
+    <span class="c1">## 3) Datetimes should be converted to string: &#39;YYYYmmddHHMM&#39; (obrange is &#39;YYYYmmdd&#39;)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">,</span> <span class="s2">&quot;expire&quot;</span><span class="p">,</span> <span class="s2">&quot;attime&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">date</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
+                <span class="c1"># Put into a string that is recognized by Pandas</span>
+                <span class="n">date</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">date</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># formatted as &quot;YYYYmmdd HH&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to convert input to a Pandas Datetime</span>
+                <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🐼 Pandas could not parse [</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">] as a datetime.&quot;</span><span class="p">)</span>
+            <span class="c1"># Format the datetime as a Synoptic-recognized string.</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="s2">%Y%m%d%H%M</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1">## 4) Special case for &#39;obrange&#39; parameter dates...</span>
+    <span class="k">if</span> <span class="s2">&quot;obrange&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># obrange could be one date or a list of two dates.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">],</span> <span class="s2">&quot;__len__&quot;</span><span class="p">):</span>
+            <span class="n">params</span><span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">]]</span>
+        <span class="n">params</span><span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">%Y%m%d</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;obrange&quot;</span><span class="p">]])</span>
+
+    <span class="c1">## 5) Timedeltas should be converted to int in minutes...</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;recent&quot;</span><span class="p">,</span> <span class="s2">&quot;within&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to convert input to Pandas timedelta</span>
+                <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🐼 Pandas could not parse [</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">dt</span><span class="si">}</span><span class="s2">] as a timedelta.&quot;</span><span class="p">)</span>
+            <span class="c1"># Format the datetime as a Synoptic-recognized int of minutes</span>
+            <span class="n">to_minutes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_minutes</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checking for data </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2"> minutes.&quot;</span><span class="p">)</span>
+
+    <span class="c1">########################</span>
+    <span class="c1"># Make the API request #</span>
+    <span class="c1">########################</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">service</span> <span class="o">==</span> <span class="s2">&quot;auth&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">f</span>
+
+    <span class="c1"># Check Returned Data</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">][</span><span class="s2">&quot;RESPONSE_CODE&quot;</span><span class="p">]</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">][</span><span class="s2">&quot;RESPONSE_MESSAGE&quot;</span><span class="p">]</span>
+    <span class="n">decode_url</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;🛑 There are errors in the API request </span><span class="si">{</span><span class="n">decode_url</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">hide_token</span><span class="p">:</span>
+            <span class="n">token_idx</span> <span class="o">=</span> <span class="n">decode_url</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;token=&quot;</span><span class="p">)</span>
+            <span class="n">decode_url</span> <span class="o">=</span> <span class="n">decode_url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="n">decode_url</span><span class="p">[</span><span class="n">token_idx</span> <span class="p">:</span> <span class="n">token_idx</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">32</span><span class="p">],</span> <span class="s2">&quot;token=🙈HIDDEN&quot;</span>
+            <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> 🚚💨 Speedy Delivery from Synoptic API [</span><span class="si">{</span><span class="n">service</span><span class="si">}</span><span class="s2">]: </span><span class="si">{</span><span class="n">decode_url</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">f</span></div>
+
+
+<div class="viewcode-block" id="stations_metadata"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.stations_metadata">[docs]</a><span class="k">def</span> <span class="nf">stations_metadata</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get station metadata for stations as a Pandas DataFrame.</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/stations/metadata/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">        Synoptic API arguments used to specify the data request.</span>
+<span class="sd">        e.g., sensorvars, obrange, obtimezone, etc.</span>
+
+<span class="sd">    Others: STATION SELECTION PARAMETERS</span>
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/station-selectors/</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">i</span> <span class="ow">in</span> <span class="n">_stn_selector</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;🤔 Please assign a station selector (i.e., </span><span class="si">{</span><span class="n">_stn_selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="c1"># Initialize a DataFrame</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;STATION&quot;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;STID&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;STATION&quot;</span><span class="p">]])</span>
+
+    <span class="c1"># Convert data to numeric values (if possible)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Deal with &quot;Period Of Record&quot; dictionary</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">PERIOD_OF_RECORD</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;start&quot;</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">)</span>
+
+    <span class="c1"># Rename some fields.</span>
+    <span class="c1"># latitude and longitude are made lowercase to conform to CF standard</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PERIOD_OF_RECORD&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+            <span class="n">LATITUDE</span><span class="o">=</span><span class="s2">&quot;latitude&quot;</span><span class="p">,</span>
+            <span class="n">LONGITUDE</span><span class="o">=</span><span class="s2">&quot;longitude&quot;</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="s2">&quot;RECORD_START&quot;</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="s2">&quot;RECORD_END&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;URL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">unquote</span><span class="p">(</span><span class="n">web</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ELEVATION&quot;</span><span class="p">:</span> <span class="s2">&quot;ft&quot;</span><span class="p">}</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;stations_metadata&quot;</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="stations_timeseries"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.stations_timeseries">[docs]</a><span class="k">def</span> <span class="nf">stations_timeseries</span><span class="p">(</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">rename_set_1</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rename_set_1&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get station data for time series.</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/stations/timeseries/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rename_set_1 : bool</span>
+
+<span class="sd">        - True: Rename the DataFrame columns to not include the set_1</span>
+<span class="sd">          or set_1d in the name. I prefer these names to more easily</span>
+<span class="sd">          key in on the variables I want.</span>
+<span class="sd">          Where there are both set_1 and set_1d for a variable, only the</span>
+<span class="sd">          column with the most non-NaN values will be renamed.</span>
+<span class="sd">        - False: Perserve the original column names.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            Observations returned from the Synoptic API are returned</span>
+<span class="sd">            with set numbers (&quot;air_temp_set_1&quot;, &quot;air_temp_set_2&quot;,</span>
+<span class="sd">            &quot;dew_point_temperature_set_1d&quot;, etc.). The set number refers</span>
+<span class="sd">            to a different observing method (maybe a station has two</span>
+<span class="sd">            temperature sensors or two heights). The &#39;d&#39; means the</span>
+<span class="sd">            variable was derived from other data.</span>
+
+<span class="sd">            In my general use, I don&#39;t usually care which variables</span>
+<span class="sd">            are derived, and just want the variable that provides the</span>
+<span class="sd">            most data. Almost always, I want to use set_1.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            The DataFrame attribute &#39;RENAMED&#39; is provided to</span>
+<span class="sd">            show how the columns were renamed.</span>
+<span class="sd">            You may also look at the &#39;SENSOR_VARIABLES&#39; attribute for</span>
+<span class="sd">            more specific information, like how each set is derived.</span>
+
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">        Synoptic API arguments used to specify the data request.</span>
+<span class="sd">        **Must include** ``start`` and ``end`` argument *or* ``recent``.</span>
+<span class="sd">    start, end : datetime, pandas Timestamp, or pandas.to_datetime-parsable str</span>
+<span class="sd">        Start and end of time series</span>
+<span class="sd">    recent : int, timedelta, or Pandas Timedelta</span>
+<span class="sd">        If int, given as minutes for recent observations.</span>
+<span class="sd">        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`</span>
+<span class="sd">        and ``recent=pd.to_timedelta(&#39;1D&#39;)``.</span>
+<span class="sd">        Or, give a pandas-recognized timedelta-string, like &#39;1W&#39; for one</span>
+<span class="sd">        week, &#39;1h&#39; for one hour, etc. ``recent=&#39;1D&#39;`` for one day.</span>
+<span class="sd">        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html</span>
+<span class="sd">        for additional units.</span>
+
+<span class="sd">    Other params include ``obtimezone``, ``units``, and any Station</span>
+<span class="sd">    Selector parameter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        stations_timeseries(stid=&#39;WBB&#39;, recent=100)</span>
+<span class="sd">        stations_timeseries(radius=&#39;UKBKB,10&#39;, vars=&#39;air_temp&#39;, recent=100)</span>
+<span class="sd">        stations_timeseries(stid=&#39;KMRY&#39;, recent=60, vars=&#39;air_temp&#39;, obtimezone=&#39;Local&#39;, units=&#39;temp|F&#39;)</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        import matplotlib.pyplot as plt</span>
+<span class="sd">        from matplotlib.dates import DateFormatter</span>
+<span class="sd">        df = stations_timeseries(stid=&#39;WBB&#39;, recent=300)</span>
+<span class="sd">        plt.plot(df[&#39;air_temp&#39;])</span>
+<span class="sd">        plt.plot(df[&#39;dew_point_temperature&#39;])</span>
+<span class="sd">        plt.gca().xaxis.set_major_formatter(DateFormatter(&#39;%b %d %H:%M&#39;))</span>
+<span class="sd">        plt.legend()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">check1</span> <span class="o">=</span> <span class="s2">&quot;start&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="s2">&quot;end&quot;</span> <span class="ow">in</span> <span class="n">params</span>
+    <span class="n">check2</span> <span class="o">=</span> <span class="s2">&quot;recent&quot;</span> <span class="ow">in</span> <span class="n">params</span>
+    <span class="k">assert</span> <span class="n">check1</span> <span class="ow">or</span> <span class="n">check2</span><span class="p">,</span> <span class="s2">&quot;🤔 `start` and `end` *or* `recent` is required&quot;</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">i</span> <span class="ow">in</span> <span class="n">_stn_selector</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;🤔 Please assign a station selector (i.e., </span><span class="si">{</span><span class="n">_stn_selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;timeseries&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="c1"># Build a separate pandas.DataFrame for each station.</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">stn</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;STATION&quot;</span><span class="p">]:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">stn</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;OBSERVATIONS&quot;</span><span class="p">)</span>
+        <span class="n">senvars</span> <span class="o">=</span> <span class="n">stn</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;SENSOR_VARIABLES&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Turn Data into a DataFrame</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;date_time&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Remaining data in dict will be returned as attribute</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">stn</span>
+
+        <span class="c1"># Convert datetime index string to datetime</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="c1"># Sort Column order alphabetically</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">sort_values</span><span class="p">())</span>
+
+        <span class="c1"># Break wind into U and V components, if speed and direction are available</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="s2">&quot;wind_speed&quot;</span> <span class="ow">in</span> <span class="n">senvars</span><span class="p">,</span> <span class="s2">&quot;wind_direction&quot;</span> <span class="ow">in</span> <span class="n">senvars</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">i_spd</span><span class="p">,</span> <span class="n">i_dir</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">senvars</span><span class="p">[</span><span class="s2">&quot;wind_speed&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">senvars</span><span class="p">[</span><span class="s2">&quot;wind_direction&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">spddir_to_uv</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="n">i_spd</span><span class="p">],</span> <span class="n">obs</span><span class="p">[</span><span class="n">i_dir</span><span class="p">])</span>
+                <span class="n">this_set</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i_spd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+                <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;wind_u_</span><span class="si">{</span><span class="n">this_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+                <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;wind_v_</span><span class="si">{</span><span class="n">this_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">][</span><span class="s2">&quot;wind_u&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">][</span><span class="s2">&quot;wind_speed&quot;</span><span class="p">]</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">][</span><span class="s2">&quot;wind_v&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UNITS&quot;</span><span class="p">][</span><span class="s2">&quot;wind_speed&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">rename_set_1</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">_rename_set_1</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="c1"># Drop Row if all data is NaN/None</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># In the DataFrame attributes, Convert some strings to float/int</span>
+        <span class="c1"># (i.e., ELEVATION, latitude, longitude) BUT NOT STID!</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;STID&quot;</span><span class="p">]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">is_integer</span><span class="p">():</span>
+                        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">n</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;🤹🏼‍♂️ DataFrame contains duplicate column names.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Rename lat/lon to lowercase to match CF convenctions</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;LATITUDE&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;longitude&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;LONGITUDE&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Include other info</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="s2">&quot;STATION&quot;</span><span class="p">:</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SENSOR_VARIABLES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">senvars</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;stations_timeseries&quot;</span>
+
+        <span class="n">Z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Returned [</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span><span class="si">}</span><span class="s1">] stations. </span><span class="si">{</span><span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;STID&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Z</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Z</span></div>
+
+
+<div class="viewcode-block" id="stations_nearesttime"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.stations_nearesttime">[docs]</a><span class="k">def</span> <span class="nf">stations_nearesttime</span><span class="p">(</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">rename_value_1</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rename_value_1&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get station data nearest a datetime. (Very similar to the latest service.)</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/stations/nearesttime/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rename_value_1 : bool</span>
+
+<span class="sd">        - True: Rename the DataFrame index to not include the value_1</span>
+<span class="sd">          or value_1d in the name. I prefer these names to more easily</span>
+<span class="sd">          key in on the variables I want.</span>
+<span class="sd">          Where there are both value_1 and value_1d for a variable, only</span>
+<span class="sd">          the most recent value will be renamed.</span>
+<span class="sd">        - False: Perserve the original index names.</span>
+
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">        Synoptic API arguments used to specify the data request.</span>
+<span class="sd">        **Must include** ``attime`` and ``within``</span>
+<span class="sd">    attime : datetime, pandas Timestamp, or pandas.to_datetime-parsable str</span>
+<span class="sd">        Datetime you want to the the nearest observations for.</span>
+<span class="sd">    within : int, timedelta, or Pandas Timedelta</span>
+<span class="sd">        How long ago is the oldest observation you want to receive?</span>
+<span class="sd">        If int, given as minutes for recent observations.</span>
+<span class="sd">        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`</span>
+<span class="sd">        and ``recent=pd.to_timedelta(&#39;1D&#39;)``.</span>
+<span class="sd">        Or, give a pandas-recognized timedelta-string, like &#39;1W&#39; for one</span>
+<span class="sd">        week, &#39;1h&#39; for one hour, etc. ``recent=&#39;1D&#39;`` for one day.</span>
+<span class="sd">        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html</span>
+<span class="sd">        for additional units.</span>
+
+<span class="sd">    Other params include ``obtimezone``, ``units``, and any Station</span>
+<span class="sd">    Selector parameter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid=&#39;WBB&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="s2">&quot;attime&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">,</span> <span class="s2">&quot;🤔 `attime` is a required parameter (datetime).&quot;</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">i</span> <span class="ow">in</span> <span class="n">_stn_selector</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;🤔 Please assign a station selector (i.e., </span><span class="si">{</span><span class="n">_stn_selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="n">params</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;within&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;nearesttime&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_parse_latest_nearesttime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rename_value_1</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;stations_nearesttime&quot;</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="stations_latest"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.stations_latest">[docs]</a><span class="k">def</span> <span class="nf">stations_latest</span><span class="p">(</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="n">rename_value_1</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rename_value_1&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+    <span class="o">**</span><span class="n">params</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the latest station data. (Very similar to the nearesttime service.)</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/stations/latest/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rename_value_1 : bool</span>
+<span class="sd">        Option to rename the DataFrame index to not include the</span>
+<span class="sd">        ``value_1`` or ``value_1d`` in the name. I prefer that the</span>
+<span class="sd">        column names strips this part of the string to more easily key</span>
+<span class="sd">        in on the variables I want. For situations where there are both</span>
+<span class="sd">        ``value_1`` and ``value_1d`` for a variable, only the most</span>
+<span class="sd">        recent value will be renamed.</span>
+
+<span class="sd">        - True: Strip ``value_1`` from the column variable names.</span>
+<span class="sd">        - False: Perserve the original index names.</span>
+
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">        Synoptic API arguments used to specify the data request.</span>
+<span class="sd">        **Must include** ``within``.</span>
+<span class="sd">    within : int, timedelta, or Pandas Timedelta</span>
+<span class="sd">        If int, given as minutes for recent observations.</span>
+<span class="sd">        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`</span>
+<span class="sd">        and ``recent=pd.to_timedelta(&#39;1D&#39;)``.</span>
+<span class="sd">        Or, give a pandas-recognized timedelta-string, like &#39;1W&#39; for one</span>
+<span class="sd">        week, &#39;1h&#39; for one hour, etc. ``recent=&#39;1D&#39;`` for one day.</span>
+<span class="sd">        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html</span>
+<span class="sd">        for additional units.</span>
+
+<span class="sd">    Other params include ``obtimezone``, ``units``, and any Station</span>
+<span class="sd">    Selector parameter.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid=&#39;WBB&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">i</span> <span class="ow">in</span> <span class="n">_stn_selector</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;🤔 Please assign a station selector (i.e., </span><span class="si">{</span><span class="n">_stn_selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="n">params</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;within&quot;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;latest&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_parse_latest_nearesttime</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">rename_value_1</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;stations_latest&quot;</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="stations_precipitation"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.stations_precipitation">[docs]</a><span class="k">def</span> <span class="nf">stations_precipitation</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the precipitation data.</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/stations/precipitation/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">        Synoptic API arguments used to specify the data request.</span>
+<span class="sd">        Requires `start` and `end` *or* `recent`.</span>
+
+<span class="sd">    Other params include ``obtimezone``, ``units``, and any Station</span>
+<span class="sd">    Selector parameter.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;🙋🏼‍♂️ HI! THIS FUNCTION IS NOT COMPLETED YET. WILL JUST RETURN JSON.&quot;</span><span class="p">)</span>
+
+    <span class="n">check1</span> <span class="o">=</span> <span class="s2">&quot;start&quot;</span> <span class="ow">in</span> <span class="n">params</span> <span class="ow">and</span> <span class="s2">&quot;end&quot;</span> <span class="ow">in</span> <span class="n">params</span>
+    <span class="n">check2</span> <span class="o">=</span> <span class="s2">&quot;recent&quot;</span> <span class="ow">in</span> <span class="n">params</span>
+    <span class="k">assert</span> <span class="n">check1</span> <span class="ow">or</span> <span class="n">check2</span><span class="p">,</span> <span class="s2">&quot;🤔 `start` and `end` *or* `recent` is required&quot;</span>
+    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">i</span> <span class="ow">in</span> <span class="n">_stn_selector</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">params</span><span class="p">]</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;🤔 Please assign a station selector (i.e., </span><span class="si">{</span><span class="n">_stn_selector</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;precipitation&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="networks"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.networks">[docs]</a><span class="k">def</span> <span class="nf">networks</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a DataFrame of available Networks and their metadata</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/networks/</span>
+<span class="sd">    https://developers.synopticdata.com/about/station-network-type/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    **param : keyword arguments</span>
+<span class="sd">    id : int or list of int</span>
+<span class="sd">        Filter by network number.</span>
+<span class="sd">    shortname : str or list of str</span>
+<span class="sd">        Network shortname, i.e. &#39;NWS/FAA&#39;, &#39;RAWS&#39;, &#39;UTAH DOT&#39;,</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;networks&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;MNET&quot;</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CATEGORY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CATEGORY&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;REPORTING_STATIONS&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;REPORTING_STATIONS&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;LAST_OBSERVATION&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">LAST_OBSERVATION</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;networks&quot;</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="networktypes"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.networktypes">[docs]</a><span class="k">def</span> <span class="nf">networktypes</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a DataFrame of network types</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/networktypes/</span>
+<span class="sd">    https://developers.synopticdata.com/about/station-network-type/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    \*\*params : keyword arguments</span>
+<span class="sd">    id : int</span>
+<span class="sd">        Select just the network type you want</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;networktypes&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;MNETCAT&quot;</span><span class="p">])</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;networktypes&quot;</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="variables"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.variables">[docs]</a><span class="k">def</span> <span class="nf">variables</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a DataFrame of available station variables</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/variables/</span>
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/api-variables/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    **param : keyword arguments</span>
+<span class="sd">        There are none for the &#39;variables&#39; service.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;variables&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;VARIABLES&quot;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="c1"># df.set_index(&#39;vid&#39;, inplace=True)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;variables&quot;</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="qctypes"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.qctypes">[docs]</a><span class="k">def</span> <span class="nf">qctypes</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a DataFrame of available quality control (QC) types</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/qctypes/</span>
+<span class="sd">    https://developers.synopticdata.com/about/qc/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    **param : keyword arguments</span>
+<span class="sd">        Available parameters include ``id`` and ``shortname``</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the data</span>
+    <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;qctypes&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;QCTYPES&quot;</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;SUMMARY&quot;</span><span class="p">]</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;service&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;qctypes&quot;</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="auth"><a class="viewcode-back" href="../../reference_guide/index.html#synoptic.services.auth">[docs]</a><span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="n">helpme</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a DataFrame of authentication controls.</span>
+
+<span class="sd">    https://developers.synopticdata.com/mesonet/v2/auth/</span>
+<span class="sd">    https://developers.synopticdata.com/settings/</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    helpme : bool</span>
+<span class="sd">        True - It might be easier to deal with generating new tokens</span>
+<span class="sd">        and listing tokens on the web settings, so just return the</span>
+<span class="sd">        URL to help you make these changes via web.</span>
+<span class="sd">        False - Access the ``auth`` API service.</span>
+<span class="sd">    **param : keyword arguments</span>
+
+<span class="sd">    Some include the following</span>
+
+<span class="sd">    disableToken : str</span>
+<span class="sd">    list : {1, 0}</span>
+<span class="sd">    expire : datetime</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    List all tokens</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        auth(helpme=False, apikey=&#39;YOUR_API_KEY&#39;, list=1)</span>
+
+<span class="sd">    Create new token (tokens are disabled after 10 years)</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        auth(helpme=False, apikey=&#39;YOUR_API_KEY&#39;)</span>
+
+<span class="sd">    Create new token with expiration date</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        auth(helpme=False, apikey=&#39;YOUR_API_KEY&#39;, expire=datetime(2021,1,1))</span>
+
+<span class="sd">    Disable a token (not sure why this doesn&#39;t do anything)</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        auth(helpme=False, apikey=&#39;YOUR_API_KEY&#39;, disable=&#39;TOKEN&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">helpme</span><span class="p">:</span>
+        <span class="n">web</span> <span class="o">=</span> <span class="s2">&quot;https://developers.synopticdata.com/settings/&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;It&#39;s easier to manage these via the web settings: </span><span class="si">{</span><span class="n">web</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="s2">&quot;apikey&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;🛑 `apikey` is a required argument. </span><span class="si">{</span><span class="n">web</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">web</span> <span class="o">=</span> <span class="n">synoptic_api</span><span class="p">(</span><span class="s2">&quot;auth&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">web</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<span class="c1"># Other Services</span>
+<span class="c1"># ---------------</span>
+<span class="c1"># stations_precipitation : *NOT FINISHED</span>
+<span class="c1"># stations_latency : *NOT CURRENTLY AVAILABLE</span>
+<span class="c1"># stations_qcsegments : ???</span>
+</pre></div>
+
+              </div>
+              
+              
+              <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+</div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+  
+    <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    
+    <div class="footer-item">
+      <p class="copyright">
+    &copy; Copyright 2022, Brian K. Blaylock.<br>
+</p>
+    </div>
+    
+    <div class="footer-item">
+      <p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.4.0.<br>
+</p>
+    </div>
+    
+  </div>
+</footer>
+  </body>
+</html>
