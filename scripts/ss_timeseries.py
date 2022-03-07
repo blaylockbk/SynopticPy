@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/p/home/blaylock/anaconda3/envs/synoptic/bin/python
 
 """
 ========================
@@ -8,6 +8,13 @@ Multi-Station Timeseries
 Create a figure showing a timeseries of multiple weather stations.
 
 Mimic the function of https://home.chpc.utah.edu/~u0553130/Brian_Blaylock/cgi-bin/ts_multistations.cgi
+
+Usage
+-----
+
+ss_timeseries.py ukbkb kslc kmry
+ss_timeseries.py ukbkb kslc kmry --vars air_temp relative_humidity --units English --recent 1D
+ss_timeseries.py psink psrim --var air_temp --recent 3D
 
 """
 
@@ -57,9 +64,9 @@ Plot a station timeseries.
 
 Examples:
 
-    python plot_timeseries.py ukbkb kslc kmry
-    python plot_timeseries.py ukbkb kslc kmry --vars air_temp relative_humidity --units English --recent 1D
-    python plot_timeseries.py psink psrim --var air_temp --recent 3D
+    ss_timeseries.py ukbkb kslc kmry
+    ss_timeseries.py ukbkb kslc kmry --vars air_temp relative_humidity --units English --recent 1D
+    ss_timeseries.py psink psrim --var air_temp --recent 3D
 
     TODO: right now, you can't do a radius plot because the `stid` argument is hardcoded.
     TODO: let the extra --recent argument play more nicely with the --start and --end arguments. Default should be --recent 12H
