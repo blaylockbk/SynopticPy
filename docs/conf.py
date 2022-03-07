@@ -34,7 +34,6 @@ release = "0.1"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    #'sphinx_rtd_theme',     # I'm not using this theme, use pydata_sphinx_theme
     "nbsphinx",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
@@ -137,14 +136,3 @@ autodoc_default_options = {
 }
 
 autodoc_mock_imports = ["xesmf", "siphon", "imageio"]
-
-# -- Auto-convert markdown pages to demo --------------------------------------
-import recommonmark
-from recommonmark.transform import AutoStructify
-
-
-def setup(app):
-    app.add_transform(AutoStructify)
-
-
-# ^^I actually don't know what the above did, if it did anything
