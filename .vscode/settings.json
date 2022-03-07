@@ -30,5 +30,6 @@
             },
         ]
     },
+    "esbonio.server.enabled": true,
 }
 

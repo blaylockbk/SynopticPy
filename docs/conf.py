@@ -36,10 +36,12 @@ extensions = [
     #'sphinx_rtd_theme',     # I'm not using this theme, use pydata_sphinx_theme
     'nbsphinx',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
     'sphinx.ext.napoleon',
     #'sphinx.ext.jsmath',    # Can't seem to get the math function to work
-    'recommonmark', 
+    'recommonmark',
     'autodocsumm',
     'sphinx_markdown_tables'
 ]
@@ -67,7 +69,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
                     '.ipynb_checkpoints', '.vscode']
 
 
@@ -122,7 +124,7 @@ html_js_files = [
 # Set autodoc defaults
 autodoc_default_options = {
     'autosummary': True,        # Include a members "table of contents"
-    'members': True,            # Document all functions/members  
+    'members': True,            # Document all functions/members
 }
 
 autodoc_mock_imports = ["xesmf", "siphon", "imageio"]
