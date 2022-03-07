@@ -31,6 +31,20 @@ dependencies:
   - pylint
   - pytest
 
+  # Documentation
+  # -------------
+  - sphinx
+  - nbsphinx
+  - pydata-sphinx-theme # PyData Sphinx Theme (i.e, Numpy, Pandas, MetPy)
+  - sphinx-panels # Add bootstrap elements to Sphinx
+  - recommonmark
+  - sphinx-markdown-tables
+  - autodocsumm
+  - sphinx-autosummary-accessors # pandas and xarray accessor docs
+  - latexmk
+  - myst-parser
+  - linkify-it-py
+
   - pip:
     # Development Version from GitHub
     - git+https://github.com/blaylockbk/SynopticPy.git
