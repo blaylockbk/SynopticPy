@@ -20,7 +20,7 @@ The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoW
 
 # 📔 [SynopticPy Documentation](https://blaylockbk.github.io/SynopticPy/_build/html/)
 
-Synoptic is _free_ up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a [paid tier](https://synopticdata.com/pricing) is available (through Synoptic, not me).
+Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service) for open-access data. More data and enhances services are available through a [paid tier](https://synopticdata.com/pricing) (available through Synoptic, not me).
 
 
 
