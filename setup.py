@@ -22,7 +22,7 @@ setup(
     package_data={
         "": ["*.cfg"],
     },
-    install_requires=["numpy", "pandas", "requests"],
+    install_requires=["numpy", "pandas", "requests", "toml"],
     keywords=["pandas", "meteorology", "weather", "mesonet", "Synoptic", "MesoWest"],
     classifiers=[
         "Development Status :: 4 - Beta",
