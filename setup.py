@@ -14,7 +14,7 @@ setup(
     long_description_content_type="text/markdown",
     project_urls={
         "Source Code": "https://github.com/blaylockbk/SynopticPy",
-        "Documentation": "https://github.com/blaylockbk/SynopticPy/blob/master/README.md",
+        "Documentation": "https://github.com/blaylockbk/SynopticPy/blob/main/README.md",
         "Official Synoptic Docs": "https://developers.synopticdata.com/mesonet/",
     },
     license="MIT",
@@ -54,4 +54,16 @@ twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist
 
 # PyPI
 twine upload --skip-existing dist/*
+"""
+
+
+#######################################################
+## On May 12, 2022 I changed the default branch to main
+## You can change your local clone default name with
+## The following
+"""
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
 """

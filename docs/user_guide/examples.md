@@ -18,7 +18,7 @@ from synoptic.services import stations_timeseries
 
 ## 📝 Jupyter Notebook Examples
 
-I have provided a number of [notebooks on GitHub](https://github.com/blaylockbk/SynopticPy/tree/master/notebooks) that contain some practical examples for importing and using these functions to get and show station data.
+I have provided a number of [notebooks on GitHub](https://github.com/blaylockbk/SynopticPy/tree/main/notebooks) that contain some practical examples for importing and using these functions to get and show station data.
 
 [![Binder](https://binder.pangeo.io/badge_logo.svg)](https://binder.pangeo.io/v2/gh/blaylockbk/SynopticPy/master)
 
@@ -46,7 +46,7 @@ df = stations_timeseries(stid='WBB',
                          vars=['air_temp', 'wind_speed'],
                          recent=timedelta(hours=10))
 ```
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/timeseries_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/timeseries_df.png)
 
 ### Query Latest Data
 To get the latest air temperature and wind speed data for WBB (University of Utah) and KRMY (Monterey, CA airport) within one hour, we can also set the minutes as an integer instead as a timedelta.
@@ -58,7 +58,7 @@ df = stations_latest(stid=['WBB', 'KMRY'],
                     vars=['air_temp', 'wind_speed'],
                     within=60)
 ```
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/latest_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/latest_df.png)
 
 Parameters may be given as a list/datetime/timedelta, or as a string/integer interpreted by the Synoptic API. Thus, 
 ```python 
@@ -82,7 +82,7 @@ df = stations_nearesttime(stid=['WBB', 'KMRY'],
                           attime=datetime(2020,1,1),
                           within=60)
 ```
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/nearesttime_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/nearesttime_df.png)
 
 **Note:** the string/integer alternative to the above example is
 ```python
@@ -133,7 +133,7 @@ plt.plot(df.index, df.air_temp, label='tz aware (plots in UTC)')
 plt.plot(df.index.tz_localize(None), df.air_temp, label='tz unaware (as local time)')
 plt.legend()
 ```
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master//images/tz_localize.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main//images/tz_localize.png)
 
 ## ✅ Quality Control Checks
 By default, only basic QC range checks are applied to the data before it is returned by the API. These basic checks remove physically implausible data like removing a 300 degree temperature instead of returning the value. 

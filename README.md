@@ -2,7 +2,7 @@
     align='center'
 >
 
-<img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/SynopticPy_logo.png" width=50%>
+<img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/SynopticPy_logo.png" width=50%>
 
 # ☁ Synoptic API for Python (_unofficial_)
 
@@ -49,7 +49,7 @@ If you have stumbled across this package, I hope it is useful to you or at least
 ## Option 1: conda (recommended)
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
-I have provided a sample Anaconda [environment.yml](https://github.com/blaylockbk/SynopticPy/blob/master/environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file...there are two ways to install SynopticPy with pip. Comment out the line you don't want.
+I have provided a sample Anaconda [environment.yml](https://github.com/blaylockbk/SynopticPy/blob/main/environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file...there are two ways to install SynopticPy with pip. Comment out the line you don't want.
 
 ```yaml
 - pip:
@@ -60,7 +60,7 @@ I have provided a sample Anaconda [environment.yml](https://github.com/blaylockb
 First, create the virtual environment with 
 
 ```bash
-wget https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/environment.yml
+wget https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/environment.yml
 conda env create -f environment.yml
 ```
 
@@ -104,7 +104,7 @@ you will be prompted to update the token in the config file.
 
 - [User Guide Examples](https://blaylockbk.github.io/SynopticPy/_build/html/user_guide/examples.html)
 - [Reference Guide](https://blaylockbk.github.io/SynopticPy/_build/html/reference_guide/index.html)
-- [Jupyter Notebooks](https://github.com/blaylockbk/SynopticPy/tree/master/notebooks)
+- [Jupyter Notebooks](https://github.com/blaylockbk/SynopticPy/tree/main/notebooks)
 
 > TODO: Move these notebooks to the docs.
 
@@ -131,7 +131,7 @@ df = stations_timeseries(
     recent=timedelta(hours=10)
 )
 ```
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/timeseries_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/timeseries_df.png)
 
 Get the latest air temperature and wind speed data for WBB (University of Utah) and KRMY (Monterey, CA airport) within one hour (with `windin` given as an interger in minutes, this may also be a timedelta object instead).
 
@@ -159,6 +159,6 @@ df = stations_latest(
     within=60
 )
 ```
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/master/images/nearesttime_df.png)
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/nearesttime_df.png)
 
 

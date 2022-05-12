@@ -3,7 +3,7 @@
 ## Option 1 (*recommended*): conda environment
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
-I have provided a sample Anaconda [environment.yml](https://github.com/blaylockbk/SynopticPy/blob/master/environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file--there are two ways to install SynopticPy with pip. Comment out the lines you don't want.
+I have provided a sample Anaconda [environment.yml](https://github.com/blaylockbk/SynopticPy/blob/main/environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file--there are two ways to install SynopticPy with pip. Comment out the lines you don't want.
 
 For the latest version of the code, use:
 
