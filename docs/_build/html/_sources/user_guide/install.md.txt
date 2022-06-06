@@ -18,7 +18,7 @@ or use this for the latest version published to PyPI
     - SynopticPy
 ```
 
-First, create the virtual environment with
+First, create the virtual environment with 
 
 ```bash
 conda env create -f environment.yml
@@ -37,7 +37,7 @@ conda env update -f environment.yml
 ```
 
 ## Option 2: pip
-**SynopticPy is my first [PyPI](https://pypi.org/project/SynopticPy/) package.** You may install the last published version from PyPI. This requires the following are already installed:
+**SynopticPy is my first [PyPI](https://pypi.org/project/SynopticPy/) package.** You may install the last published version from PyPI. This requires the following are already installed:  
 `numpy`, `pandas`, `requests`, `matplotlib`, and `cartopy`.
 
 ```bash
@@ -53,6 +53,6 @@ There are several other ways to "install" a python package so you can import the
 git clone https://github.com/blaylockbk/SynopticPy.git
 ```
 To import the SynopticPy functions, you will need to update your `PYTHONPATH` environment variable to find the directory you cloned the package into, or you can add the line the following line to the top of your python scripts:
-```python
+```python 
 sys.path.append("/path/to/SynopticPy")
 ```

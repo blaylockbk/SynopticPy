@@ -16,12 +16,12 @@ The Synoptic API for Python (unofficial)
    /user_guide/index
    /reference_guide/index
 
-The `Synoptic Mesonet API <https://synopticdata.com/mesonet-api>`_ (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic is free up to 5,000 API requests and 5 million service units each month. That's a generous amount, but if you need even more data, a paid tier is available (through Synoptic, not me).
+The `Synoptic Mesonet API <https://synopticdata.com/mesonet-api>`_ (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic data access is `free <https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service>`_ for open-access data. More data and enhances services are available through a `paid tier <https://synopticdata.com/pricing>`_ (available through Synoptic, not me).
 
 .. note::
    🌐 Register for a free account at the `Synoptic API Webpage
    <https://developers.synopticdata.com>`_. You will need to obtain an API token before using this python package.
-   
+
    .. figure:: _static/synoptic_logo.png
       :width: 300
 
