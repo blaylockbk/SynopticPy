@@ -21,9 +21,10 @@ import pydata_sphinx_theme
 from datetime import datetime
 
 # -- Project information -----------------------------------------------------
+utc_now = datetime.utcnow().strftime("%H:%M UTC %d %b %Y")
 
 project = "SynopticPy Docs"
-copyright = f"{datetime.utcnow():%Y}, Brian K. Blaylock"
+copyright = f"{datetime.utcnow():%Y}, Brian K. Blaylock.    ♻ Updated: {utc_now}"
 author = "Brian K. Blaylock"
 
 release = "0.1"
