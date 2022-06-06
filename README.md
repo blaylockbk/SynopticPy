@@ -116,14 +116,14 @@ or
 
 ```python
 # Import a single function (prefered)
-from synotpic.services import stations_timeseries
+from synoptic.services import stations_timeseries
 ```
 
 Get a timeseries of air temperature and wind speed at the station WBB for the last 10 hours:
 
 ```python
 from datetime import timedelta
-from synotpic.services import stations_timeseries
+from synoptic.services import stations_timeseries
 
 df = stations_timeseries(
     stid='WBB', 
@@ -136,7 +136,7 @@ df = stations_timeseries(
 Get the latest air temperature and wind speed data for WBB (University of Utah) and KRMY (Monterey, CA airport) within one hour (with `windin` given as an interger in minutes, this may also be a timedelta object instead).
 
 ```python
-from synotpic.services import stations_latest
+from synoptic.services import stations_latest
 
 df = stations_latest(
     stid=['WBB', 'KMRY'],
@@ -150,7 +150,7 @@ Get the air temperature and wind speed for WBB and KMRY nearest 00:00 UTC Jan 1,
 
 ```python
 from datetime import datetime
-from synotpic.services import stations_nearesttime
+from synoptic.services import stations_nearesttime
 
 df = stations_latest(
     stid=['WBB', 'KMRY'], 

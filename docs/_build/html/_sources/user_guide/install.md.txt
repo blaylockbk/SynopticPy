@@ -54,5 +54,5 @@ git clone https://github.com/blaylockbk/SynopticPy.git
 ```
 To import the SynopticPy functions, you will need to update your `PYTHONPATH` environment variable to find the directory you cloned the package into, or you can add the line the following line to the top of your python scripts:
 ```python
-sys.path.append("/path/to/SynotpicPy")
+sys.path.append("/path/to/SynopticPy")
 ```

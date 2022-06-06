@@ -299,7 +299,7 @@
 <h1>🤹🏻‍♂️ Usage Examples<a class="headerlink" href="#usage-examples" title="Permalink to this headline">¶</a></h1>
 <section id="import-functions">
 <h2>Import Functions<a class="headerlink" href="#import-functions" title="Permalink to this headline">¶</a></h2>
-<p>There is a separate function for each of the Synoptic Mesonet API services as described in the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/">Synotpic documentation</a>.</p>
+<p>There is a separate function for each of the Synoptic Mesonet API services as described in the <a class="reference external" href="https://developers.synopticdata.com/mesonet/v2/">Synoptic documentation</a>.</p>
 <p>Import all the functions with</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">synoptic.services</span> <span class="k">as</span> <span class="nn">ss</span>
 </pre></div>
@@ -332,7 +332,7 @@ MesoWest is your friend if you don’t know what stations are available or what 
 <h3>Query Timeseries Data<a class="headerlink" href="#query-timeseries-data" title="Permalink to this headline">¶</a></h3>
 <p>To get a time series of air temperature and wind speed for the last 10 hours for the William Browning Building (WBB) you can do…</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">synotpic.services</span> <span class="kn">import</span> <span class="n">stations_timeseries</span>
+<span class="kn">from</span> <span class="nn">synoptic.services</span> <span class="kn">import</span> <span class="n">stations_timeseries</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">stations_timeseries</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span>
                          <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;wind_speed&#39;</span><span class="p">],</span>
@@ -344,7 +344,7 @@ MesoWest is your friend if you don’t know what stations are available or what 
 <section id="query-latest-data">
 <h3>Query Latest Data<a class="headerlink" href="#query-latest-data" title="Permalink to this headline">¶</a></h3>
 <p>To get the latest air temperature and wind speed data for WBB (University of Utah) and KRMY (Monterey, CA airport) within one hour, we can also set the minutes as an integer instead as a timedelta.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">synotpic.services</span> <span class="kn">import</span> <span class="n">stations_latest</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">synoptic.services</span> <span class="kn">import</span> <span class="n">stations_latest</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">stations_latest</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="s1">&#39;KMRY&#39;</span><span class="p">],</span>
                     <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;wind_speed&#39;</span><span class="p">],</span>
@@ -364,7 +364,7 @@ MesoWest is your friend if you don’t know what stations are available or what 
 <h3>Query Nearesttime Data<a class="headerlink" href="#query-nearesttime-data" title="Permalink to this headline">¶</a></h3>
 <p>To get the air temperature and wind speed for WBB and KMRY nearest 00:00 UTC Jan 1, 2020 within one hour…</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">synotpic.services</span> <span class="kn">import</span> <span class="n">stations_nearesttime</span>
+<span class="kn">from</span> <span class="nn">synoptic.services</span> <span class="kn">import</span> <span class="n">stations_nearesttime</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">stations_nearesttime</span><span class="p">(</span><span class="n">stid</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WBB&#39;</span><span class="p">,</span> <span class="s1">&#39;KMRY&#39;</span><span class="p">],</span>
                           <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;air_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;wind_speed&#39;</span><span class="p">],</span>
