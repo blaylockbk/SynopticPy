@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+abstract: The Synoptic Mesonet API gives access to real-time and historical surface-based weather and environmental observations for thousands of stations. SynopticPy is a python package that provides convenient access to data from the Synoptic API and convert the returned JSON data to a Pandas DataFrame. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete MesoPy python wrapper, but with SynopticPy, the data returned as a Pandas DataFrame  makes the retrieved data ready to use in time series and spatial investiagion.
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Blaylock
+    given-names: Brian K.
+    email: blaylockbk@gmail.com
+    orcid: "https://orcid.org/0000-0003-2133-9313"
+title: "SynopticPy: Synoptic API for Python"
+version: 0.0.7
+date-released: "2021-12-04"
+url: "https://blaylockbk.github.io/SynopticPy/_build/html/"
+repository-code: "https://github.com/blaylockbk/SynopticPy"
+type: software
+keywords:
+  - meteorology
+  - weather
+  - atmosphere
+license: "MIT"
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.4567546
