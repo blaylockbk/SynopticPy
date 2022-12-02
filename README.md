@@ -162,3 +162,14 @@ df = stations_latest(
 ![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/nearesttime_df.png)
 
 
+# How to Cite and Acknowledge
+If you use SynopticPy, please cite this software and/or include me in your acknowledgments.
+
+***Suggested Citation***
+
+> Blaylock, B. K. (2021). SynopticPy: Synoptic API for Python (Version 0.0.7) [Computer software]. https://github.com/blaylockbk/SynopticPy
+
+***Suggested Acknowledgment***
+
+> A portion of this work used code generously provided by Brian Blaylock's SynopticPy python package (https://github.com/blaylockbk/SynopticPy)
+
