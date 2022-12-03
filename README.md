@@ -163,7 +163,7 @@ df = stations_latest(
 
 
 # How to Cite and Acknowledge
-If you use SynopticPy, please cite this software and/or include me in your acknowledgments.
+If SynopticPy played an important role in your work, please [tell me about it](https://github.com/blaylockbk/SynopticPY/discussions/categories/show-and-tell)! Also, consider including a citation or acknowledgement in your article or product.
 
 ***Suggested Citation***
 
