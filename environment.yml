@@ -2,7 +2,7 @@ name: synoptic
 channels:
   - conda-forge
 dependencies:
-  - python=3.10
+  - python=3.11
   - pip
   - git
 
@@ -26,7 +26,6 @@ dependencies:
   # Formatter and Testing
   # ---------------------
   - black
-  - jupyterlab_code_formatter
   - isort
   - pylint
   - pytest
@@ -45,12 +44,15 @@ dependencies:
   - myst-parser
   - linkify-it-py
 
-  - pip:
+  #- pip:
     # Development Version from GitHub
-    - git+https://github.com/blaylockbk/SynopticPy.git
+    #- git+https://github.com/blaylockbk/SynopticPy.git
 
     # Or, latest release from PyPI
     #- SynopticPy
 
     # Borrow some tools from Brian's garage
-    - git+https://github.com/blaylockbk/Carpenter_Workshop.git
+    #- git+https://github.com/blaylockbk/Carpenter_Workshop.git
+
+
+  ## Or, clone the repo and do `pip install -e .`

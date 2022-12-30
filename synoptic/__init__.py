@@ -30,6 +30,11 @@ __email__ = "blaylockbk@gmail.com"
 __url__ = "https://github.com/blaylockbk/SynopticPy"
 
 
+try:
+    from ._version import __version__
+except:
+    pass
+
 # Note to self: Synoptic's config file is created by the get_token.py script
 
 try:
