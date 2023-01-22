@@ -9,7 +9,7 @@ authors:
 title: "SynopticPy: Synoptic API for Python"
 version: 0.0.7
 date-released: "2021-12-04"
-url: "https://blaylockbk.github.io/SynopticPy/_build/html/"
+url: "https://synopticpy.readthedocs.io/"
 repository-code: "https://github.com/blaylockbk/SynopticPy"
 type: software
 keywords:

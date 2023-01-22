@@ -16,4 +16,6 @@ MANIFEST
 .eggs/
 core.*
 
+docs/_build/
+
 _version.py
