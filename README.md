@@ -10,8 +10,11 @@
 [![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
 ![](https://img.shields.io/github/license/blaylockbk/SynopticPy)
 [![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886) 
+
+![License](https://img.shields.io/github/license/blaylockbk/SynopticPy)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-<!--[![Join the chat at https://gitter.im/blaylockbk/SynopticPy](https://badges.gitter.im/blaylockbk/SynopticPy.svg)](https://gitter.im/blaylockbk/SynopticPy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
+[![Documentation Status](https://readthedocs.org/projects/synopticpy/badge/?version=latest)](https://synopticpy.readthedocs.io/?badge=latest)
+[![Python](https://img.shields.io/pypi/pyversions/SynopticPy.svg)](https://pypi.org/project/SynopticPy/)
 </div>
 
 

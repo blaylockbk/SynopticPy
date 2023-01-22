@@ -93,11 +93,8 @@ html_theme_options = {
     "use_edit_page_button": True,
     "show_toc_level": 1,
     "external_links": [
-        {
-            "name": "GOES-2-go",
-            "url": "https://blaylockbk.github.io/goes2go/_build/html/",
-        },
-        {"name": "Herbie", "url": "https://blaylockbk.github.io/Herbie/_build/html/"},
+        {"name": "GOES-2-go", "url": "https://goes2go.readthedocs.io/"},
+        {"name": "Herbie", "url": "https://herbie.readthedocs.io/"},
     ],
 }
 
