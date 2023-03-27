@@ -28,7 +28,17 @@ SynopticPy needs to know your token. The first time you import ``synoptic.servic
 
 3. The script updates a config file located at ``~/.config/SynopticPy/config.toml``. 
     
-Every time you import a ``synoptic.services`` function it does a quick check to make sure the token in that file is valid. If everything looks good, the next time you import the module you won't be asked for the token because it is saved in that config file.
+
+Alternatively you can store the token in the environmental variable named  ``SYNOPTIC_TOKEN``.
+
+To do so open your terminal and type: 
+.. code-block:: bash
+
+    export SYNOPTIC_TOKEN=yourtoken1234567890jklmnopqrstuvwxyz
+
+This way, the default settings will be applied for the configuration. If a configuration file exist, the values will be overwritten.
+
+Every time you import a ``synoptic.services`` function it does a quick check to make sure the token is valid. If everything looks good, the next time you import the module you won't be asked for the token because it is saved in that config file or in the environmental variable.
 
 Configure Settings
 ------------------
