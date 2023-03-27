@@ -81,8 +81,7 @@ conda env update -f environment.yml
 
 ## Option 2: pip
 
-Install the last published version from PyPI. This requires the following are already installed:  
-`numpy`, `pandas`, `requests`, and `toml`. It's optional, but you will likely want `matplotlib`, and `cartopy`, too.
+Install the last published version from PyPI. It's optional, but you will likely want `cartopy` too.
 
 ```bash
 pip install SynopticPy
