@@ -90,7 +90,7 @@ pip install SynopticPy
 
 # 🔨 Setup
 
-After following the setup instructions in the [documentation](https://synopticpy.readthedocs.io/en/latest/user_guide/setup.html), you should have a file at `~/.config/SynopticPy/config.toml` that looks something like this:
+After following the setup instructions in the [documentation](https://synopticpy.readthedocs.io/en/latest/user_guide/setup.html), you should either have an environmental variable named `SYNOPTIC_TOKEN` or a file at `~/.config/SynopticPy/config.toml` that looks something like this:
 
 ```
 [default]
