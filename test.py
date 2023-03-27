@@ -1,15 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from synoptic.services import stations_metadata, stations_timeseries
+import os
+import pprint
 from datetime import timedelta
+from synoptic.services import stations_metadata, stations_timeseries
 
-# in my case the config file is saved here:
+env_var = os.environ
+
+# Print the list of user's
+# environment variables
+print("User's Environment variable:")
+pprint.pprint(dict(env_var), width=1)
+
+# in GitPod case the config file is saved here:
 # /home/gitpod/.config/SynopticPy/config.toml
 
-df = stations_timeseries(
-    stid='WBB',
-    vars=['air_temp', 'wind_speed'],
-    recent=timedelta(hours=1)
-)
+# df = stations_timeseries(
+#     stid="WBB", vars=["air_temp", "wind_speed"], recent=timedelta(hours=1)
+# )
 
-print(df)
+# print(df)
+
