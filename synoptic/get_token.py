@@ -63,7 +63,6 @@ default_config = {
 
 # get token from environment variable if available
 env_token = os.environ.get("SYNOPTIC_TOKEN")
-print("token:", env_token)
 
 ########################################################################
 # If a config file isn't found, make one
