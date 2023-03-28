@@ -19,3 +19,4 @@ core.*
 docs/_build/
 
 _version.py
+.gitpod.yml

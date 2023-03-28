@@ -51,9 +51,22 @@ rename_value_1 = true
 rename_set_1 = true
 """
 
+# Default configuration, used when the API token is stored in an environmental variable
+default_config = {
+    "default": {
+        "verbose": True,
+        "hide_token": True,
+        "rename_value_1": True,
+        "rename_set_1": True,
+    }
+}
+
+# get token from environment variable if available
+env_token = os.environ.get("SYNOPTIC_TOKEN")
+
 ########################################################################
 # If a config file isn't found, make one
-if not _config_path.exists():
+if not _config_path.exists() and not env_token:
     print(
         f" ╭─────────────────────────────────────────────────╮\n"
         f" │ I'm building SynopticPy's default config file.  │\n"
@@ -103,7 +116,7 @@ def test_token(verbose=True, configure_on_fail=True):
     configure_on_fail : bool
 
         - True: Help the user update the config file with ``config_token``
-        - False: Do not update (prevents infinant loop if user keeps adding an invalid token).
+        - False: Do not update (prevents infinite loop if user keeps adding an invalid token).
 
     verbose : bool
 
@@ -115,9 +128,14 @@ def test_token(verbose=True, configure_on_fail=True):
     A valid API token
 
     """
-    # Read the config file and get the token
-    config = toml.load(_config_path)
-    token = config["default"].get("token")
+    # If the token is not stored in an environmental variable, read the config file and get the token
+    if env_token:
+        config = default_config
+        config["default"]["token"] = env_token
+        token = env_token
+    else:
+        config = toml.load(_config_path)
+        token = config["default"].get("token")
 
     if token is None:
         # There isn't an API token defined, so configure one.
@@ -187,7 +205,7 @@ def config_token(new_token=None):
 
     print(f"\nThanks! I will do a quick test...")
 
-    # Don't want to run into an infinite loop, so set config_on_fail=False
+    # Don't want to run into an infinite loop, so set configure_on_fail=False
     config = test_token(configure_on_fail=False)
     return config
 

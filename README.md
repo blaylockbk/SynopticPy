@@ -33,7 +33,7 @@ Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synopti
 
 I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a **[Pandas DataFrame](https://pandas.pydata.org/docs/)**. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](https://github.com/mesowx/MesoPy) python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more _ready-to-use_.
 
-- [👨🏻‍🏭 Contributing Guidelines and Disclaimer](https://synopticpy.readthedocs.io/user_guide/contribute.html)
+- [👨🏻‍🏭 Contributing Guidelines and Disclaimer](https://synopticpy.readthedocs.io/en/latest/user_guide/contribute.html)
 - [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions)
 - [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
 
@@ -81,8 +81,7 @@ conda env update -f environment.yml
 
 ## Option 2: pip
 
-Install the last published version from PyPI. This requires the following are already installed:  
-`numpy`, `pandas`, `requests`, and `toml`. It's optional, but you will likely want `matplotlib`, and `cartopy`, too.
+Install the last published version from PyPI. It's optional, but you will likely want `cartopy` too.
 
 ```bash
 pip install SynopticPy
@@ -90,7 +89,7 @@ pip install SynopticPy
 
 # 🔨 Setup
 
-After following the setup instructions in the [documentation](https://synopticpy.readthedocs.io/user_guide/setup.html), you should have a file at `~/.config/SynopticPy/config.toml` that looks something like this:
+After following the setup instructions in the [documentation](https://synopticpy.readthedocs.io/en/latest/user_guide/setup.html), you should either have an environmental variable named `SYNOPTIC_TOKEN` or a file at `~/.config/SynopticPy/config.toml` that looks something like this:
 
 ```
 [default]
@@ -107,8 +106,8 @@ you will be prompted to update the token in the config file.
 
 # Quick Examples
 
-- [User Guide Examples](https://synopticpy.readthedocs.io/user_guide/examples.html)
-- [Reference Guide](https://synopticpy.readthedocs.io/reference_guide/index.html)
+- [User Guide Examples](https://synopticpy.readthedocs.io/en/latest/user_guide/examples.html)
+- [Reference Guide](https://synopticpy.readthedocs.io/en/latest/reference_guide/index.html)
 - [Jupyter Notebooks](https://github.com/blaylockbk/SynopticPy/tree/main/notebooks)
 
 > TODO: Move these notebooks to the docs.
