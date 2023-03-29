@@ -8,14 +8,19 @@
 
 <!-- Badges -->
 
-[![](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
-![](https://img.shields.io/github/license/blaylockbk/SynopticPy)
+[![PyPI](https://img.shields.io/pypi/v/SynopticPy)](https://pypi.python.org/pypi/SynopticPy/)
+[![Conda Version](https://img.shields.io/conda/vn/conda-forge/synopticpy.svg)](https://anaconda.org/conda-forge/synopticpy)
 [![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886)
 
 ![License](https://img.shields.io/github/license/blaylockbk/SynopticPy)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Documentation Status](https://readthedocs.org/projects/synopticpy/badge/?version=latest)](https://synopticpy.readthedocs.io/?badge=latest)
 [![Python](https://img.shields.io/pypi/pyversions/SynopticPy.svg)](https://pypi.org/project/SynopticPy/)
+[![Conda Recipe](https://img.shields.io/badge/recipe-synopticpy-green.svg)](https://anaconda.org/conda-forge/synopticpy)
+[![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/synopticpy.svg)](https://anaconda.org/conda-forge/synopticpy)
+[![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/synopticpy.svg)](https://anaconda.org/conda-forge/synopticpy)
+
+<!-- (Badges) -->
 
 </div>
 
@@ -48,50 +53,43 @@ If you have stumbled across this package, I hope it is useful to you or at least
 
 # 🐍 Installation
 
-## Option 1: conda (recommended)
+## Install with conda
 
 If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
 
-I have provided a sample Anaconda [environment.yml](https://github.com/blaylockbk/SynopticPy/blob/main/environment.yml) file that lists the minimum packages required plus some extras that might be useful when working with other types of weather data. Look at the bottom lines of that yaml file...there are two ways to install SynopticPy with pip. Comment out the line you don't want.
-
-```yaml
-- pip:
-    - git+https://github.com/blaylockbk/SynopticPy.git # for latest updates
-    #- SynopticPy  # for latest release
+```bash
+conda install -c conda-forge synopticpy
 ```
 
-First, create the virtual environment with
+## Install with pip
+
+Install the last published version from PyPI. 
 
 ```bash
-wget https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/environment.yml
-conda env create -f environment.yml
-```
-
-Then, activate the `synoptic` environment. Don't confuse this _environment_ name with the _package_ name.
-
-```bash
-conda activate synoptic
-```
-
-Occasionally, you might want to update all the packages in the environment.
-
-```bash
-conda env update -f environment.yml
-```
-
-## Option 2: pip
-
-Install the last published version from PyPI. It's optional, but you will likely want `cartopy` too.
-
-```bash
+# Install latest release
 pip install SynopticPy
 ```
+
+```bash
+# Install latest main branch
+pip install git+https://github.com/blaylockbk/SynopticPy.git
+```
+
+```bash
+# Install latest main branch, editable (for development)
+git clone https://github.com/blaylockbk/SynopticPy.git
+cd SynopticPy
+pip install -e .
+```
+
+## Optional Dependencies
+It's optional, but you will likely want `cartopy` too. You may also want https://github.com/blaylockbk/carpenter_workshop.git
 
 # 🔨 Setup
 
 After following the setup instructions in the [documentation](https://synopticpy.readthedocs.io/en/latest/user_guide/setup.html), you should either have an environmental variable named `SYNOPTIC_TOKEN` or a file at `~/.config/SynopticPy/config.toml` that looks something like this:
 
-```
+```toml
 [default]
 verbose = true
 hide_token = true
@@ -175,7 +173,7 @@ If SynopticPy played an important role in your work, please [tell me about it](h
 
 **_Suggested Citation_**
 
-> Blaylock, B. K. (2021). SynopticPy: Synoptic API for Python (Version 0.0.7) [Computer software]. https://github.com/blaylockbk/SynopticPy
+> Blaylock, B. K. (2023). SynopticPy: Synoptic API for Python (Version 2023.3.0) [Computer software]. https://github.com/blaylockbk/SynopticPy
 
 **_Suggested Acknowledgment_**
 
