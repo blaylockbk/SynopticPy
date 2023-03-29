@@ -50,6 +50,7 @@ extensions = [
 # MyST Docs: https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 myst_enable_extensions = [
     "linkify",  # Autodetects URL links in Markdown files
+    "attrs_block",
 ]
 
 # Set up mapping for other projects' docs
