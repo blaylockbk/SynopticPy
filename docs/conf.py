@@ -87,7 +87,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".ipynb_checkpoints", ".
 html_theme = "pydata_sphinx_theme"
 
 html_theme_options = {
-    "github_url": "https://github.com/blaylockbk/goes2go",
+    "github_url": "https://github.com/blaylockbk/SynopticPy",
     "twitter_url": "https://twitter.com/blaylockbk",
     "navbar_end": ["navbar-icon-links.html", "search-field.html"],
     "google_analytics_id": "G-NWK8MJNNGX",
