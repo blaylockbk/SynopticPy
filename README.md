@@ -28,7 +28,7 @@ The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoW
 
 # 📔 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)
 
-# 📈 [SynopticPy Web App: Timeseries](web/timeseries.html)
+# 📈 [SynopticPy Web App: Timeseries](https://blaylockbk.github.io/SynopticPy/web/timeseries.html)
 
 Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service) for open-access data. More data and enhances services are available through a [paid tier](https://synopticdata.com/pricing) (available through Synoptic, not me).
 
