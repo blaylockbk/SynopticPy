@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="light">
   <head>
     <!-- TODO: pd.resample should align plot on right for minute, hour; but on left for day, month, week, year -->
     <!-- TODO: Add instructions in modal -->
@@ -351,6 +351,9 @@
                   <option value="mean">Mean</option>
                   <option value="max">Max</option>
                   <option value="min">Min</option>
+                  <option value="mean">Mean</option>
+                  <option value="std">Standard Deviation</option>
+                  <option value="var">Variance</option>
                   <option value="spread" disabled>Spread</option>
                 </select>
               </div>
@@ -578,16 +581,6 @@
       mpl.rcParams['ytick.minor.size'] = 0
 
 
-      config = {
-          "default": {
-              "verbose": True,
-              "hide_token": True,
-              "rename_value_1": True,
-              "rename_set_1": True,
-              "token": "0bbe0e9fda7945a68951cc1bdebb2b0d",
-          }
-      }
-
       # Available API Services
       # https://developers.synopticdata.com/mesonet/v2/
       _service = {"auth", "networks", "networktypes", "variables", "qctypes"}
@@ -772,8 +765,14 @@
           #print(f" └──{smooth_time=}")
 
 
+          #==================================================
+          # If you using this page as a template,
+          # PLEASE use your own token. You can
+          # create a *free* Synoptic account and
+          # Mesonet API token here:
+          # https://developers.synopticdata.com/mesonet/
           token = "0bbe0e9fda7945a68951cc1bdebb2b0d"
-
+          #==================================================
           if '=' in stid:
             # User used the "backdoor" to specify a new station query
             # e.g. stid="radius=wbb,10&limit=5"
@@ -784,12 +783,17 @@
             custom_query = False
             url = f"https://api.synopticdata.com/v2/stations/timeseries?start={start:%Y%m%d%H%M}&end={end:%Y%m%d%H%M}&stid={stid}&vars={variable}&units={units}&obtimezone={obtimezone}&token={token}"
 
-          print(f"Request URL: {url}")
+          print(f"Request URL: {url.replace(token,'*****')}")
 
           response = await request(url, method="GET")
           status = response.status
           data = await response.json()
-          print(f"GET request=> status:{status} >>> Response Message: {data['SUMMARY']['RESPONSE_MESSAGE']}")
+
+          if data['SUMMARY']['RESPONSE_MESSAGE'].upper() == 'OK':
+            status_symbol = '✅'
+          else:
+            status_symbol = '❌'
+          print(f"{status_symbol} GET request=> status:{status} >>> Response Message: {data['SUMMARY']['RESPONSE_MESSAGE']}. Received [{data['SUMMARY'].get('NUMBER_OF_OBJECTS')}] stations. Timer: {data['SUMMARY'].get('DATA_QUERY_TIME', 'n/a')}")
 
           rename_set_1 = True
 
@@ -879,7 +883,8 @@
                   df = getattr(df.resample(smooth_time, label='right'), smooth_stat)()
 
                 ax.plot(df.index, df[variable], marker='o', markersize=3, linestyle='-', label=STID)
-                station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
+                mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
+                station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
               except Exception as e:
                 print(f"⛔ ERROR: {e}")
                 print(df)
