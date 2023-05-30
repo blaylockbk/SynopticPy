@@ -16,6 +16,7 @@
     />
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
   </head>
 
   <body>
@@ -29,6 +30,8 @@
       integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
       crossorigin="anonymous"
     ></script>
+
+
 
     <h1 align="center">
       Multi-station Time Series
@@ -259,6 +262,20 @@
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
+            id="contact-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#contact-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="contact-tab-pane"
+            aria-selected="false"
+          >
+            Station Info
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
             id="profile-tab"
             data-bs-toggle="tab"
             data-bs-target="#profile-tab-pane"
@@ -268,20 +285,6 @@
             aria-selected="false"
           >
             REPL
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link disabled"
-            id="contact-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#contact-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="contact-tab-pane"
-            aria-selected="false"
-          >
-            Output
           </button>
         </li>
       </ul>
@@ -295,6 +298,18 @@
         >
           <div id="graph-area"></div>
         </div>
+
+
+        <div
+          class="tab-pane fade"
+          id="contact-tab-pane"
+          role="tabpanel"
+          aria-labelledby="contact-tab"
+          tabindex="0"
+        >
+        <div id="station-info"></div>
+
+        </div>
         <div
           class="tab-pane fade"
           id="profile-tab-pane"
@@ -305,20 +320,8 @@
           <div id="replOutput"></div>
           <!-- prettier-ignore -->
           <py-repl output="replOutput">
-          hello = "Hello world!"
-          hello
+          df
         </py-repl>
-        </div>
-
-        <div
-          class="tab-pane fade"
-          id="contact-tab-pane"
-          role="tabpanel"
-          aria-labelledby="contact-tab"
-          tabindex="0"
-        >
-          <!-- I want to put this here, but text displays on one line  -->
-          <!-- <py-terminal></py-terminal> -->
         </div>
       </div>
 
@@ -348,6 +351,27 @@
       # Change default date formatter
       plt.rcParams["date.autoformatter.day"] = "%b %d\n%H:%M"
       plt.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
+
+      mpl.rcParams['axes.facecolor'] = ".95"
+      mpl.rcParams['axes.spines.left'] = False
+      mpl.rcParams['axes.spines.bottom'] = False
+      mpl.rcParams['axes.spines.top'] = False
+      mpl.rcParams['axes.spines.right'] = False
+      mpl.rcParams['xtick.major.size'] = 0
+      mpl.rcParams['xtick.minor.size'] = 0
+      mpl.rcParams['ytick.major.size'] = 0
+      mpl.rcParams['ytick.minor.size'] = 0
+
+      # Color cycle for plot lines
+      bootstrap_colors = [
+        "#0d6efd",
+        "#dc3545",
+        "#fd7e14",
+        "#198754",
+        "#0dcaf0",
+        ]
+
+      mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=bootstrap_colors)
 
       config = {
           "default": {
@@ -490,7 +514,7 @@
           variable = Element("variableSelector").value
           smooth_type = Element("smootherSelector1").value
           smooth_stat = Element("smootherSelector2").value
-          smooth_time = Element("smootherInput").value
+          smooth_time = pd.to_timedelta(Element("smootherInput").value)
           for ele in js.document.getElementsByName("unitsRadioOptions"):
               if ele.checked:
                   units = ele.value
@@ -598,37 +622,43 @@
 
 
           fig, ax = plt.subplots(figsize=[10,6])
+
+          station_info = ""
           for df in Z:
-              if smooth_type == 'rolling':
-                print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                if smooth_stat == 'max':
-                  df = df.rolling(smooth_time).max()
-                elif smooth_stat == 'min':
-                  df = df.rolling(smooth_time).min()
-                elif smooth_stat == 'mean':
-                  df = df.rolling(smooth_time).mean()
-              elif smooth_type == "resample":
-                print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                if smooth_stat == 'max':
-                  df = df.resample(smooth_time, label='right').max()
-                elif smooth_stat == 'min':
-                  df = df.resample(smooth_time, label='right').min()
-                elif smooth_stat == 'mean':
-                  df = df.resample(smooth_time, label='right').mean()
-              ax.plot(df.index, df[variable], marker='o', markersize=3, linestyle='-', label=df.attrs['STID'])
+              try:
+                if smooth_type == 'rolling':
+                  print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
+                  print(df.rolling(smooth_time))
+                  if smooth_stat == 'max':
+                    df = df.rolling(smooth_time).max()
+                  elif smooth_stat == 'min':
+                    df = df.rolling(smooth_time).min()
+                  elif smooth_stat == 'mean':
+                    df = df.rolling(smooth_time).mean()
+                elif smooth_type == "resample":
+                  print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
+                  if smooth_stat == 'max':
+                    df = df.resample(smooth_time, label='right').max()
+                  elif smooth_stat == 'min':
+                    df = df.resample(smooth_time, label='right').min()
+                  elif smooth_stat == 'mean':
+                    df = df.resample(smooth_time, label='right').mean()
+
+                ax.plot(df.index, df[variable], marker='o', markersize=3, linestyle='-', label=df.attrs['STID'])
+                station_info += f"<h3>{df.attrs['STID']} - {df.attrs['NAME']}</h3>{pd.DataFrame(pd.Series(df.attrs)).to_html(classes='table table-striped')}<br><br>"
+              except Exception as e:
+                print(f"WARNING: {e}")
+          Element("station-info").element.innerHTML = station_info
 
           ax.set_ylabel(f'{variable.upper()} ({df.attrs.get("UNITS").get(variable)})')
           ax.set_title(variable)
           ax.spines[['right', 'top', 'bottom']].set_visible(False)
           ax.legend()
-          ax.grid(alpha=.35)
+          ax.grid(color='w', linewidth=2, alpha=.8)
           plt.tight_layout()
           display(fig, target="graph-area", append=False)
 
       asyncio.ensure_future(main())
-
-
-      #js.document.querySelector("img").setAttribute("style", "max-width:100%")
 
     </py-script>
     <style>
