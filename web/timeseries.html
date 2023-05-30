@@ -2,6 +2,9 @@
 <html>
   <head>
     <!-- TODO: Add color pickers for custom color cycle: https://getbootstrap.com/docs/5.3/forms/form-control/#color -->
+    <!-- TODO: Why isn't the pd.rolling working? -->
+    <!-- TODO: pd.resample should align plot on right for minute, hour; but on left for day, month, week, year -->
+    <!-- TODO: Add instructions in modal -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Multi-station Timeseries</title>
@@ -20,14 +23,65 @@
     <py-config>
       packages = ["matplotlib", "pandas", "numpy"]
     </py-config>
-    <!-- plugins = ["./core.py"] -->
 
-    <h1 align="center">Multi-station Time Series</h1>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
       crossorigin="anonymous"
     ></script>
+
+    <h1 align="center">
+      Multi-station Time Series
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        README
+      </button>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Multi-station Timeseries Web App
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              This gets data from the Synoptic Mesonet API, reads it with
+              Pandas, and plots a timeseries of the data with matplotlib. This
+              is all done in your browser powered by
+              <a href="https://pyscript.net/">pyscript</a>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </h1>
 
     <div class="container">
       <hr />
@@ -59,14 +113,17 @@
                 <option value="wind_speed">🍃 Wind Speed</option>
                 <option value="wind_gust">🌬️ Wind Gust</option>
                 <option value="wind_direction">🧭 Wind Direction</option>
-                <option value="wind_direction,wind_speed">🏹 Wind Barbs</option>
+                <!-- <option value="wind_direction,wind_speed">🏹 Wind Barbs</option> -->
+                <!-- <option value="???">☔ Precipitation</option> -->
                 <option value="dew_point_temperature">💦 Dew Point</option>
                 <option value="pressure">🎈 Pressure</option>
                 <option value="solar_radiation">☀️ Solar Radiation</option>
                 <option value="PM_25_concentration">
-                  PM 2.5 Concentration
+                  🏭 PM 2.5 Concentration
                 </option>
-                <option value="ozone_concentration">Ozone Concentration</option>
+                <option value="ozone_concentration">
+                  😎 Ozone Concentration
+                </option>
               </select>
             </div>
           </div>
