@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- TODO: Add color pickers for custom color cycle: https://getbootstrap.com/docs/5.3/forms/form-control/#color -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Multi-station Timeseries</title>
@@ -30,74 +31,89 @@
 
     <div class="container">
       <hr />
+
       <div align="center" class="contentText form-group">
-        <!-- Station ID ----------------------->
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="stid">Station IDs</span>
-          <input
-            type="text"
-            id="stidInput"
-            class="form-control"
-            value="PSRIM,PSINK"
-          />
+        <div class="row align-items-center">
+          <div class="col-sm-6">
+            <!-- Station ID ----------------------->
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="stid">Station IDs</span>
+              <input
+                type="text"
+                id="stidInput"
+                class="form-control"
+                value="PSRIM,PSINK"
+                title="Comma-separated list of MesoWest Station IDs"
+              />
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <!-- Variable ----------------------->
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="variable">Variable</label>
+              <select class="form-select" id="variableSelector">
+                <option selected="selected" value="air_temp">
+                  🌡️ Air Temperature
+                </option>
+                <option value="relative_humidity">💧 Relative Humidity</option>
+                <option value="wind_speed">🍃 Wind Speed</option>
+                <option value="wind_gust">🌬️ Wind Gust</option>
+                <option value="wind_direction">🧭 Wind Direction</option>
+                <option value="wind_direction,wind_speed">🏹 Wind Barbs</option>
+                <option value="dew_point_temperature">💦 Dew Point</option>
+                <option value="pressure">🎈 Pressure</option>
+                <option value="solar_radiation">☀️ Solar Radiation</option>
+                <option value="PM_25_concentration">
+                  PM 2.5 Concentration
+                </option>
+                <option value="ozone_concentration">Ozone Concentration</option>
+              </select>
+            </div>
+          </div>
         </div>
+        <div class="row align-items-center">
+          <div class="col-sm-6">
+            <!-- Duration ----------------------->
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="duration">Duration</span>
+              <input
+                type="text"
+                id="durationInput"
+                class="form-control"
+                value="12H"
+                title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
+              />
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <!-- End Time ----------------------->
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="endTime">Ending at</span>
+              <input
+                type="text"
+                class="form-control"
+                id="endTimeInput"
+                placeholder="YYYY-MM-DD HH:MM"
+                title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM)"
+              />
+            </div>
+            <script>
+              // Get the input element by ID
+              var endTimeInput = document.getElementById("endTimeInput");
 
-        <!-- Duration ----------------------->
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="duration">Duration</span>
-          <input
-            type="text"
-            id="durationInput"
-            class="form-control"
-            value="12H"
-          />
-        </div>
+              // Create a new Date object with the current datetime
+              var currentDate = new Date();
 
-        <!-- End Time ----------------------->
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="endTime">Ending at</span>
-          <input
-            type="text"
-            class="form-control"
-            id="endTimeInput"
-            placeholder="YYYY-MM-DD HH:MM"
-          />
-        </div>
-        <script>
-          // Get the input element by ID
-          var endTimeInput = document.getElementById("endTimeInput");
+              // Format the datetime as YYYY-MM-DD HH:MM
+              var formattedDatetime = currentDate
+                .toISOString()
+                .slice(0, 16)
+                .replace("T", " ");
 
-          // Create a new Date object with the current datetime
-          var currentDate = new Date();
-
-          // Format the datetime as YYYY-MM-DD HH:MM
-          var formattedDatetime = currentDate
-            .toISOString()
-            .slice(0, 16)
-            .replace("T", " ");
-
-          // Set the formatted datetime as the value of the input element
-          endTimeInput.value = formattedDatetime;
-        </script>
-
-        <!-- Variable ----------------------->
-        <div class="input-group mb-3">
-          <label class="input-group-text" for="variable">Variable</label>
-          <select class="form-select" id="variableSelector">
-            <option selected="selected" value="air_temp">
-              🌡️ Air Temperature
-            </option>
-            <option value="relative_humidity">💧 Relative Humidity</option>
-            <option value="wind_speed">🍃 Wind Speed</option>
-            <option value="wind_gust">🌬️ Wind Gust</option>
-            <option value="wind_direction">🧭 Wind Direction</option>
-            <option value="wind_direction,wind_speed">🏹 Wind Barbs</option>
-            <option value="dew_point_temperature">💦 Dew Point</option>
-            <option value="pressure">🎈 Pressure</option>
-            <option value="solar_radiation">☀️ Solar Radiation</option>
-            <option value="PM_25_concentration">PM 2.5 Concentration</option>
-            <option value="ozone_concentration">Ozone Concentration</option>
-          </select>
+              // Set the formatted datetime as the value of the input element
+              endTimeInput.value = formattedDatetime;
+            </script>
+          </div>
         </div>
 
         <!-- Smoother ----------------------->
@@ -119,6 +135,7 @@
             id="smootherInput"
             class="form-control"
             value="30min"
+            title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
           />
         </div>
 
@@ -165,14 +182,94 @@
         </div>
       </div>
       <hr />
-      <div align="center"></div>
 
-      <!-- Print Stuff Here  -->
+      <!-- CONTENT TABS  -->
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="home-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#home-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="home-tab-pane"
+            aria-selected="true"
+          >
+            Figure
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="profile-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#profile-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="profile-tab-pane"
+            aria-selected="false"
+          >
+            REPL
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link disabled"
+            id="contact-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#contact-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="contact-tab-pane"
+            aria-selected="false"
+          >
+            Output
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="myTabContent">
+        <div
+          class="tab-pane fade show active"
+          id="home-tab-pane"
+          role="tabpanel"
+          aria-labelledby="home-tab"
+          tabindex="0"
+        >
+          <div id="graph-area"></div>
+        </div>
+        <div
+          class="tab-pane fade"
+          id="profile-tab-pane"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+          tabindex="0"
+        >
+          <div id="replOutput"></div>
+          <!-- prettier-ignore -->
+          <py-repl output="replOutput">
+          hello = "Hello world!"
+          hello
+        </py-repl>
+        </div>
 
-      <div id="graph-area"></div>
-      <br><br><br>
+        <div
+          class="tab-pane fade"
+          id="contact-tab-pane"
+          role="tabpanel"
+          aria-labelledby="contact-tab"
+          tabindex="0"
+        >
+          <!-- I want to put this here, but text displays on one line  -->
+          <!-- <py-terminal></py-terminal> -->
+        </div>
+      </div>
 
+      <br /><br /><br />
+      <py-terminal></py-terminal>
     </div>
+
+    <!-- (CONTENT TABS)  -->
 
     <!-- prettier-ignore -->
     <py-script>
@@ -184,7 +281,9 @@
       import matplotlib.pyplot as plt
       import pandas as pd
       import numpy as np
+      import sys
 
+      print(f"Python version:", sys.version)
       print(f"imported matplotlib {mpl.__version__}")
       print(f"imported pandas {pd.__version__}")
       print(f"imported numpy {np.__version__}")
@@ -327,7 +426,7 @@
 
       async def main():
           # Get input values
-          stid = Element("stidInput").value
+          stid = Element("stidInput").value.replace(" ", "").upper()
           duration = pd.to_timedelta(Element("durationInput").value)
           end = pd.to_datetime(Element("endTimeInput").value)
           start = end - duration
@@ -461,11 +560,11 @@
                   df = df.resample(smooth_time, label='right').mean()
               ax.plot(df.index, df[variable], marker='o', markersize=3, linestyle='-', label=df.attrs['STID'])
 
-          ax.set_ylabel(f'{variable.upper()} (units)')
+          ax.set_ylabel(f'{variable.upper()} ({df.attrs.get("UNITS").get(variable)})')
           ax.set_title(variable)
           ax.spines[['right', 'top', 'bottom']].set_visible(False)
           ax.legend()
-          ax.grid(alpha=.2)
+          ax.grid(alpha=.35)
           plt.tight_layout()
           display(fig, target="graph-area", append=False)
 
@@ -476,7 +575,6 @@
 
     </py-script>
     <style>
-
       img {
         max-width: 98%;
         align-items: center;
