@@ -137,7 +137,7 @@ import asyncio
 stid="UKBKB,KMRY"
 vars="air_temp"
 units="english"
-recent="300"
+recent="30"
 token="0bbe0e9fda7945a68951cc1bdebb2b0d"
 URL = f"https://api.synopticdata.com/v2/stations/timeseries?recent={recent}&stid={stid}&vars={vars}&units={units}&token={token}"
 response = await pyfetch(url=URL, method="GET")

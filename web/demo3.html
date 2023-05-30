@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  </head>
+
+  <body>
+    <py-config>
+      packages = ["matplotlib"]
+    </py-config>
+
+    <div class="container">
+
+      <h3>Show Graph</h3>
+      <div id="graph-area"></div>
+
+    </div>
+
+    <py-script>
+      import matplotlib.pyplot as plt
+      plt.plot([1,2,3])
+      plt.tight_layout()
+      display(plt, target="graph-area", append=False)
+    </py-script>
+    <style>
+        img {
+  max-width: 80%;
+}
+    </style>
+  </body>
+</html>
