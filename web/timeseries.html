@@ -19,6 +19,11 @@
     ></script>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <style>
+      .spaced-list li {
+        margin-bottom: 10px; /* Increase the margin-bottom value to increase spacing */
+      }
+    </style>
   </head>
 
   <body>
@@ -66,11 +71,147 @@
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body" style="font-size:15px;text-align: left;">
-              This gets data from the Synoptic Mesonet API, reads it with
-              Pandas, and plots a timeseries of the data with matplotlib. This
-              is all done in your browser powered by
-              <a href="https://pyscript.net/">pyscript</a>
+            <div class="modal-body" style="font-size: 15px; text-align: left">
+              <p>
+                This app gets data from the Synoptic Mesonet API, reads it with
+                Pandas, and plots a timeseries of the data with matplotlib. This
+                is all done in your browser powered by
+                <a href="https://pyscript.net/">pyscript</a>. The primary use of
+                this app is to plot a timeseries of data from multiple stations
+                in a single plot.
+              </p>
+              <p>
+                <strong>Station IDs:</strong> A comma-separated list of station
+                IDs. If you don't know the ID of a station, you can search for a
+                station on
+                <a href="https://mesowest.utah.edu/" target="_blank">Mesowest</a
+                >.
+              </p>
+              <p>
+                <strong>Variable:</strong> Select the variable you wish to plot.
+              </p>
+              <p>
+                <strong>Duration:</strong> Specify the length of time you want
+                to plot. This must be a Pandas-parsable timedelta string. Here
+                are a few examples: <kbd>30min</kbd> for 30 minutes,
+                <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
+              </p>
+              <p>
+                <strong>End time (UTC):</strong>
+                Specify the end time of the timeseries. This must be a
+                Pandas-parsable datetime; it may be easiest to use the format
+                <kbd>YYYY-MM-DD HH:MM</kbd>
+              </p>
+              <p>
+                <strong>Smoother:</strong>
+                You can "smooth" the data using two different methods built into
+                Pandas:
+              </p>
+
+              <ol>
+                <li>
+                  Resample: Reduces the amount of data points to interval
+                  selected. This is useful for showing the "daily maximum
+                  temperature" for the time period.
+                </li>
+                <li>
+                  Rolling: Returns the same amount of data points but value
+                  (i.e. mean, max, min) is computed over a time window.
+                </li>
+              </ol>
+              <p>
+                Also specify the time window and the statistic to compute in the
+                time window.
+              </p>
+
+              <p>
+                <strong>Colors:</strong>
+                You can specify the colors you want each line. Maybe you have
+                lots of stations plotted, but want to highlight only one; you
+                can make that station "red" and the others a shade of grey.
+              </p>
+              <p>
+                <strong>Toggles:</strong>
+                Toggle units to be returned in English or Metric units. Also
+                toggle if time is local or UTC.
+              </p>
+
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree"
+                      aria-expanded="false"
+                      aria-controls="collapseThree"
+                    >
+                      Backdoor: Advanced Station Selector
+                    </button>
+                  </h2>
+                  <div
+                    id="collapseThree"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      <p>
+                        With some knowledge of the Synoptic Mesonet API, you can
+                        make more complex station queries. While the simple
+                        method for selecting stations is to provide a list of
+                        station IDs (e.g.
+                        <kbd>PSRIM,PSINK</kbd>), you can instead provide
+                        arguments using the
+                        <a
+                          target="_blank"
+                          href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/"
+                          >station selection parameter</a
+                        >
+                        to get many types of station combinations. For example:
+                      </p>
+
+                      <ul class="spaced-list">
+                        <li>
+                          <kbd>radius=wbb,5</kbd> All stations within a 5 mile
+                          radius of WBB
+                        </li>
+                        <li>
+                          <kbd>radius=wbb,5&limit=10</kbd> Ten stations nearest
+                          WBB within a 5 mile radius.
+                        </li>
+                        <li>
+                          <kbd>radius=WBB,5&limit=10&stid=!MTMET</kbd> Same as
+                          above, but exclude the station MTMET.
+                        </li>
+                        <li>
+                          <kbd>radius=WBB,20&network=153</kbd> Stations within
+                          20 miles of WBB that belong to the "UUNET" network.
+                          (See list of
+                          <a
+                            href="https://developers.synopticdata.com/about/station-providers/"
+                            >network providers</a
+                          >.)
+                        </li>
+                        <li>
+                          <kbd>radius=KSLC,40&network=1,2&limit=8</kbd> Eight
+                          stations within 40 miles of KSLC that belong to the
+                          "ASOS/AWOS" and "RAWS" networks. (See list of
+                          <a
+                            href="https://developers.synopticdata.com/about/station-providers/"
+                            >network providers</a
+                          >.)
+                        </li>
+                        <li>
+                          <kbd>radius=41.5,-120.25,20&limit=10</kbd> Ten
+                          stations within 20 miles of the latitude/longitude
+                          location.
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <button
@@ -113,22 +254,28 @@
                 <option selected="selected" value="air_temp">
                   🌡️ Air Temperature
                 </option>
+                <option value="dew_point_temperature">💦 Dew Point</option>
                 <option value="relative_humidity">💧 Relative Humidity</option>
                 <option value="wind_speed">🍃 Wind Speed</option>
-                <option value="wind_gust">🌬️ Wind Gust</option>
                 <option value="wind_direction">🧭 Wind Direction</option>
+                <option value="wind_gust">🌬️ Wind Gust</option>
                 <option value="wind_direction,wind_speed" disabled>
                   🏹 Wind Barbs
                 </option>
-                <option value="???" disabled>☔ Precipitation</option>
-                <option value="dew_point_temperature">💦 Dew Point</option>
+                <option value="precip_accum">☔ Precipitation (only precip_accu currently supported)</option>
                 <option value="pressure">🎈 Pressure</option>
+                <option value="sea_level_pressure">⛵ Sea Level Pressure</option>
+                <option value="altimeter">🏔️ Altimiter</option>
+                <option value="snow_depth">❄️ Snow Depth</option>
                 <option value="solar_radiation">☀️ Solar Radiation</option>
                 <option value="PM_25_concentration">
                   🏭 PM 2.5 Concentration
                 </option>
                 <option value="ozone_concentration">
                   😎 Ozone Concentration
+                </option>
+                <option value="volt">
+                  🔋 Battery Voltage
                 </option>
               </select>
             </div>
@@ -576,6 +723,9 @@
             duration = pd.to_timedelta(Element("durationInput").value)
           except:
             print("⛔ ERROR: Duration could not be parsed by Pandas. Try something like '12min', '6H', '3D' instead.")
+          if duration > pd.to_timedelta("356D"):
+            duration = pd.to_timedelta("356D")
+            print("⚠️ WARNING: Requested too long of a dataset; setting duration to 366 days.")
           try:
             end = pd.to_datetime(Element("endTimeInput").value)
           except:
@@ -607,35 +757,39 @@
           mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=color_cycle)
           # -------------------------------------------------------------------
 
-          # Write input values to page
           print("")
-          print("User Input")
-          print(f" ├──{stid=}")
-          print(f" ├──{duration=}")
-          print(f" ├──{start=}")
-          print(f" ├──{end=}")
-          print(f" ├──{variable=}")
-          print(f" ├──{units=}")
-          print(f" ├──{obtimezone=}")
-          print(f" ├──{smooth_type=}")
-          print(f" ├──{smooth_stat=}")
-          print(f" └──{smooth_time=}")
+          # Write input values to page
+          #print("User Input")
+          #print(f" ├──{stid=}")
+          #print(f" ├──{duration=}")
+          #print(f" ├──{start=}")
+          #print(f" ├──{end=}")
+          #print(f" ├──{variable=}")
+          #print(f" ├──{units=}")
+          #print(f" ├──{obtimezone=}")
+          #print(f" ├──{smooth_type=}")
+          #print(f" ├──{smooth_stat=}")
+          #print(f" └──{smooth_time=}")
 
 
           token = "0bbe0e9fda7945a68951cc1bdebb2b0d"
-          url = f"https://api.synopticdata.com/v2/stations/timeseries?start={start:%Y%m%d%H%M}&end={end:%Y%m%d%H%M}&stid={stid}&vars={variable}&units={units}&obtimezone={obtimezone}&token={token}"
+
+          if '=' in stid:
+            # User used the "backdoor" to specify a new station query
+            # e.g. stid="radius=wbb,10&limit=5"
+            custom_query = True
+            url = f"https://api.synopticdata.com/v2/stations/timeseries?start={start:%Y%m%d%H%M}&end={end:%Y%m%d%H%M}&{stid}&vars={variable}&units={units}&obtimezone={obtimezone}&token={token}"
+          else:
+            # User requested a comma-separated list of station IDs
+            custom_query = False
+            url = f"https://api.synopticdata.com/v2/stations/timeseries?start={start:%Y%m%d%H%M}&end={end:%Y%m%d%H%M}&stid={stid}&vars={variable}&units={units}&obtimezone={obtimezone}&token={token}"
 
           print(f"Request URL: {url}")
 
-          headers = {"Content-type": "application/json"}
-          response = await request(
-              url,
-              method="GET",
-              # headers=headers,
-          )
+          response = await request(url, method="GET")
           status = response.status
           data = await response.json()
-          print(f"GET request=> status:{status}")
+          print(f"GET request=> status:{status} >>> Response Message: {data['SUMMARY']['RESPONSE_MESSAGE']}")
 
           rename_set_1 = True
 
@@ -705,7 +859,9 @@
 
               Z[df.attrs["STID"]] = df
 
-          Z = {i: Z[i] for i in stid.split(",") if i in Z.keys()}
+          if not custom_query:
+            # Sort stations in order they were requested
+            Z = {i: Z[i] for i in stid.split(",") if i in Z.keys()}
 
           fig, ax = plt.subplots()
 
