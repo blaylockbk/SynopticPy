@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html data-bs-theme="light">
   <head>
-    <!-- TODO: pd.resample should align plot on right for minute, hour; but on left for day, month, week, year -->
-    <!-- TODO: Add instructions in modal -->
-    <!-- TODO: Add a "spread" option to the smoother, use "bar chart" to display -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Station Timeseries</title>
+    <link
+      rel="icon"
+      type="image/jpeg"
+      href="https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/Balloon_logo/square_balloon.jpg"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -83,61 +85,13 @@
                 in a single plot.
               </p>
               <p>
-                <strong>Station IDs:</strong> A comma-separated list of station
+                <hr><strong>Station IDs:</strong> A comma-separated list of station
                 IDs. If you don't know the ID of a station, you can search for a
                 station on
                 <a href="https://mesowest.utah.edu/" target="_blank">Mesowest</a
-                >.
+                >. For advanced station selection, read the "Backdoor: Advanced Station Selector"
+                below.
               </p>
-              <p>
-                <strong>Variable:</strong> Select the variable you wish to plot.
-              </p>
-              <p>
-                <strong>Duration:</strong> Specify the length of time you want
-                to plot. This must be a Pandas-parsable timedelta string. Here
-                are a few examples: <kbd>30min</kbd> for 30 minutes,
-                <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
-              </p>
-              <p>
-                <strong>End time (UTC):</strong>
-                Specify the end time of the timeseries. This must be a
-                Pandas-parsable datetime; it may be easiest to use the format
-                <kbd>YYYY-MM-DD HH:MM</kbd>
-              </p>
-              <p>
-                <strong>Smoother:</strong>
-                You can "smooth" the data using two different methods built into
-                Pandas:
-              </p>
-
-              <ol>
-                <li>
-                  Resample: Reduces the amount of data points to interval
-                  selected. This is useful for showing the "daily maximum
-                  temperature" for the time period.
-                </li>
-                <li>
-                  Rolling: Returns the same amount of data points but value
-                  (i.e. mean, max, min) is computed over a time window.
-                </li>
-              </ol>
-              <p>
-                Also specify the time window and the statistic to compute in the
-                time window.
-              </p>
-
-              <p>
-                <strong>Colors:</strong>
-                You can specify the colors you want each line. Maybe you have
-                lots of stations plotted, but want to highlight only one; you
-                can make that station "red" and the others a shade of grey.
-              </p>
-              <p>
-                <strong>Toggles:</strong>
-                Toggle units to be returned in English or Metric units. Also
-                toggle if time is local or UTC.
-              </p>
-
               <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                   <h2 class="accordion-header">
@@ -214,6 +168,66 @@
                   </div>
                 </div>
               </div>
+              <br>
+
+              <p>
+                <hr><strong>Variable:</strong> Select the variable you wish to plot.
+              </p>
+              <p>
+                <hr><strong>Start Time:</strong> Specify the starting time for the
+                plot. This must be a Pandas-parsable datetime string
+                <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if an End datetime is
+                given, a Pandas-parsable timedelta such as <kbd>30min</kbd> for
+                30 minutes, <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3
+                days.
+              </p>
+              <p>
+                <hr><strong>End Time:</strong> Specify the ending time for the plot.
+                This must be a Pandas-parsable datetime string
+                <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if a Start datetime is
+                given, a Pandas-parsable timedelta such as <kbd>30min</kbd> for
+                30 minutes, <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3
+                days.
+              </p>
+              <p>
+                <hr><strong>Smoother:</strong>
+                You can "smooth" the data using two different methods built into
+                Pandas:
+              </p>
+
+              <ol>
+                <li>
+                  Resample: Reduces the amount of data points to interval
+                  selected. This is useful for showing the "daily maximum
+                  temperature" for the time period.
+                </li>
+                <li>
+                  Rolling: Returns the same amount of data points but value
+                  (i.e. mean, max, min) is computed over a time window.
+                </li>
+              </ol>
+              <p>
+                Also specify the time window (as a Pandas-parsable timedelta) and the statistic to compute in the
+                time window (e.g. Mean).
+              </p>
+              <p>
+                WARNING: A proper average for wind_direction is not yet
+                implemented.
+              </p>
+
+              <p>
+                <hr><strong>Colors:</strong>
+                You can specify the colors you want each line. Maybe you have
+                lots of stations plotted, but want to highlight only one; you
+                can make that station "red" and the others a shade of grey.
+              </p>
+              <p>
+                <hr><strong>Toggles:</strong>
+                Toggle units to be returned in English or Metric units. Also
+                toggle if time is local or UTC.
+              </p>
+
+
             </div>
             <div class="modal-footer">
               <button
@@ -264,9 +278,13 @@
                 <option value="wind_direction,wind_speed" disabled>
                   🏹 Wind Barbs
                 </option>
-                <option value="precip_accum">☔ Precipitation (only precip_accu currently supported)</option>
+                <option value="precip_accum">
+                  ☔ Precipitation (only precip_accu currently supported)
+                </option>
                 <option value="pressure">🎈 Pressure</option>
-                <option value="sea_level_pressure">⛵ Sea Level Pressure</option>
+                <option value="sea_level_pressure">
+                  ⛵ Sea Level Pressure
+                </option>
                 <option value="altimeter">🏔️ Altimiter</option>
                 <option value="snow_depth">❄️ Snow Depth</option>
                 <option value="solar_radiation">☀️ Solar Radiation</option>
@@ -276,9 +294,7 @@
                 <option value="ozone_concentration">
                   😎 Ozone Concentration
                 </option>
-                <option value="volt">
-                  🔋 Battery Voltage
-                </option>
+                <option value="volt">🔋 Battery Voltage</option>
               </select>
             </div>
           </div>
@@ -286,15 +302,17 @@
         <!-- SECOND ROW -->
         <div class="row align-items-center">
           <div class="col-sm-6">
-            <!-- Duration ----------------------->
+            <!-- Start Time ----------------------->
             <div class="input-group mb-3">
-              <span class="input-group-text" id="duration">Duration</span>
+              <span class="input-group-text" id="startTime"
+                >Start time (UTC)</span
+              >
               <input
                 type="text"
-                id="durationInput"
+                id="startTimeInput"
                 class="form-control"
                 value="18H"
-                title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
+                title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
               />
             </div>
           </div>
@@ -307,7 +325,7 @@
                 class="form-control"
                 id="endTimeInput"
                 placeholder="YYYY-MM-DD HH:MM"
-                title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM)"
+                title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
               />
             </div>
             <script>
@@ -353,7 +371,7 @@
                   <option value="mean">Mean</option>
                   <option value="max">Max</option>
                   <option value="min">Min</option>
-                  <option value="mean">Mean</option>
+                  <option value="median">Median</option>
                   <option value="std">Standard Deviation</option>
                   <option value="var">Variance</option>
                   <option value="spread" disabled>Spread</option>
@@ -548,7 +566,8 @@
     <!-- prettier-ignore -->
     <py-script>
       from timeseries import main
-      import asyncio
+      print()
+      print("Making new API request...")
       fig = main(display)
 
     </py-script>

@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Ice Cream Picker</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  </head>
+  <body>
+
+    <py-config>
+      packages = ["matplotlib", "pandas"]
+    </py-config>
+
+    <py-terminal></py-terminal>
+    <py-script>
+      import pandas as pd
+
+      from pyodide.http import open_url
+
+      url = (
+          "https://api.synopticdata.com/v2/stations/timesries?start=202306070954&end=202306080354&stid=PSRIM,PSINK&vars=air_temp&units=english&obtimezone=local&token=d25c2abe02b94001a82e7790d9c30f06"
+      )
+      json = open_url(url)
+    </py-script>
+
+    <py-repl>
+      ice_data
+    </py-repl>
+  </body>
+</html>
