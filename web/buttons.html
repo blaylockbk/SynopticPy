@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Multi-station Timeseries</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  </head>
+  <body>
+    <py-config> packages = ["matplotlib", "pandas"] </py-config>
+    <h1 align="center">Multi-station Time Series</h1>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+
+    <div class="container">
+      <hr />
+      <div align="center" class="contentText form-group">
+          <!-- Station ID ----------------------->
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="stid">Station IDs</span>
+            <input type="text" id='stidInput' class="form-control" value="PSRIM,PSINK" />
+          </div>
+
+
+          <!-- Duration ----------------------->
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="duration">Duration</span>
+            <input
+              type="text"
+              id="durationInput"
+              class="form-control"
+              value="30min"
+            />
+          </div>
+
+          <!-- End Time ----------------------->
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="endTime">End Time</span>
+            <input
+              type="text"
+              class="form-control"
+              id="endTimeInput"
+              placeholder="YYYY-MM-DD HH:MM"
+            />
+          </div>
+          <script>
+            // Get the input element by ID
+            var endTimeInput = document.getElementById("endTimeInput");
+
+            // Create a new Date object with the current datetime
+            var currentDate = new Date();
+
+            // Format the datetime as YYYY-MM-DD HH:MM
+            var formattedDatetime = currentDate.toISOString().slice(0, 16).replace("T", " ");
+
+            // Set the formatted datetime as the value of the input element
+            endTimeInput.value = formattedDatetime;
+          </script>
+
+          <!-- Variable ----------------------->
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="variable">Variable</label>
+            <select class="form-select" id="variableSelector">
+              <option selected="selected" value="air_temp">
+                Air Temperature
+              </option>
+              <option value="relative_humidity">Relative Humidity</option>
+              <option value="wind_speed">Wind Speed</option>
+              <option value="wind_gust">Wind Gust</option>
+              <option value="wind_direction">Wind Direction</option>
+              <option value="wind_direction,wind_speed">Wind Barbs</option>
+              <option value="dew_point_temperature">Dew Point</option>
+              <option value="pressure">Pressure</option>
+              <option value="PM_25_concentration">PM 2.5 Concentration</option>
+              <option value="ozone_concentration">Ozone Concentration</option>
+              <option value="solar_radiation">Solar Radiation</option>
+            </select>
+          </div>
+
+          <!-- Units ----------------------->
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="unitsRadioOptions"
+              id="unitsRadio1"
+              value="english"
+              checked
+            />
+            <label class="form-check-label" for="inlineRadio1"
+              >English Units</label
+            >
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="unitsRadioOptions"
+              id="unitsRadio2"
+              value="metric"
+            />
+            <label class="form-check-label" for="inlineRadio2"
+              >Metric Units</label
+            >
+          </div>
+
+          <!-- Submit Button ----------------------------------------------------------->
+
+          <div class="form-group" style="padding-top: 10px">
+            <div class="col-sm-offset-5 col-sm-10">
+              <button type="submit" class="btn btn-success" py-click="get_input()"  id="display">Make Plot</button>
+            </div>
+          </div>
+      </div>
+      <hr />
+      <div align="center">
+      </div>
+
+      <!-- Print Stuff Here  -->
+
+      <h3>Show Graph</h3>
+      <div id="graph-area"></div>
+
+      <h3>Show Input Values</h3>
+      <div id="display-write"></div>
+
+    </div>
+
+    <py-script>
+import js
+from pyscript import Element
+import matplotlib.pyplot as plt
+
+units_element = js.document.getElementsByName("unitsRadioOptions")
+
+def get_input():
+    stid = Element('stidInput').value
+    duration = Element('durationInput').value
+    endTime = Element('endTimeInput').value
+    variable = Element('variableSelector').value
+    for ele in units_element:
+        if ele.checked:
+            units = ele.value
+            break
+
+    display(f"{stid=}", target="display-write")
+    display(f"{duration=}", target="display-write")
+    display(f"{endTime=}", target="display-write")
+    display(f"{variable=}", target="display-write")
+    display(f"{units=}", target="display-write")
+
+    fig, ax = plt.subplots()
+    bars = ax.plot([1,5,3], marker='.')
+    plt.title("placeholder figure")
+    display(fig, target="graph-area", append=False)
+</py-script>
+  </body>
+</html>
