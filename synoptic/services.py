@@ -456,15 +456,14 @@ def synoptic_api(
         if i in params:
             dt = params[i]
             if isinstance(dt, (int, float)):
-                dt = timedelta(minutes=dt)
+                dt = pd.to_timedelta(dt, unit="minutes")
             try:
                 # Try to convert input to Pandas timedelta
                 params[i] = pd.to_timedelta(dt)
             except:
                 warnings.warn(f"🐼 Pandas could not parse [{i}={dt}] as a timedelta.")
             # Format the datetime as a Synoptic-recognized int of minutes
-            to_minutes = np.ceil(params[i] / timedelta(minutes=1)).astype(int)
-            params[i] = to_minutes
+            params[i] = int(params[i].ceil("min").total_seconds() / 60)
             if verbose:
                 print(f"Checking for data {i}={params[i]} minutes.")
 
