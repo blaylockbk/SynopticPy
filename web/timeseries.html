@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- TODO: Add color pickers for custom color cycle: https://getbootstrap.com/docs/5.3/forms/form-control/#color -->
-    <!-- TODO: Why isn't the pd.rolling working? -->
     <!-- TODO: pd.resample should align plot on right for minute, hour; but on left for day, month, week, year -->
     <!-- TODO: Add instructions in modal -->
+    <!-- TODO: Add a "spread" option to the smoother, use "bar chart" to display -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Multi-station Timeseries</title>
+    <title>Station Timeseries</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
+    <script
+      src="https://kit.fontawesome.com/f6cc126dcc.js"
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-
   </head>
 
   <body>
@@ -31,10 +33,8 @@
       crossorigin="anonymous"
     ></script>
 
-
-
     <h1 align="center">
-      Multi-station Time Series
+      Station Timeseries
       <!-- Button trigger modal -->
       <button
         type="button"
@@ -57,7 +57,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Multi-station Timeseries Web App
+                Brian Blaylock's Station Timeseries Web App
               </h1>
               <button
                 type="button"
@@ -66,7 +66,7 @@
                 aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="font-size:15px;text-align: left;">
               This gets data from the Synoptic Mesonet API, reads it with
               Pandas, and plots a timeseries of the data with matplotlib. This
               is all done in your browser powered by
@@ -90,6 +90,7 @@
       <hr />
 
       <div align="center" class="contentText form-group">
+        <!-- FIRST ROW -->
         <div class="row align-items-center">
           <div class="col-sm-6">
             <!-- Station ID ----------------------->
@@ -116,8 +117,10 @@
                 <option value="wind_speed">🍃 Wind Speed</option>
                 <option value="wind_gust">🌬️ Wind Gust</option>
                 <option value="wind_direction">🧭 Wind Direction</option>
-                <!-- <option value="wind_direction,wind_speed">🏹 Wind Barbs</option> -->
-                <!-- <option value="???">☔ Precipitation</option> -->
+                <option value="wind_direction,wind_speed" disabled>
+                  🏹 Wind Barbs
+                </option>
+                <option value="???" disabled>☔ Precipitation</option>
                 <option value="dew_point_temperature">💦 Dew Point</option>
                 <option value="pressure">🎈 Pressure</option>
                 <option value="solar_radiation">☀️ Solar Radiation</option>
@@ -131,6 +134,7 @@
             </div>
           </div>
         </div>
+        <!-- SECOND ROW -->
         <div class="row align-items-center">
           <div class="col-sm-6">
             <!-- Duration ----------------------->
@@ -140,7 +144,7 @@
                 type="text"
                 id="durationInput"
                 class="form-control"
-                value="12H"
+                value="18H"
                 title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
               />
             </div>
@@ -148,7 +152,7 @@
           <div class="col-sm-6">
             <!-- End Time ----------------------->
             <div class="input-group mb-3">
-              <span class="input-group-text" id="endTime">Ending at</span>
+              <span class="input-group-text" id="endTime">End time (UTC)</span>
               <input
                 type="text"
                 class="form-control"
@@ -176,71 +180,139 @@
           </div>
         </div>
 
-        <!-- Smoother ----------------------->
-        <div class="input-group mb-3">
-          <label class="input-group-text" for="smoothing">Smoother</label>
-          <select class="form-select" id="smootherSelector1">
-            <option selected="selected" value="none">None</option>
-            <option value="rolling">Rolling (doesn't seem to work)</option>
-            <option value="resample">Resample</option>
-          </select>
-          <select class="form-select" id="smootherSelector2">
-            <option selected="selected" value="none">None</option>
-            <option value="mean">Mean</option>
-            <option value="max">Max</option>
-            <option value="min">Min</option>
-          </select>
-          <input
-            type="text"
-            id="smootherInput"
-            class="form-control"
-            value="30min"
-            title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
-          />
+        <!-- FOURTH ROW -->
+        <div class="row align-items-center">
+          <div class="col-sm-6">
+            <!-- Smoother ----------------------->
+            <div class="input-group mb-3">
+              <div class="input-group mb-3">
+                <label class="input-group-text" for="smoothing">Smoother</label>
+                <select class="form-select" id="smootherSelector1">
+                  <option selected="selected" value="none">None</option>
+                  <option value="resample">Resample</option>
+                  <option value="rolling">Rolling</option>
+                </select>
+                <input
+                  type="text"
+                  id="smootherInput"
+                  class="form-control"
+                  value="30min"
+                  title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
+                />
+                <select class="form-select" id="smootherSelector2">
+                  <option selected="selected" value="none">None</option>
+                  <option value="mean">Mean</option>
+                  <option value="max">Max</option>
+                  <option value="min">Min</option>
+                  <option value="spread" disabled>Spread</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <!-- Colors ----------------------->
+            <!-- prettier-ignore -->
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="colorCycle"
+                >Colors</label
+              >
+              <input type="color" class="form-control form-control-color" name="color" value="#0d6efd" title="Choose color" id="color1">
+              <input type="color" class="form-control form-control-color" name="color" value="#dc3545" title="Choose color" id="color2">
+              <input type="color" class="form-control form-control-color" name="color" value="#fd7e14" title="Choose color" id="color3">
+              <input type="color" class="form-control form-control-color" name="color" value="#198754" title="Choose color" id="color4">
+              <input type="color" class="form-control form-control-color" name="color" value="#0dcaf0" title="Choose color" id="color5">
+              <input type="color" class="form-control form-control-color" name="color" value="#563d7c" title="Choose color" id="color6">
+              <input type="color" class="form-control form-control-color" name="color" value="#ffc107" title="Choose color" id="color7">
+              <input type="color" class="form-control form-control-color" name="color" value="#262626" title="Choose color" id="color8">
+              <input type="color" class="form-control form-control-color" name="color" value="#6610f2" title="Choose color" id="color9">
+              <input type="color" class="form-control form-control-color" name="color" value="#20c997" title="Choose color" id="color10">
+              <input type="color" class="form-control form-control-color" name="color" value="#e83e8c" title="Choose color" id="color11">
+              <input type="color" class="form-control form-control-color" name="color" value="#a64dff" title="Choose color" id="color12">
+            </div>
+          </div>
         </div>
-
-        <!-- Units ----------------------->
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="unitsRadioOptions"
-            id="unitsRadio1"
-            value="english"
-            checked
-          />
-          <label class="form-check-label" for="inlineRadio1"
-            >English Units</label
-          >
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            class="form-check-input"
-            type="radio"
-            name="unitsRadioOptions"
-            id="unitsRadio2"
-            value="metric"
-          />
-          <label class="form-check-label" for="inlineRadio2"
-            >Metric Units</label
-          >
-        </div>
-
-        <!-- Submit Button ----------------------------------------------------------->
-
-        <div class="form-group" style="padding-top: 10px">
-          <div class="col-sm-offset-5 col-sm-10">
-            <button
-              type="submit"
-              class="btn btn-success"
-              py-click="main()"
-              id="display"
-            >
-              Make Plot
-            </button>
+        <!-- THIRD ROW -->
+        <div class="row align-items-center">
+          <!-- Units toggle----------------------->
+          <div class="col-sm-3">
+            <div class="input-group mb-3">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="unitsRadioOptions"
+                  id="unitsRadio1"
+                  autocomplete="off"
+                  value="english"
+                  checked
+                />
+                <label class="btn btn-outline-dark" for="unitsRadio1"
+                  >English Units</label
+                >
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="unitsRadioOptions"
+                  id="unitsRadio2"
+                  autocomplete="off"
+                  value="metric"
+                />
+                <label class="btn btn-outline-dark" for="unitsRadio2"
+                  >Metric Units</label
+                >
+              </div>
+            </div>
+          </div>
+          <!-- (Units toggle) -->
+          <!-- timezone toggle----------------------->
+          <div class="col-sm-3">
+            <div class="input-group mb-3">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="timezoneRadioOptions"
+                  id="timezoneRadio1"
+                  autocomplete="off"
+                  value="local"
+                  checked
+                />
+                <label class="btn btn-outline-dark" for="timezoneRadio1"
+                  >Local Time</label
+                >
+                <input
+                  type="radio"
+                  class="btn-check"
+                  name="timezoneRadioOptions"
+                  id="timezoneRadio2"
+                  autocomplete="off"
+                  value="utc"
+                />
+                <label class="btn btn-outline-dark" for="timezoneRadio2"
+                  >UTC Time</label
+                >
+              </div>
+            </div>
+          </div>
+          <!-- (timezone toggle) -->
+          <div class="col-sm-6">
+            <!-- Submit Button -->
+            <div class="form-group" style="padding-top: 10px">
+              <div class="col-sm-4">
+                <button
+                  type="submit"
+                  class="btn btn-success"
+                  py-click="main()"
+                  id="display"
+                >
+                  Make Plot
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
       <hr />
 
       <!-- CONTENT TABS  -->
@@ -273,20 +345,6 @@
             Station Info
           </button>
         </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="profile-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#profile-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="profile-tab-pane"
-            aria-selected="false"
-          >
-            REPL
-          </button>
-        </li>
       </ul>
       <div class="tab-content" id="myTabContent">
         <div
@@ -296,9 +354,8 @@
           aria-labelledby="home-tab"
           tabindex="0"
         >
-          <div id="graph-area"></div>
+          <div id="graph-area" align="center"></div>
         </div>
-
 
         <div
           class="tab-pane fade"
@@ -307,8 +364,7 @@
           aria-labelledby="contact-tab"
           tabindex="0"
         >
-        <div id="station-info"></div>
-
+          <div id="station-info"></div>
         </div>
         <div
           class="tab-pane fade"
@@ -316,17 +372,23 @@
           role="tabpanel"
           aria-labelledby="profile-tab"
           tabindex="0"
-        >
-          <div id="replOutput"></div>
-          <!-- prettier-ignore -->
-          <py-repl output="replOutput">
-          df
-        </py-repl>
+        ></div>
+        <br />
+        <div style="float: right">
+          <i class="fa-brands fa-github"></i>
+          <a href="https://github.com/blaylockbk/SynopticPy" target="_blank"
+            >SynopticPy
+          </a>
+          |
+          <a
+            href="https://github.com/blaylockbk/SynopticPy/blob/main/web/timeseries.html"
+            target="_blank"
+            >Page Source</a
+          >
         </div>
+        <br /><br /><br />
+        <py-terminal></py-terminal>
       </div>
-
-      <br /><br /><br />
-      <py-terminal></py-terminal>
     </div>
 
     <!-- (CONTENT TABS)  -->
@@ -352,6 +414,12 @@
       plt.rcParams["date.autoformatter.day"] = "%b %d\n%H:%M"
       plt.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
 
+
+      mpl.rcParams['figure.figsize'] = [10,6]
+      mpl.rcParams['axes.labelsize'] = 'large'
+      mpl.rcParams['xtick.labelsize'] = 'medium'
+      mpl.rcParams['ytick.labelsize'] = 'medium'
+      mpl.rcParams['axes.titlesize'] = 'xx-large'
       mpl.rcParams['axes.facecolor'] = ".95"
       mpl.rcParams['axes.spines.left'] = False
       mpl.rcParams['axes.spines.bottom'] = False
@@ -362,16 +430,6 @@
       mpl.rcParams['ytick.major.size'] = 0
       mpl.rcParams['ytick.minor.size'] = 0
 
-      # Color cycle for plot lines
-      bootstrap_colors = [
-        "#0d6efd",
-        "#dc3545",
-        "#fd7e14",
-        "#198754",
-        "#0dcaf0",
-        ]
-
-      mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=bootstrap_colors)
 
       config = {
           "default": {
@@ -503,24 +561,54 @@
           response = await pyfetch(url, **kwargs)
           return response
 
+      def clear_terminal():
+        ter = js.document.getElementById("my-terminal")
+        ter.innerHTML = ''
 
 
       async def main():
-          # Get input values
+
+          # -------------------------------------------------------------------
+          # Get and validate input values
+          # -------------------------------------------------------------------
           stid = Element("stidInput").value.replace(" ", "").upper()
-          duration = pd.to_timedelta(Element("durationInput").value)
-          end = pd.to_datetime(Element("endTimeInput").value)
+          try:
+            duration = pd.to_timedelta(Element("durationInput").value)
+          except:
+            print("⛔ ERROR: Duration could not be parsed by Pandas. Try something like '12min', '6H', '3D' instead.")
+          try:
+            end = pd.to_datetime(Element("endTimeInput").value)
+          except:
+            print("⛔ ERROR: End time could not be parsed by Pandas. Use the format 'YYYY-MM-DD HH:MM' instead.")
           start = end - duration
           variable = Element("variableSelector").value
           smooth_type = Element("smootherSelector1").value
           smooth_stat = Element("smootherSelector2").value
-          smooth_time = pd.to_timedelta(Element("smootherInput").value)
+          try:
+            smooth_time = pd.to_timedelta(Element("smootherInput").value)
+          except:
+            print("⛔ ERROR: Duration could not be parsed by Pandas. Try something like '12min', '6H', '3D' instead.")
+
           for ele in js.document.getElementsByName("unitsRadioOptions"):
               if ele.checked:
                   units = ele.value
                   break
 
+          for ele in js.document.getElementsByName("timezoneRadioOptions"):
+              if ele.checked:
+                  obtimezone = ele.value
+                  break
+
+          color_cycle = []
+          for ele in js.document.getElementsByName("color"):
+              color_cycle.append(ele.value)
+              # Color cycle for plot lines
+
+          mpl.rcParams['axes.prop_cycle'] = mpl.cycler(color=color_cycle)
+          # -------------------------------------------------------------------
+
           # Write input values to page
+          print("")
           print("User Input")
           print(f" ├──{stid=}")
           print(f" ├──{duration=}")
@@ -528,13 +616,14 @@
           print(f" ├──{end=}")
           print(f" ├──{variable=}")
           print(f" ├──{units=}")
+          print(f" ├──{obtimezone=}")
           print(f" ├──{smooth_type=}")
           print(f" ├──{smooth_stat=}")
           print(f" └──{smooth_time=}")
 
 
           token = "0bbe0e9fda7945a68951cc1bdebb2b0d"
-          url = f"https://api.synopticdata.com/v2/stations/timeseries?start={start:%Y%m%d%H%M}&end={end:%Y%m%d%H%M}&stid={stid}&vars={variable}&units={units}&token={token}"
+          url = f"https://api.synopticdata.com/v2/stations/timeseries?start={start:%Y%m%d%H%M}&end={end:%Y%m%d%H%M}&stid={stid}&vars={variable}&units={units}&obtimezone={obtimezone}&token={token}"
 
           print(f"Request URL: {url}")
 
@@ -545,17 +634,13 @@
               # headers=headers,
           )
           status = response.status
-          json = await response.json()
+          data = await response.json()
           print(f"GET request=> status:{status}")
-          print(f"GET request=> json:{json}")
-
 
           rename_set_1 = True
-          data = json
 
-          print(data)
           # Build a separate pandas.DataFrame for each station.
-          Z = []
+          Z = {}
           for stn in data["STATION"]:
               obs = stn.pop("OBSERVATIONS")
               senvars = stn.pop("SENSOR_VARIABLES")
@@ -618,40 +703,41 @@
               #df.attrs["params"] = params
               df.attrs["service"] = "stations_timeseries"
 
-              Z.append(df)
+              Z[df.attrs["STID"]] = df
 
+          Z = {i: Z[i] for i in stid.split(",") if i in Z.keys()}
 
-          fig, ax = plt.subplots(figsize=[10,6])
+          fig, ax = plt.subplots()
 
           station_info = ""
-          for df in Z:
-              try:
-                if smooth_type == 'rolling':
-                  print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                  print(df.rolling(smooth_time))
-                  if smooth_stat == 'max':
-                    df = df.rolling(smooth_time).max()
-                  elif smooth_stat == 'min':
-                    df = df.rolling(smooth_time).min()
-                  elif smooth_stat == 'mean':
-                    df = df.rolling(smooth_time).mean()
-                elif smooth_type == "resample":
-                  print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                  if smooth_stat == 'max':
-                    df = df.resample(smooth_time, label='right').max()
-                  elif smooth_stat == 'min':
-                    df = df.resample(smooth_time, label='right').min()
-                  elif smooth_stat == 'mean':
-                    df = df.resample(smooth_time, label='right').mean()
+          for STID, df in Z.items():
 
-                ax.plot(df.index, df[variable], marker='o', markersize=3, linestyle='-', label=df.attrs['STID'])
-                station_info += f"<h3>{df.attrs['STID']} - {df.attrs['NAME']}</h3>{pd.DataFrame(pd.Series(df.attrs)).to_html(classes='table table-striped')}<br><br>"
+              try:
+                if smooth_type == "rolling" and smooth_stat.lower() != 'none':
+                  preserve_attrs = df.attrs
+                  print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
+                  df = getattr(df.rolling(smooth_time), smooth_stat)()
+                  df.attrs = preserve_attrs
+                elif smooth_type == "resample" and smooth_stat.lower() != 'none':
+                  print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
+                  df = getattr(df.resample(smooth_time, label='right'), smooth_stat)()
+
+                ax.plot(df.index, df[variable], marker='o', markersize=3, linestyle='-', label=STID)
+                station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
               except Exception as e:
-                print(f"WARNING: {e}")
+                print(f"⛔ ERROR: {e}")
+                print(df)
           Element("station-info").element.innerHTML = station_info
 
-          ax.set_ylabel(f'{variable.upper()} ({df.attrs.get("UNITS").get(variable)})')
-          ax.set_title(variable)
+          var_label = variable.replace("_", " ").title()
+          if var_label.lower() == 'air temp':
+            var_label = 'Air Temperature'
+
+          ax.text(1.0, 0.0, f'{obtimezone.upper()} ', transform=ax.transAxes, va='bottom', ha='right')
+          ax.set_ylabel(f'{var_label} ({df.attrs.get("UNITS").get(variable)})')
+          ax.set_title(var_label)
+
+
           ax.spines[['right', 'top', 'bottom']].set_visible(False)
           ax.legend()
           ax.grid(color='w', linewidth=2, alpha=.8)
