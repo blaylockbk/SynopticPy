@@ -460,3 +460,4 @@ def main(display):
     ax.grid(color="w", linewidth=2, alpha=0.8)
     plt.tight_layout()
     display(fig, target="graph-area", append=False)
+    print("finished plot\n")
