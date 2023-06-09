@@ -5,6 +5,7 @@ import json
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
+import geopandas
 import numpy as np
 import sys
 
@@ -12,6 +13,7 @@ print(f"Python version:", sys.version)
 print(f"imported matplotlib {mpl.__version__}")
 print(f"imported pandas {pd.__version__}")
 print(f"imported numpy {np.__version__}")
+print(f"imported geopandas {geopandas.__version__}")
 
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"
 mpl.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
@@ -37,8 +39,9 @@ mpl.rcParams["ytick.minor.size"] = 0
 # create a *free* Synoptic account and
 # Mesonet API token here:
 # https://developers.synopticdata.com/mesonet/
-token = "d25c2abe02b94001a82e7790d9c30f06"
+brian_token = "d25c2abe02b94001a82e7790d9c30f06"
 # ==================================================
+
 
 def spddir_to_uv(wspd, wdir, round=3):
     """Compute u and v wind components from wind speed and direction.
@@ -72,6 +75,7 @@ def spddir_to_uv(wspd, wdir, round=3):
         v = v.round(round)
 
     return u, v
+
 
 def wind_degree_labels(res="m"):
     """Wind degree increment and direction labels
@@ -125,6 +129,7 @@ def wind_degree_labels(res="m"):
         return degrees[::2], labels[::2]
     elif res in ["h", 22.5]:
         return degrees, labels
+
 
 # Rename "set_1" and "value_1" names is a convience I prefer.
 ## You can turn these off in your requests by setting `rename_set_1`
@@ -191,6 +196,14 @@ def main(display):
     # Get and validate input values
     # -------------------------------------------------------------------
 
+    # Parse token
+    token = Element("tokenInput").value
+    if token == "":
+        token = brian_token
+        user_token = False
+    else:
+        user_token = True
+
     # Parse station selector
     stid = Element("stidInput").value.replace(" ", "")
     if "=" in stid:
@@ -202,7 +215,7 @@ def main(display):
         # User requested a comma-separated list of station IDs
         # e.g. WBB,UKBKB,KMRY
         station_selector = f"stid={stid.upper()}"
-        station_order = stid.split(",")
+        station_order = stid.upper().split(",")
 
     # Parse variable
     variable = Element("variableSelector").value
@@ -310,7 +323,10 @@ def main(display):
     ]
     url = base_url + "&".join(arguments)
 
-    print(f"Request URL: {url.replace(token,'*****')}")
+    if user_token:
+        print(f"Request URL: {url}")
+    else:
+        print(f"Request URL: {url.replace(token,'*****')}")
 
     try:
         data = json.loads(open_url(url).read())
@@ -397,8 +413,10 @@ def main(display):
         # Sort stations in order they were requested
         Z = {i: Z[i] for i in station_order if i in Z.keys()}
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots()  # Timeseries
+    fig2, ax2 = plt.subplots()  # Map
 
+    states_added = []
     station_info = ""
     for STID, df in Z.items():
         try:
@@ -411,7 +429,7 @@ def main(display):
                 print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
                 df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
 
-            if variable == 'wind_direction':
+            if variable == "wind_direction":
                 ax.scatter(
                     df.index,
                     df[variable],
@@ -431,7 +449,37 @@ def main(display):
             mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
             station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
         except Exception as e:
-            print(f"⛔ ERROR: {e}")
+            print(f"⛔ ERROR: Timeseries figure >> {e}")
+
+        # Create a map of station locations
+        try:
+            ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
+            try:
+                state = df.attrs.get("STATE")
+                if state not in states_added:
+                    states_added.append(state)
+                    geostate = geopandas.read_file(
+                        open_url(
+                            f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
+                        )
+                    )
+                    geostate.plot(ax=ax2, facecolor=".9", alpha=0.5, zorder=2)
+            except:
+                print(
+                    f"⚠️ WARNING: Map figure >> Could not plot {state} state boundary."
+                )
+            point = df.attrs.get("longitude"), df.attrs.get("latitude")
+            art = ax2.scatter(*point, zorder=3)
+            ax2.text(
+                *point,
+                f"  {df.attrs.get('STID')}",
+                color=art.get_facecolor()[-1],
+                ha="left",
+                va="center",
+                zorder=4,
+            )
+        except Exception as e:
+            print(f"⛔ ERROR: Map figure >> {e}")
 
     Element("station-info").element.innerHTML = station_info
 
@@ -450,7 +498,7 @@ def main(display):
     ax.set_ylabel(f'{var_label} ({df.attrs.get("UNITS").get(variable)})')
     ax.set_title(var_label)
 
-    if variable == 'wind_direction':
+    if variable == "wind_direction":
         ticks, labels = wind_degree_labels()
         ax.set_yticks(ticks)
         ax.set_yticklabels(labels)
@@ -458,6 +506,24 @@ def main(display):
     ax.spines[["right", "top", "bottom"]].set_visible(False)
     ax.legend()
     ax.grid(color="w", linewidth=2, alpha=0.8)
-    plt.tight_layout()
-    display(fig, target="graph-area", append=False)
+    ax2.set_xlabel("Longitude")
+    ax2.set_ylabel("Latitude")
+    ax2.xaxis.set_major_formatter(
+        mpl.ticker.ScalarFormatter(useOffset=False, useMathText=False)
+    )
+    ax2.xaxis.get_major_formatter().set_scientific(False)
+    ax2.xaxis.get_major_formatter().set_useOffset(False)
+    ax2.xaxis.get_major_formatter().set_useMathText(False)
+    ax2.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2f"))
+    ax2.yaxis.set_major_formatter(
+        mpl.ticker.ScalarFormatter(useOffset=False, useMathText=False)
+    )
+    ax2.yaxis.get_major_formatter().set_scientific(False)
+    ax2.yaxis.get_major_formatter().set_useOffset(False)
+    ax2.yaxis.get_major_formatter().set_useMathText(False)
+    ax2.yaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2f"))
+    fig.tight_layout()
+    fig2.tight_layout()
+    display(fig, target="figure-timeseries", append=False)
+    display(fig2, target="figure-map", append=False)
     print("finished plot\n")

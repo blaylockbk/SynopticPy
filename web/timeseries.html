@@ -31,7 +31,7 @@
   <body>
     <!-- prettier-ignore -->
     <py-config>
-      packages = ["matplotlib", "pandas", "numpy"]
+      packages = ["matplotlib", "pandas", "numpy", "shapely", "geopandas"]
       [[fetch]]
         files = ["./timeseries.py"]
     </py-config>
@@ -82,6 +82,30 @@
               <a href="https://pyscript.net/">pyscript</a>. The primary use of
               this app is to plot a timeseries of data from multiple stations in
               a single plot.
+
+              <hr />
+              <strong>Token:</strong>
+              You may insert your own
+              <a
+                href="https://developers.synopticdata.com/mesonet/v2/getting-started/"
+                target="_blank"
+                >Synoptic API token</a
+              >
+              below. If left blank, you will use my one of my free-tier tokens
+              <i
+                >which may be limited if more than 4+ people are using this page
+                at the same time</i
+              >. Using your own token prevents running into this problem and
+              gives you access to features you may have for your account.
+              <div class="input-group mb-3">
+                <span class="input-group-text" id="token">Token</span>
+                <input
+                  type="text"
+                  id="tokenInput"
+                  class="form-control"
+                  placeholder="Synoptic API Token"
+                />
+              </div>
 
               <hr />
               <strong>Stations:</strong> A comma-separated list of station IDs,
@@ -186,7 +210,7 @@
                 </li>
                 <li>
                   "Start <code>[timedelta]</code> before the end
-                  <code>[timedelta]</code>."
+                  <code>[datetime]</code>."
                 </li>
               </ol>
 
@@ -533,59 +557,75 @@
         <li class="nav-item" role="presentation">
           <button
             class="nav-link active"
-            id="home-tab"
+            id="timeseries-tab"
             data-bs-toggle="tab"
-            data-bs-target="#home-tab-pane"
+            data-bs-target="#timeseries-tab-pane"
             type="button"
             role="tab"
-            aria-controls="home-tab-pane"
+            aria-controls="timeseries-tab-pane"
             aria-selected="true"
           >
-            Figure
+            Timeseries
           </button>
         </li>
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
-            id="contact-tab"
+            id="station-tab"
             data-bs-toggle="tab"
-            data-bs-target="#contact-tab-pane"
+            data-bs-target="#station-tab-pane"
             type="button"
             role="tab"
-            aria-controls="contact-tab-pane"
+            aria-controls="station-tab-pane"
             aria-selected="false"
           >
             Station Info
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="map-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#map-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="map-tab-pane"
+            aria-selected="false"
+          >
+            Map
           </button>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
         <div
           class="tab-pane fade show active"
-          id="home-tab-pane"
+          id="timeseries-tab-pane"
           role="tabpanel"
-          aria-labelledby="home-tab"
+          aria-labelledby="timeseries-tab"
           tabindex="0"
         >
-          <div id="graph-area" align="center"></div>
+          <div id="figure-timeseries" align="center"></div>
         </div>
 
         <div
           class="tab-pane fade"
-          id="contact-tab-pane"
+          id="station-tab-pane"
           role="tabpanel"
-          aria-labelledby="contact-tab"
+          aria-labelledby="station-tab"
           tabindex="0"
         >
           <div id="station-info"></div>
         </div>
         <div
           class="tab-pane fade"
-          id="profile-tab-pane"
+          id="map-tab-pane"
           role="tabpanel"
-          aria-labelledby="profile-tab"
+          aria-labelledby="map-tab"
           tabindex="0"
-        ></div>
+        >
+          <div id="figure-map" align="center"></div>
+        </div>
         <br />
         <div style="float: right">
           <i class="fa-brands fa-github"></i>
