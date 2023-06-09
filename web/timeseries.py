@@ -6,6 +6,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import itertools
 import sys
 
 from matplotlib.patches import Polygon
@@ -129,6 +130,32 @@ def wind_degree_labels(res="m"):
         return degrees[::2], labels[::2]
     elif res in ["h", 22.5]:
         return degrees, labels
+
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    # Calculate the difference in degrees between two lat/lon points
+    lat1_rad = np.radians(lat1)
+    lon1_rad = np.radians(lon1)
+    lat2_rad = np.radians(lat2)
+    lon2_rad = np.radians(lon2)
+
+    # Calculate differences between latitudes and longitudes
+    delta_lat = lat2_rad - lat1_rad
+    delta_lon = lon2_rad - lon1_rad
+
+    # Calculate the square of half the chord length between the points
+    a = (
+        np.sin(delta_lat / 2) ** 2
+        + np.cos(lat1_rad) * np.cos(lat2_rad) * np.sin(delta_lon / 2) ** 2
+    )
+
+    # Calculate the angular distance in radians
+    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+
+    # Calculate the distance in degrees
+    distance_deg = np.degrees(c)
+
+    return distance_deg
 
 
 # Rename "set_1" and "value_1" names is a convience I prefer.
@@ -511,6 +538,26 @@ def main(display):
     if var_label.lower() == "air temp":
         var_label = "Air Temperature"
 
+    # ----------
+    # Map bounds
+    # Use zoomed-in map boundary if max distance between stations is large.
+    latitudes = [i.attrs["latitude"] for i in Z.values()]
+    longitudes = [i.attrs["longitude"] for i in Z.values()]
+    points = zip(latitudes, longitudes)
+    pairs = list(itertools.product(points, repeat=2))
+
+    threshold = 1.5
+    pad = .05
+    max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
+    xlim = (min(longitudes) - pad/2, max(longitudes) + pad/2)
+    ylim = (min(latitudes) - pad, max(latitudes) + pad)
+
+    if max_distance < threshold:
+        ax2.set_xlim(*xlim)
+        ax2.set_ylim(*ylim)
+
+    # -------------------------------
+    # Label indicating timezone units
     ax.text(
         1.0,
         0.0,
@@ -519,6 +566,9 @@ def main(display):
         va="bottom",
         ha="right",
     )
+
+    # ---------
+    # Cosmetics
     ax.set_ylabel(f'{var_label} ({df.attrs.get("UNITS").get(variable)})')
     ax.set_title(var_label)
 
@@ -550,4 +600,4 @@ def main(display):
     fig2.tight_layout()
     display(fig, target="figure-timeseries", append=False)
     display(fig2, target="figure-map", append=False)
-    print("finished plot\n")
+    print("🏁 Finished!\n")
