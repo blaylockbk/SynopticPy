@@ -5,15 +5,15 @@ import json
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
-import geopandas
 import numpy as np
 import sys
+
+from matplotlib.patches import Polygon
 
 print(f"Python version:", sys.version)
 print(f"imported matplotlib {mpl.__version__}")
 print(f"imported pandas {pd.__version__}")
 print(f"imported numpy {np.__version__}")
-print(f"imported geopandas {geopandas.__version__}")
 
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"
 mpl.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
@@ -189,6 +189,27 @@ def _rename_set_1(df):
     df.rename(columns=renames, inplace=True)
     df.attrs["RENAMED"] = renames
     return df
+
+
+def draw_state_polygon(ax, state, **kwargs):
+    data = json.loads(
+        open_url(
+            f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
+        ).read()
+    )
+
+    for feature in data["features"]:
+        if feature["geometry"]["type"] == "Polygon":
+            for coordinates in feature["geometry"]["coordinates"]:
+                polygon = Polygon(coordinates, closed=True, **kwargs)
+                ax.add_patch(polygon)
+        elif feature["geometry"]["type"] == "MultiPolygon":
+            for coordinates in feature["geometry"]["coordinates"]:
+                for i in coordinates:
+                    polygon = Polygon(i, closed=True, **kwargs)
+                    ax.add_patch(polygon)
+        else:
+            print("⚠️ WARNING: Trouble plotting state polygon.")
 
 
 def main(display):
@@ -458,12 +479,15 @@ def main(display):
                 state = df.attrs.get("STATE")
                 if state not in states_added:
                     states_added.append(state)
-                    geostate = geopandas.read_file(
-                        open_url(
-                            f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
-                        )
+
+                    draw_state_polygon(
+                        ax=ax2,
+                        state=state,
+                        facecolor=".9",
+                        edgecolor=".5",
+                        alpha=0.5,
+                        zorder=2,
                     )
-                    geostate.plot(ax=ax2, facecolor=".9", alpha=0.5, zorder=2)
             except:
                 print(
                     f"⚠️ WARNING: Map figure >> Could not plot {state} state boundary."
