@@ -317,11 +317,11 @@ def main(display):
 
     # Parse smoother options
     smooth_type = Element("smootherSelector1").value
-    smooth_time = Element("smootherInput").value
+    smooth_time_str = Element("smootherInput").value
     smooth_stat = Element("smootherSelector2").value
     if smooth_type:
         try:
-            smooth_time = pd.to_timedelta(smooth_time)
+            smooth_time = pd.to_timedelta(smooth_time_str)
         except:
             print("⛔ ERROR: Smoother duration could not be parsed by Pandas.")
             print("    └ Input a timedelta string like '12min', '6H', '3D' instead.")
@@ -474,8 +474,10 @@ def main(display):
                 df = getattr(df.rolling(smooth_time), smooth_stat)()
                 df.attrs = preserve_attrs
             elif smooth_type == "resample" and smooth_stat.lower() != "none":
+                preserve_attrs = df.attrs
                 print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
                 df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
+                df.attrs = preserve_attrs
 
             if variable == "wind_direction":
                 ax.scatter(
@@ -547,9 +549,9 @@ def main(display):
     pairs = list(itertools.product(points, repeat=2))
 
     threshold = 1.5
-    pad = .05
+    pad = 0.05
     max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
-    xlim = (min(longitudes) - pad/2, max(longitudes) + pad/2)
+    xlim = (min(longitudes) - pad / 2, max(longitudes) + pad / 2)
     ylim = (min(latitudes) - pad, max(latitudes) + pad)
 
     if max_distance < threshold:
@@ -566,6 +568,15 @@ def main(display):
         va="bottom",
         ha="right",
     )
+
+    # ----------------------------------
+    # Label indicating smoothing options
+    if smooth_type != "none":
+        ax.set_title(
+            f"{smooth_time_str} {smooth_type.title()} {smooth_stat.upper()}",
+            loc="right",
+            fontsize=8,
+        )
 
     # ---------
     # Cosmetics
