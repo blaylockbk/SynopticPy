@@ -157,67 +157,6 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
     return distance_deg
 
-
-# Rename "set_1" and "value_1" names is a convience I prefer.
-## You can turn these off in your requests by setting `rename_set_1`
-## and `rename_value_1` to False in your function call where applicable.
-def _rename_set_1(df):
-    """
-    Rename Variable Columns Names
-
-    Remove the 'set_1' and 'set_1d' from column names
-    Sets 2+ will retain their full names.
-    The user should refer to SENSOR_VARIABLES to see which
-    variables are derived
-
-    """
-
-    ## Get list of current column names
-    dummy_columns = list(df.columns)
-
-    # Remove '_set_1' and '_set_1d' from column name
-    var_names = [
-        "_".join(v.split("_")[:-2]) if "_set_1" in v else v for v in dummy_columns
-    ]
-
-    # Number of observations in each column
-    obs_count = list(df.count())
-
-    # Sometimes, set_1 and set_1d are both returned. In that
-    # case, we need to determin which column has the most
-    # observations and use that as the main variable. The set
-    # with fewer data will retain the 'set_1' or 'set_1d' label.
-    renames = {}
-    for i, name in enumerate(var_names):
-        # Determine all indices this variable type is located
-        var_bool = [v.startswith(name + "_set_1") for v in dummy_columns]
-        var_idx = np.where(var_bool)[0]
-
-        if len(var_idx) == 1:
-            # This variable is only listed once. Rename with var_name
-            renames[dummy_columns[i]] = var_names[var_idx[0]]
-        elif len(var_idx) > 1:
-            # This variable is listed more than once.
-            # Determine which set has the most non-NaN data and
-            # rename that column as var_name.
-            max_idx = var_idx[np.argmax([obs_count[i] for i in var_idx])]
-            if max_idx == i:
-                # If the current iteration matches the var_idx with
-                # the most data, rename the column without set number.
-                renames[dummy_columns[i]] = var_names[max_idx]
-            else:
-                # If the current iteration does not match the var_idx
-                # with the most data, then retain the original column
-                # name with the set number.
-                renames[dummy_columns[i]] = dummy_columns[i]
-        else:
-            # This case should only occur during my testing.
-            renames[dummy_columns[i]] = dummy_columns[i]
-    df.rename(columns=renames, inplace=True)
-    df.attrs["RENAMED"] = renames
-    return df
-
-
 def draw_state_polygon(ax, state, **kwargs):
     data = json.loads(
         open_url(
@@ -422,11 +361,6 @@ def main(display):
                 data["UNITS"]["wind_u"] = data["UNITS"]["wind_speed"]
                 data["UNITS"]["wind_v"] = data["UNITS"]["wind_speed"]
 
-        df = _rename_set_1(df)
-
-        # Drop Row if all data is NaN/None
-        df.dropna(how="all", inplace=True)
-
         # In the DataFrame attributes, Convert some strings to float/int
         # (i.e., ELEVATION, latitude, longitude) BUT NOT STID!
         for k, v in df.attrs.items():
@@ -439,9 +373,6 @@ def main(display):
                         df.attrs[k] = n
                 except:
                     pass
-
-        if len(df.columns) != len(set(df.columns)):
-            warnings.warn("🤹🏼‍♂️ DataFrame contains duplicate column names.")
 
         # Rename lat/lon to lowercase to match CF convenctions
         df.attrs["latitude"] = df.attrs.pop("LATITUDE")
@@ -479,23 +410,36 @@ def main(display):
                 df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
                 df.attrs = preserve_attrs
 
-            if variable == "wind_direction":
-                ax.scatter(
-                    df.index,
-                    df[variable],
-                    marker="o",
-                    s=3,
-                    label=STID,
-                )
-            else:
-                ax.plot(
-                    df.index,
-                    df[variable],
-                    marker="o",
-                    markersize=3,
-                    linestyle="-",
-                    label=STID,
-                )
+            alphas = np.linspace(1, 0.3, len(df.columns))
+            for alpha, column in zip(alphas, sorted(df.columns)):
+                set_derived = column.split("_")[-1]
+                label = STID
+                if set_derived[0] != "1":
+                    # indicate this is the nth dataset
+                    label += "$^{" + set_derived[0] + "}$"
+                if set_derived.endswith("d"):
+                    # indicate this is a derived value
+                    label += "$^{*}$"
+
+                if column.startswith("wind_direction"):
+                    ax.scatter(
+                        df.index,
+                        df[column],
+                        marker="o",
+                        s=3,
+                        label=label,
+                        alpha=alpha,
+                    )
+                else:
+                    ax.plot(
+                        df.index,
+                        df[column],
+                        marker="o",
+                        markersize=3,
+                        linestyle="-",
+                        label=label,
+                        alpha=alpha,
+                    )
             mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
             station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
         except Exception as e:
