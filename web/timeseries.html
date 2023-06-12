@@ -355,11 +355,11 @@
                   🌡️ Air Temperature
                 </option>
 
-                <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider" /></li>
                 <option value="relative_humidity">💧 Relative Humidity</option>
                 <option value="dew_point_temperature">💦 Dew Point</option>
 
-                <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider" /></li>
                 <option value="wind_speed">🍃 Wind Speed</option>
                 <option value="wind_direction">🧭 Wind Direction</option>
                 <option value="wind_gust">🌬️ Wind Gust</option>
@@ -367,8 +367,10 @@
                   🏹 Wind Barbs
                 </option>
 
-                <li><hr class="dropdown-divider"></li>
-                <option value="precip_accum">☔ Precipitation (accumulated)</option>
+                <li><hr class="dropdown-divider" /></li>
+                <option value="precip_accum">
+                  ☔ Precipitation (accumulated)
+                </option>
                 <!-- <option value="precip_accum_one_minute">☔ Precipitation (1min)</option>
                 <option value="precip_accum_ten_minute">☔ Precipitation (10min)</option>
                 <option value="precip_accum_fifteen_minute">☔ Precipitation (15min)</option>
@@ -376,22 +378,24 @@
                 <option value="precip_accum_one_hour">☔ Precipitation (1H)</option>
                 <option value="precip_accum_three_hour">☔ Precipitation (3H)</option>
                 <option value="precip_accum_six_hour">☔ Precipitation (6H)</option> -->
-                <option value="precip_accum_24_hour">☔ Precipitation (24H)</option>
+                <option value="precip_accum_24_hour">
+                  ☔ Precipitation (24H)
+                </option>
                 <option value="precip_storm">☔ Precipitation (storm)</option>
                 <option value="snow_depth">❄️ Snow Depth</option>
 
-                <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider" /></li>
                 <option value="pressure">🎈 Pressure</option>
                 <option value="sea_level_pressure">
                   ⛵ Sea Level Pressure
                 </option>
                 <option value="altimeter">🏔️ Altimiter</option>
 
-                <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider" /></li>
                 <option value="solar_radiation">☀️ Solar Radiation</option>
                 <option value="volt">🔋 Battery Voltage</option>
 
-                <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider" /></li>
                 <option value="PM_25_concentration">
                   🏭 PM 2.5 Concentration
                 </option>
@@ -478,7 +482,7 @@
                   <option value="std">Standard Deviation</option>
                   <option value="var">Variance</option>
                   <option value="count">Count</option>
-                  <option value="spread" disabled>Spread</option>
+                  <option value="spread">Spread</option>
                 </select>
               </div>
             </div>
@@ -664,6 +668,10 @@
           <div id="figure-map" align="center"></div>
         </div>
         <br />
+
+        <div style="float: left">
+          <div id="json-download"></div>
+        </div>
         <div style="float: right">
           <i class="fa-brands fa-github"></i>
           <a href="https://github.com/blaylockbk/SynopticPy" target="_blank"

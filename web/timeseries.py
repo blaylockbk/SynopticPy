@@ -157,6 +157,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
     return distance_deg
 
+
 def draw_state_polygon(ax, state, **kwargs):
     data = json.loads(
         open_url(
@@ -176,6 +177,32 @@ def draw_state_polygon(ax, state, **kwargs):
                     ax.add_patch(polygon)
         else:
             print("⚠️ WARNING: Trouble plotting state polygon.")
+
+
+def plot_spread_bars(dfr, *, ax):
+    """Plot a bar of the max/median/mean/min spread  of the resampled df as a bar plot."""
+    art = ax.bar(
+        dfr.index,
+        dfr["median"] - dfr["min"],
+        pd.to_timedelta(dfr.index.freq),
+        dfr["min"],
+        edgecolor="w",
+        alpha=0.6,
+        label=dfr.attrs["STID"],
+        zorder=1000,
+    )
+    ax.bar(
+        dfr.index,
+        dfr["max"] - dfr["median"],
+        pd.to_timedelta(dfr.index.freq),
+        dfr["median"],
+        edgecolor="w",
+        color=art.patches[0].get_facecolor(),
+        alpha=0.6,
+        zorder=1000,
+    )
+    ax.scatter(dfr.index, dfr["mean"], marker="d", s=5, color="w", alpha=0.5, zorder=1000)
+
 
 
 def main(display):
@@ -309,11 +336,18 @@ def main(display):
         f"token={token}",
     ]
     url = base_url + "&".join(arguments)
+    url_hidden = url.replace(token, "*****")
 
     if user_token:
         print(f"Request URL: {url}")
+        Element(
+            "json-download"
+        ).element.innerHTML = f"<i class='fa-solid fa-download'></i> <a href='{url}' target='_blank' title='Raw JSON: supply your own API token'>JSON</a>"
     else:
-        print(f"Request URL: {url.replace(token,'*****')}")
+        print(f"Request URL: {url_hidden}")
+        Element(
+            "json-download"
+        ).element.innerHTML = f"<i class='fa-solid fa-download'></i> <a href='{url_hidden}' target='_blank' title='Raw JSON: supply your own API token'>JSON</a>"
 
     try:
         data = json.loads(open_url(url).read())
@@ -399,19 +433,30 @@ def main(display):
     station_info = ""
     for STID, df in Z.items():
         try:
+            column_vars = sorted(df.columns)
             if smooth_type == "rolling" and smooth_stat.lower() != "none":
                 preserve_attrs = df.attrs
-                print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                df = getattr(df.rolling(smooth_time), smooth_stat)()
+                #print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
+                if smooth_stat == "spread":
+                    df = df.rolling(smooth_time, label="right").agg(
+                        ["max", "min", "mean", "median"]
+                    )
+                else:
+                    df = getattr(df.rolling(smooth_time), smooth_stat)()
                 df.attrs = preserve_attrs
             elif smooth_type == "resample" and smooth_stat.lower() != "none":
                 preserve_attrs = df.attrs
                 print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
+                if smooth_stat == "spread":
+                    df = df.resample(smooth_time, label="right").agg(
+                        ["max", "min", "mean", "median"]
+                    )
+                else:
+                    df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
                 df.attrs = preserve_attrs
 
-            alphas = np.linspace(1, 0.3, len(df.columns))
-            for alpha, column in zip(alphas, sorted(df.columns)):
+            alphas = np.linspace(1, 0.3, len(column_vars))
+            for alpha, column in zip(alphas, sorted(column_vars)):
                 set_derived = column.split("_")[-1]
                 label = STID
                 if set_derived[0] != "1":
@@ -421,25 +466,28 @@ def main(display):
                     # indicate this is a derived value
                     label += "$^{*}$"
 
-                if column.startswith("wind_direction"):
-                    ax.scatter(
-                        df.index,
-                        df[column],
-                        marker="o",
-                        s=3,
-                        label=label,
-                        alpha=alpha,
-                    )
+                if smooth_type in ["resample", "rolling"] and smooth_stat == "spread":
+                    plot_spread_bars(df[column], ax=ax)
                 else:
-                    ax.plot(
-                        df.index,
-                        df[column],
-                        marker="o",
-                        markersize=3,
-                        linestyle="-",
-                        label=label,
-                        alpha=alpha,
-                    )
+                    if column.startswith("wind_direction"):
+                        ax.scatter(
+                            df.index,
+                            df[column],
+                            marker="o",
+                            s=3,
+                            label=label,
+                            alpha=alpha,
+                        )
+                    else:
+                        ax.plot(
+                            df.index,
+                            df[column],
+                            marker="o",
+                            markersize=3,
+                            linestyle="-",
+                            label=label,
+                            alpha=alpha,
+                        )
             mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
             station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
         except Exception as e:
