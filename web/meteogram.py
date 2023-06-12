@@ -6,7 +6,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import itertools
 import sys
+
+from matplotlib.patches import Polygon
 
 print(f"Python version:", sys.version)
 print(f"imported matplotlib {mpl.__version__}")
@@ -37,8 +40,9 @@ mpl.rcParams["ytick.minor.size"] = 0
 # create a *free* Synoptic account and
 # Mesonet API token here:
 # https://developers.synopticdata.com/mesonet/
-token = "d25c2abe02b94001a82e7790d9c30f06"
+brian_token = "d25c2abe02b94001a82e7790d9c30f06"
 # ==================================================
+
 
 def spddir_to_uv(wspd, wdir, round=3):
     """Compute u and v wind components from wind speed and direction.
@@ -72,6 +76,7 @@ def spddir_to_uv(wspd, wdir, round=3):
         v = v.round(round)
 
     return u, v
+
 
 def wind_degree_labels(res="m"):
     """Wind degree increment and direction labels
@@ -126,86 +131,71 @@ def wind_degree_labels(res="m"):
     elif res in ["h", 22.5]:
         return degrees, labels
 
-# Rename "set_1" and "value_1" names is a convience I prefer.
-## You can turn these off in your requests by setting `rename_set_1`
-## and `rename_value_1` to False in your function call where applicable.
-def _rename_set_1(df):
-    """
-    Rename Variable Columns Names
 
-    Remove the 'set_1' and 'set_1d' from column names
-    Sets 2+ will retain their full names.
-    The user should refer to SENSOR_VARIABLES to see which
-    variables are derived
+def calculate_distance(lat1, lon1, lat2, lon2):
+    # Calculate the difference in degrees between two lat/lon points
+    lat1_rad = np.radians(lat1)
+    lon1_rad = np.radians(lon1)
+    lat2_rad = np.radians(lat2)
+    lon2_rad = np.radians(lon2)
 
-    """
+    # Calculate differences between latitudes and longitudes
+    delta_lat = lat2_rad - lat1_rad
+    delta_lon = lon2_rad - lon1_rad
 
-    ## Get list of current column names
-    dummy_columns = list(df.columns)
+    # Calculate the square of half the chord length between the points
+    a = (
+        np.sin(delta_lat / 2) ** 2
+        + np.cos(lat1_rad) * np.cos(lat2_rad) * np.sin(delta_lon / 2) ** 2
+    )
 
-    # Remove '_set_1' and '_set_1d' from column name
-    var_names = [
-        "_".join(v.split("_")[:-2]) if "_set_1" in v else v for v in dummy_columns
-    ]
+    # Calculate the angular distance in radians
+    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
 
-    # Number of observations in each column
-    obs_count = list(df.count())
+    # Calculate the distance in degrees
+    distance_deg = np.degrees(c)
 
-    # Sometimes, set_1 and set_1d are both returned. In that
-    # case, we need to determin which column has the most
-    # observations and use that as the main variable. The set
-    # with fewer data will retain the 'set_1' or 'set_1d' label.
-    renames = {}
-    for i, name in enumerate(var_names):
-        # Determine all indices this variable type is located
-        var_bool = [v.startswith(name + "_set_1") for v in dummy_columns]
-        var_idx = np.where(var_bool)[0]
+    return distance_deg
 
-        if len(var_idx) == 1:
-            # This variable is only listed once. Rename with var_name
-            renames[dummy_columns[i]] = var_names[var_idx[0]]
-        elif len(var_idx) > 1:
-            # This variable is listed more than once.
-            # Determine which set has the most non-NaN data and
-            # rename that column as var_name.
-            max_idx = var_idx[np.argmax([obs_count[i] for i in var_idx])]
-            if max_idx == i:
-                # If the current iteration matches the var_idx with
-                # the most data, rename the column without set number.
-                renames[dummy_columns[i]] = var_names[max_idx]
-            else:
-                # If the current iteration does not match the var_idx
-                # with the most data, then retain the original column
-                # name with the set number.
-                renames[dummy_columns[i]] = dummy_columns[i]
+def draw_state_polygon(ax, state, **kwargs):
+    data = json.loads(
+        open_url(
+            f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
+        ).read()
+    )
+
+    for feature in data["features"]:
+        if feature["geometry"]["type"] == "Polygon":
+            for coordinates in feature["geometry"]["coordinates"]:
+                polygon = Polygon(coordinates, closed=True, **kwargs)
+                ax.add_patch(polygon)
+        elif feature["geometry"]["type"] == "MultiPolygon":
+            for coordinates in feature["geometry"]["coordinates"]:
+                for i in coordinates:
+                    polygon = Polygon(i, closed=True, **kwargs)
+                    ax.add_patch(polygon)
         else:
-            # This case should only occur during my testing.
-            renames[dummy_columns[i]] = dummy_columns[i]
-    df.rename(columns=renames, inplace=True)
-    df.attrs["RENAMED"] = renames
-    return df
-
+            print("⚠️ WARNING: Trouble plotting state polygon.")
 
 def main(display):
     # -------------------------------------------------------------------
     # Get and validate input values
     # -------------------------------------------------------------------
 
-    # Parse station selector
-    stid = Element("stidInput").value.replace(" ", "")
-    if "=" in stid:
-        # User used the "backdoor" for advanced station query
-        # e.g. radius=wbb,10&limit=5
-        station_selector = stid
-        station_order = None
+    # Parse token
+    token = Element("tokenInput").value
+    if token == "":
+        token = brian_token
+        user_token = False
     else:
-        # User requested a comma-separated list of station IDs
-        # e.g. WBB,UKBKB,KMRY
-        station_selector = f"stid={stid.upper()}"
-        station_order = stid.split(",")
+        user_token = True
 
-    # Parse variable
-    variable = Element("variableSelector").value
+    # Parse station location
+    stid = Element("stidInput").value.replace(" ", "")
+
+    # Parse variable1
+    variable_1 = Element("variableSelector_1").value
+    variable_2 = Element("variableSelector_2").value
 
     # Parse start and end date
     startTime = Element("startTimeInput").value
@@ -288,7 +278,8 @@ def main(display):
     # print(f" ├──{stid=}")
     # print(f" ├──{startTime=} {startDuration=} {start=}")
     # print(f" ├──{endTime=} {endDuration=} {end=}")
-    # print(f" ├──{variable=}")
+    # print(f" ├──{variable_1=}")
+    # print(f" ├──{variable_2=}")
     # print(f" ├──{units=}")
     # print(f" ├──{obtimezone=}")
     # print(f" ├──{smooth_type=}")
@@ -302,15 +293,19 @@ def main(display):
     arguments = [
         f"start={start:%Y%m%d%H%M}",
         f"end={end:%Y%m%d%H%M}",
-        f"{station_selector}",
-        f"vars={variable}",
+        f"radius={stid},60&limit=1",
+        f"vars={variable_1},{variable_2},wind_speed,wind_direction",
+        # f"precip=1",
         f"units={units}",
         f"obtimezone={obtimezone}",
         f"token={token}",
     ]
     url = base_url + "&".join(arguments)
 
-    print(f"Request URL: {url.replace(token,'*****')}")
+    if user_token:
+        print(f"Request URL: {url}")
+    else:
+        print(f"Request URL: {url.replace(token,'*****')}")
 
     try:
         data = json.loads(open_url(url).read())
@@ -347,21 +342,16 @@ def main(display):
         df = df.reindex(columns=df.columns.sort_values())
 
         # Break wind into U and V components, if speed and direction are available
-        if all(["wind_speed" in senvars, "wind_direction" in senvars]):
-            for i_spd, i_dir in zip(
-                senvars["wind_speed"].keys(), senvars["wind_direction"].keys()
-            ):
-                u, v = spddir_to_uv(obs[i_spd], obs[i_dir])
-                this_set = "_".join(i_spd.split("_")[-2:])
-                df[f"wind_u_{this_set}"] = u
-                df[f"wind_v_{this_set}"] = v
-                data["UNITS"]["wind_u"] = data["UNITS"]["wind_speed"]
-                data["UNITS"]["wind_v"] = data["UNITS"]["wind_speed"]
-
-        df = _rename_set_1(df)
-
-        # Drop Row if all data is NaN/None
-        df.dropna(how="all", inplace=True)
+        #if all(["wind_speed" in senvars, "wind_direction" in senvars]):
+        #    for i_spd, i_dir in zip(
+        #        senvars["wind_speed"].keys(), senvars["wind_direction"].keys()
+        #    ):
+        #        u, v = spddir_to_uv(obs[i_spd], obs[i_dir])
+        #        this_set = "_".join(i_spd.split("_")[-2:])
+        #        df[f"wind_u_{this_set}"] = u
+        #        df[f"wind_v_{this_set}"] = v
+        #        data["UNITS"]["wind_u"] = data["UNITS"]["wind_speed"]
+        #        data["UNITS"]["wind_v"] = data["UNITS"]["wind_speed"]
 
         # In the DataFrame attributes, Convert some strings to float/int
         # (i.e., ELEVATION, latitude, longitude) BUT NOT STID!
@@ -375,9 +365,6 @@ def main(display):
                         df.attrs[k] = n
                 except:
                     pass
-
-        if len(df.columns) != len(set(df.columns)):
-            warnings.warn("🤹🏼‍♂️ DataFrame contains duplicate column names.")
 
         # Rename lat/lon to lowercase to match CF convenctions
         df.attrs["latitude"] = df.attrs.pop("LATITUDE")
@@ -393,11 +380,10 @@ def main(display):
 
         Z[df.attrs["STID"]] = df
 
-    if station_order:
-        # Sort stations in order they were requested
-        Z = {i: Z[i] for i in station_order if i in Z.keys()}
-
-    fig, ax = plt.subplots()
+    fig1, ax1 = plt.subplots() # User request variables
+    fig2, ax2 = plt.subplots() # Wind variables
+    fig3, ax3 = plt.subplots() # Precip variables
+    figM, axM = plt.subplots() # Map
 
     station_info = ""
     for STID, df in Z.items():
@@ -411,53 +397,110 @@ def main(display):
                 print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
                 df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
 
-            if variable == 'wind_direction':
-                ax.scatter(
-                    df.index,
-                    df[variable],
-                    marker="o",
-                    s=3,
-                    label=STID,
-                )
-            else:
-                ax.plot(
-                    df.index,
-                    df[variable],
-                    marker="o",
-                    markersize=3,
-                    linestyle="-",
-                    label=STID,
-                )
+            alphas = np.linspace(1, 0.3, len(df.columns))
+            for alpha, column in zip(alphas, sorted(df.columns)):
+                set_derived = column.split("_")[-1]
+                label = STID
+                if set_derived[0] != "1":
+                    # indicate this is the nth dataset
+                    label += "$^{" + set_derived[0] + "}$"
+                if set_derived.endswith("d"):
+                    # indicate this is a derived value
+                    label += "$^{*}$"
+
+                if column.startswith('precip'):
+                    ax3.plot(
+                        df.index,
+                        df[column],
+                        marker="o",
+                        markersize=3,
+                        linestyle="-",
+                        label=label,
+                        alpha=alpha,
+                    )
+                elif column.startswith('wind'):
+                    ax2.plot(
+                        df.index,
+                        df[column],
+                        marker="o",
+                        markersize=3,
+                        linestyle="-",
+                        label=label,
+                        alpha=alpha,
+                    )
+                else:
+                    ax1.plot(
+                        df.index,
+                        df[column],
+                        marker="o",
+                        markersize=3,
+                        linestyle="-",
+                        label=label,
+                        alpha=alpha,
+                    )
             mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
             station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
         except Exception as e:
             print(f"⛔ ERROR: {e}")
 
+        # Create a map of station locations
+        try:
+            ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
+            try:
+                state = df.attrs.get("STATE")
+                draw_state_polygon(
+                    ax=axM,
+                    state=state,
+                    facecolor=".9",
+                    edgecolor=".5",
+                    alpha=0.5,
+                    zorder=2,
+                )
+            except:
+                print(
+                    f"⚠️ WARNING: Map figure >> Could not plot {state} state boundary."
+                )
+            point = df.attrs.get("longitude"), df.attrs.get("latitude")
+            art = axM.scatter(*point, zorder=3)
+            axM.text(
+                *point,
+                f"  {df.attrs.get('STID')}",
+                color=art.get_facecolor()[-1],
+                ha="left",
+                va="center",
+                zorder=4,
+            )
+        except Exception as e:
+            print(f"⛔ ERROR: Map figure >> {e}")
+
     Element("station-info").element.innerHTML = station_info
 
-    var_label = variable.replace("_", " ").title()
-    if var_label.lower() == "air temp":
-        var_label = "Air Temperature"
+    var_label_1 = variable_1.replace("_", " ").title()
+    var_label_2 = variable_2.replace("_", " ").title()
+    if var_label_1.lower() == "air temp":
+        var_label_1 = "Air Temperature"
+    if var_label_2.lower() == "air temp":
+        var_label_2 = "Air Temperature"
 
-    ax.text(
-        1.0,
-        0.0,
-        f"{obtimezone.upper()} ",
-        transform=ax.transAxes,
-        va="bottom",
-        ha="right",
-    )
-    ax.set_ylabel(f'{var_label} ({df.attrs.get("UNITS").get(variable)})')
-    ax.set_title(var_label)
+    for ax in (ax1, ax2, ax3):
+        ax.text(
+            1.0,
+            0.0,
+            f"{obtimezone.upper()} ",
+            transform=ax.transAxes,
+            va="bottom",
+            ha="right",
+        )
+        ax.legend()
+        ax.grid(color="w", linewidth=2, alpha=0.8)
 
-    if variable == 'wind_direction':
-        ticks, labels = wind_degree_labels()
-        ax.set_yticks(ticks)
-        ax.set_yticklabels(labels)
+    for fig in (fig1, fig2, fig3):
+        fig.tight_layout()
 
-    ax.spines[["right", "top", "bottom"]].set_visible(False)
-    ax.legend()
-    ax.grid(color="w", linewidth=2, alpha=0.8)
-    plt.tight_layout()
-    display(fig, target="graph-area", append=False)
-    print("finished plot\n")
+    display(fig1, target="figure-userVariables", append=False)
+    display(fig2, target="figure-windVariables", append=False)
+    display(fig3, target="figure-precVariables", append=False)
+    display(figM, target="figure-map", append=False)
+
+    print("🏁 Finished!\n")
+

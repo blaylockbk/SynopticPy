@@ -532,7 +532,6 @@ def main(display):
         ax.set_yticks(ticks)
         ax.set_yticklabels(labels)
 
-    ax.spines[["right", "top", "bottom"]].set_visible(False)
     ax.legend()
     ax.grid(color="w", linewidth=2, alpha=0.8)
     ax2.set_xlabel("Longitude")

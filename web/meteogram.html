@@ -20,7 +20,7 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <!-- <script defer src="https://pyscript.net/latest/pyscript.js"></script> -->
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <style>
       .spaced-list li {
         margin-bottom: 10px; /* Increase the margin-bottom value to increase spacing */
@@ -333,21 +333,12 @@
             <!-- Variable ----------------------->
             <div class="input-group mb-3">
               <label class="input-group-text" for="variable">Variable</label>
-              <select class="form-select" id="variableSelector">
+              <select class="form-select" id="variableSelector_1">
                 <option selected="selected" value="air_temp">
                   🌡️ Air Temperature
                 </option>
                 <option value="dew_point_temperature">💦 Dew Point</option>
                 <option value="relative_humidity">💧 Relative Humidity</option>
-                <option value="wind_speed">🍃 Wind Speed</option>
-                <option value="wind_direction">🧭 Wind Direction</option>
-                <option value="wind_gust">🌬️ Wind Gust</option>
-                <option value="wind_direction,wind_speed" disabled>
-                  🏹 Wind Barbs
-                </option>
-                <option value="precip_accum">
-                  ☔ Precipitation (only precip_accu currently supported)
-                </option>
                 <option value="pressure">🎈 Pressure</option>
                 <option value="sea_level_pressure">
                   ⛵ Sea Level Pressure
@@ -369,21 +360,12 @@
             <!-- Variable ----------------------->
             <div class="input-group mb-3">
               <label class="input-group-text" for="variable">Variable</label>
-              <select class="form-select" id="variableSelector">
+              <select class="form-select" id="variableSelector_2">
                 <option selected="selected" value="air_temp">
                   🌡️ Air Temperature
                 </option>
                 <option value="dew_point_temperature">💦 Dew Point</option>
                 <option value="relative_humidity">💧 Relative Humidity</option>
-                <option value="wind_speed">🍃 Wind Speed</option>
-                <option value="wind_direction">🧭 Wind Direction</option>
-                <option value="wind_gust">🌬️ Wind Gust</option>
-                <option value="wind_direction,wind_speed" disabled>
-                  🏹 Wind Barbs
-                </option>
-                <option value="precip_accum">
-                  ☔ Precipitation (only precip_accu currently supported)
-                </option>
                 <option value="pressure">🎈 Pressure</option>
                 <option value="sea_level_pressure">
                   ⛵ Sea Level Pressure
@@ -632,7 +614,9 @@
           aria-labelledby="timeseries-tab"
           tabindex="0"
         >
-          <div id="figure-timeseries" align="center"></div>
+          <div id="figure-userVariables" align="center"></div>
+          <div id="figure-windVariables" align="center"></div>
+          <div id="figure-precVariables" align="center"></div>
         </div>
 
         <div
