@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import itertools
 import sys
+import re
 
 from matplotlib.patches import Polygon
 
@@ -34,14 +35,13 @@ mpl.rcParams["ytick.major.size"] = 0
 mpl.rcParams["ytick.minor.size"] = 0
 
 
-# ==================================================
-# If you using this page as a template,
-# PLEASE use your own token. You can
-# create a *free* Synoptic account and
-# Mesonet API token here:
-# https://developers.synopticdata.com/mesonet/
+# ╔════════════════════════════════════════════════════════════════════╗
+# ║   If you using this page as a template PLEASE use your own token.  ║
+# ╠════════════════════════════════════════════════════════════════════╣
+# ║You can create a *free* Synoptic account and Mesonet API token here:║
+# ║          https://developers.synopticdata.com/mesonet/              ║
+# ╚════════════════════════════════════════════════════════════════════╝
 brian_token = "d25c2abe02b94001a82e7790d9c30f06"
-# ==================================================
 
 
 def spddir_to_uv(wspd, wdir, round=3):
@@ -132,8 +132,159 @@ def wind_degree_labels(res="m"):
         return degrees, labels
 
 
+def plot_standard(
+    df,
+    only_plot_set_1=True,
+    *,
+    ax=None,
+):
+    if ax is None:
+        ax = plt.gca()
+
+    if only_plot_set_1:
+        df = df.filter(regex="set_1")
+
+    for column in sorted(df.columns):
+        variable = re.sub(r"_set_\d+d?", "", column)
+        units = df.attrs.get("UNITS").get(variable)
+        if variable == "air_temp":
+            variable = "air temperature"
+        var_label = variable.replace("_", " ").title()
+
+        # Set type will be an integer (starting at 1) and my end in "d"
+        # to indicate it is a "derived" value.
+        set_type = column.split("_")[-1]
+        label = df.attrs["STID"]
+        if set_type[0] != "1":
+            # indicate this is the nth dataset
+            label += "$^{" + set_type[0] + "}$"
+        if set_type.endswith("d"):
+            # indicate this is a derived value
+            label += "$^{*}$"
+
+        # Plot line
+        ax.plot(
+            df.index,
+            df[column],
+            marker="o",
+            markersize=3,
+            linestyle="-",
+            label=label,
+        )
+
+        # Cosmetics (labels, etc.)
+        ax.set_ylabel(f"{var_label} ({units})")
+        ax.set_title(var_label)
+
+        if variable == "wind_direction":
+            ticks, labels = wind_degree_labels()
+            ax.set_yticks(ticks)
+            ax.set_yticklabels(labels)
+
+    return ax
+
+
+def plot_spread_bars(df, ax=None):
+    """Special case when smooth.method = 'spread'"""
+    if ax is None:
+        ax = plt.gca()
+
+    # Specify the column to plot (only first set)
+    set = 0
+    column = sorted(df.columns)[set][0]
+    variable = re.sub(r"_set_\d+d?", "", column)
+    units = df.attrs.get("UNITS").get(variable)
+    if variable == "air_temp":
+        variable = "air temperature"
+    var_label = variable.replace("_", " ").title()
+
+    # Set type will be an integer (starting at 1) and my end in "d"
+    # to indicate it is a "derived" value.
+    set_type = column.split("_")[-1]
+    label = df.attrs["STID"]
+    if set_type[0] != "1":
+        # indicate this is the nth dataset
+        label += "$^{" + set_type[0] + "}$"
+    if set_type.endswith("d"):
+        # indicate this is a derived value
+        label += "$^{*}$"
+
+    # Bar Min -> Median
+    art = ax.bar(
+        df.index,
+        df[column]["median"] - df[column]["min"],
+        pd.to_timedelta(df.index.freq),
+        df[column]["min"],
+        edgecolor="w",
+        alpha=0.6,
+        label=label,
+        zorder=1000,
+    )
+
+    # Bar Median -> Max
+    ax.bar(
+        df.index,
+        df[column]["max"] - df[column]["median"],
+        pd.to_timedelta(df.index.freq),
+        df[column]["median"],
+        edgecolor="w",
+        color=art.patches[0].get_facecolor(),
+        alpha=0.6,
+        zorder=1000,
+    )
+
+    # Point Mean
+    ax.scatter(
+        df.index, df[column]["mean"], marker="d", s=5, color="w", alpha=0.5, zorder=1000
+    )
+
+    # Cosmetics (labels)
+    ax.set_ylabel(f"{var_label} ({units})")
+    ax.set_title(var_label)
+
+    if variable == "wind_direction":
+        ticks, labels = wind_degree_labels()
+        ax.set_yticks(ticks)
+        ax.set_yticklabels(labels)
+
+    return ax
+
+
+def plot_station_on_map(df, ax=None):
+    if ax is None:
+        ax = plt.gca()
+
+    point = df.attrs.get("LONGITUDE"), df.attrs.get("LATITUDE")
+    art = ax.scatter(*point, zorder=3)
+    ax.text(
+        *point,
+        f"  {df.attrs.get('STID')}",
+        color=art.get_facecolor()[-1],
+        ha="left",
+        va="center",
+        zorder=4,
+    )
+
+    ax.set_xlabel("Longitude")
+    ax.set_ylabel("Latitude")
+    ax.xaxis.set_major_formatter(
+        mpl.ticker.ScalarFormatter(useOffset=False, useMathText=False)
+    )
+    ax.xaxis.get_major_formatter().set_scientific(False)
+    ax.xaxis.get_major_formatter().set_useOffset(False)
+    ax.xaxis.get_major_formatter().set_useMathText(False)
+    ax.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2f"))
+    ax.yaxis.set_major_formatter(
+        mpl.ticker.ScalarFormatter(useOffset=False, useMathText=False)
+    )
+    ax.yaxis.get_major_formatter().set_scientific(False)
+    ax.yaxis.get_major_formatter().set_useOffset(False)
+    ax.yaxis.get_major_formatter().set_useMathText(False)
+    ax.yaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2f"))
+
+
 def calculate_distance(lat1, lon1, lat2, lon2):
-    # Calculate the difference in degrees between two lat/lon points
+    """Calculate the difference in degrees between two lat/lon points"""
     lat1_rad = np.radians(lat1)
     lon1_rad = np.radians(lon1)
     lat2_rad = np.radians(lat2)
@@ -158,12 +309,13 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     return distance_deg
 
 
-def draw_state_polygon(ax, state, **kwargs):
-    data = json.loads(
-        open_url(
-            f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
-        ).read()
-    )
+def draw_state_polygon(state, ax=None, **kwargs):
+    if ax is None:
+        ax = plt.gca()
+
+    url = f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
+
+    data = json.loads(open_url(url).read())
 
     for feature in data["features"]:
         if feature["geometry"]["type"] == "Polygon":
@@ -179,35 +331,111 @@ def draw_state_polygon(ax, state, **kwargs):
             print("⚠️ WARNING: Trouble plotting state polygon.")
 
 
-def plot_spread_bars(dfr, *, ax):
-    """Plot a bar of the max/median/mean/min spread  of the resampled df as a bar plot."""
-    art = ax.bar(
-        dfr.index,
-        dfr["median"] - dfr["min"],
-        pd.to_timedelta(dfr.index.freq),
-        dfr["min"],
-        edgecolor="w",
-        alpha=0.6,
-        label=dfr.attrs["STID"],
-        zorder=1000,
-    )
-    ax.bar(
-        dfr.index,
-        dfr["max"] - dfr["median"],
-        pd.to_timedelta(dfr.index.freq),
-        dfr["median"],
-        edgecolor="w",
-        color=art.patches[0].get_facecolor(),
-        alpha=0.6,
-        zorder=1000,
-    )
-    ax.scatter(dfr.index, dfr["mean"], marker="d", s=5, color="w", alpha=0.5, zorder=1000)
+class Smoother:
+    """An object to hold smoothing parameters and do smoothing.
 
+    Usage
+    -----
+    Presently, you must explicitly set the smoothing params after instantiation.
+    >>> smooth = Smoother()
+    >>> smooth.method = "rolling"
+    >>> smooth.interval = "3H"
+    >>> smooth.stat = "mean"
+    >>> df2 = smooth.smooth_dataframe(df)
+    """
+
+    def __init__(self):
+        self._method = None
+        self._interval = None
+        self._interval_str = None
+        self._stat = None
+
+    @property
+    def method(self):
+        return self._method
+
+    @method.setter
+    def method(self, value):
+        methods = {"rolling", "resample", None}
+        if isinstance(value, str):
+            value = value.lower()
+        if value == "none":
+            value = None
+            self._interval = None
+            self._interval_str = None
+            self._stat = None
+        if value in methods:
+            self._method = value
+        else:
+            print("⛔ ERROR: Smoother method must be one of the following:")
+            print(f"    └ {methods}")
+            raise ValueError(
+                f"Invalid value for 'method'. Allowed values are one of {methods}."
+            )
+
+    @property
+    def interval(self):
+        return self._interval
+
+    @interval.setter
+    def interval(self, value):
+        self.interval_str = value
+        try:
+            value = pd.to_timedelta(value)
+        except (ValueError, TypeError):
+            print(f"⛔ ERROR: Smoother interval {value} could not be parsed by Pandas.")
+            print(f"    └ Input a timedelta string like '12min', '6H', '3D' instead.")
+            raise ValueError(
+                "Invalid value for 'interval'. Must be a Pandas-parsable timedelta."
+            )
+        self._interval = value
+
+    @property
+    def stat(self):
+        return self._stat
+
+    @stat.setter
+    def stat(self, value):
+        stats = {"mean", "max", "min", "median", "std", "var", "count", "spread"}
+        if value == "none":
+            value = None
+        elif value not in stats:
+            print(
+                f"⚠️ WARNING: Smoother stat {value} is not in the list of expected values."
+            )
+            print(f"    └ {stats}")
+        self._stat = value
+
+    def __repr__(self) -> str:
+        return f"Smoother: {self.method=} {self.interval=} {self._interval_str=} {self.stat=}"
+
+    @property
+    def label(self):
+        return f"{self.interval_str} {self.method.title()} {self.stat.upper()}"
+
+    def smooth_dataframe(self, df):
+        """Smooth a Pandas Dataframe according to the smoothing parameters. Index must be a datetime."""
+        preserve_attrs = df.attrs
+        if self.method is None:
+            print(f"⚠️ WARNING: No smoothing performed. {self.method=}.")
+        elif self.stat.lower() == "spread":
+            # "spread" is a special case
+            if self.method == "resample":
+                df = df.resample(self.interval).agg(["max", "min", "median", "mean"])
+            elif self.method == "rolling":
+                df = df.rolling(self.interval).agg(["max", "min", "median", "mean"])
+        else:
+            if self.method == "rolling":
+                df = getattr(df.rolling(self.interval), self.stat)()
+            elif self.method == "resample":
+                df = getattr(df.resample(self.interval), self.stat)()
+        df.attrs = preserve_attrs
+        return df
 
 
 def main(display):
     # -------------------------------------------------------------------
-    # Get and validate input values
+    # Parse and validate input values
     # -------------------------------------------------------------------
 
     # Parse token
@@ -282,15 +510,15 @@ def main(display):
         print("    └ Only returning last 366 days requested.")
 
     # Parse smoother options
-    smooth_type = Element("smootherSelector1").value
-    smooth_time_str = Element("smootherInput").value
-    smooth_stat = Element("smootherSelector2").value
-    if smooth_type:
-        try:
-            smooth_time = pd.to_timedelta(smooth_time_str)
-        except:
-            print("⛔ ERROR: Smoother duration could not be parsed by Pandas.")
-            print("    └ Input a timedelta string like '12min', '6H', '3D' instead.")
+    smooth = Smoother()
+    smooth.method = Element("smootherSelector1").value
+    if smooth.method:
+        smooth.interval = Element("smootherInput").value
+        smooth.stat = Element("smootherSelector2").value
+
+    smooth.method = Element("smootherSelector1").value
+    smooth.interval = Element("smootherInput").value
+    smooth.stat = Element("smootherSelector2").value
 
     # Parse units
     for ele in js.document.getElementsByName("unitsRadioOptions"):
@@ -311,16 +539,18 @@ def main(display):
     mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=color_cycle)
 
     # Write input values to page
-    # print("User Input")
-    # print(f" ├──{stid=}")
-    # print(f" ├──{startTime=} {startDuration=} {start=}")
-    # print(f" ├──{endTime=} {endDuration=} {end=}")
-    # print(f" ├──{variable=}")
-    # print(f" ├──{units=}")
-    # print(f" ├──{obtimezone=}")
-    # print(f" ├──{smooth_type=}")
-    # print(f" ├──{smooth_stat=}")
-    # print(f" └──{smooth_time=}")
+    if False:
+        print("User Input")
+        print(f" ├─{stid=}")
+        print(f" ├─{startTime=} {startDuration=} {start=}")
+        print(f" ├─{endTime=} {endDuration=} {end=}")
+        print(f" ├─{variable=}")
+        print(f" ├─{units=}")
+        print(f" ├─{obtimezone=}")
+        print(f" ├─{smooth.method=}")
+        print(f" ├─{smooth.interval=}")
+        print(f" ├─{smooth.interval_str=}")
+        print(f" └─{smooth.stat=}")
 
     # ------------------------------------------------------------------
     # Request data via Synoptic API
@@ -338,6 +568,8 @@ def main(display):
     url = base_url + "&".join(arguments)
     url_hidden = url.replace(token, "*****")
 
+    # ----------------------
+    # Hyperlink to JSON data
     if user_token:
         print(f"Request URL: {url}")
         Element(
@@ -349,10 +581,12 @@ def main(display):
             "json-download"
         ).element.innerHTML = f"<i class='fa-solid fa-download'></i> <a href='{url_hidden}' target='_blank' title='Raw JSON: supply your own API token'>JSON</a>"
 
+    # --------------
+    # Read JSON data
     try:
         data = json.loads(open_url(url).read())
     except:
-        print(f"💥 FATAL: Could not read {url}")
+        print(f"💥 FATAL: Could not load {url}")
 
     if data["SUMMARY"]["RESPONSE_MESSAGE"].upper() == "OK":
         status_symbol = "✅"
@@ -380,23 +614,23 @@ def main(display):
         # Convert datetime index string to datetime
         df.index = pd.to_datetime(df.index)
 
-        # Sort Column order alphabetically
+        # Sort column order alphabetically
         df = df.reindex(columns=df.columns.sort_values())
 
         # Break wind into U and V components, if speed and direction are available
-        if all(["wind_speed" in senvars, "wind_direction" in senvars]):
+        if "wind_speed" in senvars and "wind_direction" in senvars:
             for i_spd, i_dir in zip(
                 senvars["wind_speed"].keys(), senvars["wind_direction"].keys()
             ):
                 u, v = spddir_to_uv(obs[i_spd], obs[i_dir])
-                this_set = "_".join(i_spd.split("_")[-2:])
-                df[f"wind_u_{this_set}"] = u
-                df[f"wind_v_{this_set}"] = v
+                df[i_spd.replace("wind_speed", "wind_u")] = u
+                df[i_spd.replace("wind_speed", "wind_v")] = v
                 data["UNITS"]["wind_u"] = data["UNITS"]["wind_speed"]
                 data["UNITS"]["wind_v"] = data["UNITS"]["wind_speed"]
 
         # In the DataFrame attributes, Convert some strings to float/int
-        # (i.e., ELEVATION, latitude, longitude) BUT NOT STID!
+        # (i.e., ELEVATION, latitude, longitude) BUT NOT STID
+        # because some STIDs could be all numeric characters.
         for k, v in df.attrs.items():
             if isinstance(v, str) and k not in ["STID"]:
                 try:
@@ -408,149 +642,37 @@ def main(display):
                 except:
                     pass
 
-        # Rename lat/lon to lowercase to match CF convenctions
-        df.attrs["latitude"] = df.attrs.pop("LATITUDE")
-        df.attrs["longitude"] = df.attrs.pop("LONGITUDE")
-
         # Include other info
         for i in data.keys():
             if i != "STATION":
                 df.attrs[i] = data[i]
         df.attrs["SENSOR_VARIABLES"] = senvars
-        # df.attrs["params"] = params
         df.attrs["service"] = "stations_timeseries"
 
+        # Insert dataframe in Z dictionary
         Z[df.attrs["STID"]] = df
 
+    # ------------------------------------------
+    # Sort stations in order they were requested
     if station_order:
-        # Sort stations in order they were requested
         Z = {i: Z[i] for i in station_order if i in Z.keys()}
 
-    fig, ax = plt.subplots()  # Timeseries
-    fig2, ax2 = plt.subplots()  # Map
+    # ---------------------
+    # Figures and Smoothing
+    # ---------------------
 
-    states_added = []
-    station_info = ""
-    for STID, df in Z.items():
-        try:
-            column_vars = sorted(df.columns)
-            if smooth_type == "rolling" and smooth_stat.lower() != "none":
-                preserve_attrs = df.attrs
-                #print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                if smooth_stat == "spread":
-                    df = df.rolling(smooth_time, label="right").agg(
-                        ["max", "min", "mean", "median"]
-                    )
-                else:
-                    df = getattr(df.rolling(smooth_time), smooth_stat)()
-                df.attrs = preserve_attrs
-            elif smooth_type == "resample" and smooth_stat.lower() != "none":
-                preserve_attrs = df.attrs
-                print(f"Apply smoothing:{smooth_type=}; {smooth_stat=}; {smooth_time=}")
-                if smooth_stat == "spread":
-                    df = df.resample(smooth_time, label="right").agg(
-                        ["max", "min", "mean", "median"]
-                    )
-                else:
-                    df = getattr(df.resample(smooth_time, label="right"), smooth_stat)()
-                df.attrs = preserve_attrs
+    # ------------------------
+    # Tab 1: Timeseries Figure
+    fig, ax = plt.subplots()
+    for station, df in Z.items():
+        if smooth.method:
+            df = smooth.smooth_dataframe(df)
 
-            alphas = np.linspace(1, 0.3, len(column_vars))
-            for alpha, column in zip(alphas, sorted(column_vars)):
-                set_derived = column.split("_")[-1]
-                label = STID
-                if set_derived[0] != "1":
-                    # indicate this is the nth dataset
-                    label += "$^{" + set_derived[0] + "}$"
-                if set_derived.endswith("d"):
-                    # indicate this is a derived value
-                    label += "$^{*}$"
+        if smooth.method and smooth.stat == "spread":
+            df.pipe(plot_spread_bars, ax=ax)
+        else:
+            df.pipe(plot_standard, False, ax=ax)
 
-                if smooth_type in ["resample", "rolling"] and smooth_stat == "spread":
-                    plot_spread_bars(df[column], ax=ax)
-                else:
-                    if column.startswith("wind_direction"):
-                        ax.scatter(
-                            df.index,
-                            df[column],
-                            marker="o",
-                            s=3,
-                            label=label,
-                            alpha=alpha,
-                        )
-                    else:
-                        ax.plot(
-                            df.index,
-                            df[column],
-                            marker="o",
-                            markersize=3,
-                            linestyle="-",
-                            label=label,
-                            alpha=alpha,
-                        )
-            mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
-            station_info += f"<br><h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}<br>"
-        except Exception as e:
-            print(f"⛔ ERROR: Timeseries figure >> {e}")
-
-        # Create a map of station locations
-        try:
-            ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
-            try:
-                state = df.attrs.get("STATE")
-                if state not in states_added:
-                    states_added.append(state)
-
-                    draw_state_polygon(
-                        ax=ax2,
-                        state=state,
-                        facecolor=".9",
-                        edgecolor=".5",
-                        alpha=0.5,
-                        zorder=2,
-                    )
-            except:
-                print(
-                    f"⚠️ WARNING: Map figure >> Could not plot {state} state boundary."
-                )
-            point = df.attrs.get("longitude"), df.attrs.get("latitude")
-            art = ax2.scatter(*point, zorder=3)
-            ax2.text(
-                *point,
-                f"  {df.attrs.get('STID')}",
-                color=art.get_facecolor()[-1],
-                ha="left",
-                va="center",
-                zorder=4,
-            )
-        except Exception as e:
-            print(f"⛔ ERROR: Map figure >> {e}")
-
-    Element("station-info").element.innerHTML = station_info
-
-    var_label = variable.replace("_", " ").title()
-    if var_label.lower() == "air temp":
-        var_label = "Air Temperature"
-
-    # ----------
-    # Map bounds
-    # Use zoomed-in map boundary if max distance between stations is large.
-    latitudes = [i.attrs["latitude"] for i in Z.values()]
-    longitudes = [i.attrs["longitude"] for i in Z.values()]
-    points = zip(latitudes, longitudes)
-    pairs = list(itertools.product(points, repeat=2))
-
-    threshold = 1.5
-    pad = 0.05
-    max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
-    xlim = (min(longitudes) - pad / 2, max(longitudes) + pad / 2)
-    ylim = (min(latitudes) - pad, max(latitudes) + pad)
-
-    if max_distance < threshold:
-        ax2.set_xlim(*xlim)
-        ax2.set_ylim(*ylim)
-
-    # -------------------------------
     # Label indicating timezone units
     ax.text(
         1.0,
@@ -561,45 +683,68 @@ def main(display):
         ha="right",
     )
 
-    # ----------------------------------
     # Label indicating smoothing options
-    if smooth_type != "none":
+    if smooth.method:
         ax.set_title(
-            f"{smooth_time_str} {smooth_type.title()} {smooth_stat.upper()}",
+            smooth.label,
             loc="right",
             fontsize=8,
         )
 
-    # ---------
     # Cosmetics
-    ax.set_ylabel(f'{var_label} ({df.attrs.get("UNITS").get(variable)})')
-    ax.set_title(var_label)
-
-    if variable == "wind_direction":
-        ticks, labels = wind_degree_labels()
-        ax.set_yticks(ticks)
-        ax.set_yticklabels(labels)
-
     ax.legend()
     ax.grid(color="w", linewidth=2, alpha=0.8)
-    ax2.set_xlabel("Longitude")
-    ax2.set_ylabel("Latitude")
-    ax2.xaxis.set_major_formatter(
-        mpl.ticker.ScalarFormatter(useOffset=False, useMathText=False)
-    )
-    ax2.xaxis.get_major_formatter().set_scientific(False)
-    ax2.xaxis.get_major_formatter().set_useOffset(False)
-    ax2.xaxis.get_major_formatter().set_useMathText(False)
-    ax2.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2f"))
-    ax2.yaxis.set_major_formatter(
-        mpl.ticker.ScalarFormatter(useOffset=False, useMathText=False)
-    )
-    ax2.yaxis.get_major_formatter().set_scientific(False)
-    ax2.yaxis.get_major_formatter().set_useOffset(False)
-    ax2.yaxis.get_major_formatter().set_useMathText(False)
-    ax2.yaxis.set_major_formatter(mpl.ticker.FormatStrFormatter("%.2f"))
+
     fig.tight_layout()
-    fig2.tight_layout()
     display(fig, target="figure-timeseries", append=False)
+
+    # -------------------------
+    # Tab 2: Station Map Figure
+    fig2, ax2 = plt.subplots()  # Map
+    states = {df.attrs.get("STATE") for _, df in Z.items()}
+    for state in states:
+        draw_state_polygon(
+            state,
+            facecolor=".9",
+            edgecolor=".5",
+            alpha=0.5,
+            zorder=2,
+        )
+
+    for station, df in Z.items():
+        plot_station_on_map(df, ax=ax2)
+
+    ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
+
+    # Map bounds
+    # Use zoomed-in map boundary if max distance between stations is large.
+    latitudes = [i.attrs["LATITUDE"] for i in Z.values()]
+    longitudes = [i.attrs["LONGITUDE"] for i in Z.values()]
+    points = zip(latitudes, longitudes)
+    pairs = list(itertools.product(points, repeat=2))
+
+    threshold = 0.5
+    pad = 0.08
+    max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
+    xlim = (min(longitudes) - pad / 2, max(longitudes) + pad / 2)
+    ylim = (min(latitudes) - pad, max(latitudes) + pad)
+
+    if max_distance < threshold:
+        plt.gca().set_xlim(*xlim)
+        plt.gca().set_ylim(*ylim)
+
+    fig2.tight_layout()
     display(fig2, target="figure-map", append=False)
+
+    # ---------------------------------
+    # Tab 3: Station Information Tables
+    station_info = ""
+    for STID, df in Z.items():
+        mesowest = f"""<a href="https://mesowest.utah.edu/cgi-bin/droman/meso_base_dyn.cgi?stn={df.attrs['STID']}" target="_blank">MesoWest</a>"""
+        station_info += f"<br>"
+        station_info += f"<h3>{df.attrs['STID']} - {df.attrs['NAME']} {mesowest}</h3>"
+        station_info += f"{pd.DataFrame(pd.Series(df.attrs)).rename(columns={0:''}).to_html(classes='table table-striped table-sm')}"
+        station_info += f"<br>"
+    Element("station-info").element.innerHTML = station_info
+
     print("🏁 Finished!\n")

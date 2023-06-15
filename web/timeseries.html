@@ -31,7 +31,7 @@
   <body>
     <!-- prettier-ignore -->
     <py-config>
-      packages = ["matplotlib", "pandas", "numpy", "shapely"]
+      packages = ["matplotlib", "pandas", "numpy"]
       [[fetch]]
         files = ["./timeseries.py"]
     </py-config>
@@ -42,294 +42,328 @@
       crossorigin="anonymous"
     ></script>
 
+    <script>
+      // If Smoother method selector is none, then disable the interval and stat input,
+      // but if user selects a smoother, then activate the interval and stat inputs.
+      function checkInputValue() {
+        var input1Value = document.getElementById("smootherSelector1").value;
+        var input2 = document.getElementById("smootherInput");
+        var input3 = document.getElementById("smootherSelector2");
+
+        if (input1Value === "none") {
+          input2.disabled = true;
+          input3.disabled = true;
+        } else {
+          input2.disabled = false;
+          input3.disabled = false;
+        }
+      }
+    </script>
+
     <!-- NAVBAR -->
-    <!-- TODO: I'd like a navbar, but don't know what for yet -->
-    <!-- <nav class="navbar bg-secondary">
+    <nav
+      class="navbar bg-body-tertiary border-bottom border-bottom-dark"
+      data-bs-theme="dark"
+    >
       <div class="container-fluid">
-        <a class="navbar-brand " href="#">
-          <img
-            src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/Balloon_logo/square_balloon.jpg"
-            alt="Logo"
-            width="24"
-            height="24"
-            class="d-inline-block align-text-top"
-          />
-          Brian's Tools
-        </a>
-      </div>
-    </nav> -->
-
-    <h1 align="center">
-      Station Timeseries
-      <!-- Button trigger modal -->
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        README
-      </button>
-
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Brian Blaylock's Station Timeseries Web App
-              </h1>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body" style="font-size: 15px; text-align: left">
-              This app gets data from the Synoptic Mesonet API, reads it with
-              Pandas, and plots a timeseries of the data with matplotlib. This
-              is all done in your browser powered by
-              <a href="https://pyscript.net/">pyscript</a>. The primary use of
-              this app is to plot a timeseries of data from multiple stations in
-              a single plot.
-
-              <hr />
-              <strong>Token:</strong>
-              You may insert your own
+        <!-- Left Menu -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarTogglerDemo03"
+          aria-controls="navbarTogglerDemo03"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
               <a
-                href="https://developers.synopticdata.com/mesonet/v2/getting-started/"
-                target="_blank"
-                >Synoptic API token</a
+                class="nav-link active"
+                aria-current="page"
+                href="meteogram.html"
+                >Meteogram</a
               >
-              below. If left blank, you will use one of my free-tier tokens
-              <i
-                >which may be limited if more than 4+ people are using this page
-                at the same time</i
-              >. Using your own token prevents running into this problem and
-              gives you access to features you may have for your account.
-              <div class="input-group mb-3">
-                <span class="input-group-text" id="token">Token</span>
-                <input
-                  type="text"
-                  id="tokenInput"
-                  class="form-control"
-                  placeholder="Synoptic API Token"
-                />
-              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Placeholder Link</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Title -->
+        <a class="navbar-brand"
+          ><h2 style="display: inline">Station Timeseries</h2></a
+        >
+        <!-- README button; trigger modal -->
+        <button
+          type="button"
+          class="btn btn-outline-info"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          README
+        </button>
+      </div>
+    </nav>
 
-              <hr />
-              <strong>Stations:</strong> A comma-separated list of station IDs,
-              e.g. <kbd>PSRIM,PSINK</kbd>. If you don't know the station ID, you
-              can search on
-              <a href="https://mesowest.utah.edu/" target="_blank">Mesowest</a>.
+    <!-- Modal Content -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Brian Blaylock's Station Timeseries Web App
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" style="font-size: 15px; text-align: left">
+            This app gets data from the Synoptic Mesonet API, reads it with
+            Pandas, and plots a timeseries of the data with matplotlib. This is
+            all done in your browser powered by
+            <a href="https://pyscript.net/">pyscript</a>. The primary use of
+            this app is to plot a timeseries of data from multiple stations in a
+            single plot.
 
-              <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button
-                      class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree"
-                      aria-expanded="false"
-                      aria-controls="collapseThree"
-                    >
-                      Backdoor: Advanced Station Selector
-                    </button>
-                  </h2>
-                  <div
-                    id="collapseThree"
-                    class="accordion-collapse collapse"
-                    data-bs-parent="#accordionExample"
+            <hr />
+            <strong>Token:</strong>
+            You may insert your own
+            <a
+              href="https://developers.synopticdata.com/mesonet/v2/getting-started/"
+              target="_blank"
+              >Synoptic API token</a
+            >
+            below. If left blank, you will use one of my free-tier tokens
+            <i
+              >which may be limited if more than 4+ people are using this page
+              at the same time</i
+            >. Using your own token prevents running into this problem and gives
+            you access to features you may have for your account.
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="token">Token</span>
+              <input
+                type="text"
+                id="tokenInput"
+                class="form-control"
+                placeholder="Synoptic API Token"
+              />
+            </div>
+
+            <hr />
+            <strong>Stations:</strong> A comma-separated list of station IDs,
+            e.g. <kbd>PSRIM,PSINK</kbd>. If you don't know the station ID, you
+            can search on
+            <a href="https://mesowest.utah.edu/" target="_blank">Mesowest</a>.
+
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree"
+                    aria-expanded="false"
+                    aria-controls="collapseThree"
                   >
-                    <div class="accordion-body">
-                      <p>
-                        With some knowledge of the Synoptic Mesonet API, you can
-                        make more complex station queries. Instead of a list of
-                        stations, you can instead provide
-                        <a
-                          target="_blank"
-                          href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/"
-                          >station selection parameters</a
-                        >
-                        to refine your station selection. This is inerted in the
-                        API request, so you need to separate each argument with
-                        a <code>&</code>. For example:
-                      </p>
+                    Backdoor: Advanced Station Selector
+                  </button>
+                </h2>
+                <div
+                  id="collapseThree"
+                  class="accordion-collapse collapse"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <p>
+                      With some knowledge of the Synoptic Mesonet API, you can
+                      make more complex station queries. Instead of a list of
+                      stations, you can instead provide
+                      <a
+                        target="_blank"
+                        href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/"
+                        >station selection parameters</a
+                      >
+                      to refine your station selection. This is inerted in the
+                      API request, so you need to separate each argument with a
+                      <code>&</code>. For example:
+                    </p>
 
-                      <ul class="spaced-list">
-                        <li>
-                          <kbd>radius=wbb,5</kbd> All stations within a 5 mile
-                          radius of <code>WBB</code>.
-                        </li>
-                        <li>
-                          <kbd>radius=wbb,5&limit=10</kbd>
-                          <code>10</code> stations nearest
-                          <code>WBB</code> within a <code>5</code> mile radius.
-                        </li>
-                        <li>
-                          <kbd>radius=WBB,5&limit=10&stid=!MTMET</kbd> Same as
-                          above, but exclude the station <code>MTMET</code>.
-                        </li>
-                        <li>
-                          <kbd>radius=WBB,20&network=153</kbd> Stations within
-                          <code>20</code> miles of <code>WBB</code> that belong
-                          to the <code>UUNET</code> network. (See list of
-                          <a
-                            href="https://developers.synopticdata.com/about/station-providers/"
-                            >network providers</a
-                          >.)
-                        </li>
-                        <li>
-                          <kbd>radius=KSLC,40&network=1,2&limit=8</kbd>
-                          <code>8</code> stations within <code>40</code> miles
-                          of <code>KSLC</code> that belong to the
-                          <code>ASOS/AWOS</code> and <code>RAWS</code> networks.
-                          (See list of
-                          <a
-                            href="https://developers.synopticdata.com/about/station-providers/"
-                            >network providers</a
-                          >.)
-                        </li>
-                        <li>
-                          <kbd>radius=41.5,-120.25,20&limit=10</kbd>
-                          <code>10</code> stations within <code>20</code> miles
-                          of the <code>latitude,longitude</code>
-                          location.
-                        </li>
-                      </ul>
-                    </div>
+                    <ul class="spaced-list">
+                      <li>
+                        <kbd>radius=wbb,5</kbd> All stations within a 5 mile
+                        radius of <code>WBB</code>.
+                      </li>
+                      <li>
+                        <kbd>radius=wbb,5&limit=10</kbd>
+                        <code>10</code> stations nearest <code>WBB</code> within
+                        a <code>5</code> mile radius.
+                      </li>
+                      <li>
+                        <kbd>radius=WBB,5&limit=10&stid=!MTMET</kbd> Same as
+                        above, but exclude the station <code>MTMET</code>.
+                      </li>
+                      <li>
+                        <kbd>radius=WBB,20&network=153</kbd> Stations within
+                        <code>20</code> miles of <code>WBB</code> that belong to
+                        the <code>UUNET</code> network. (See list of
+                        <a
+                          href="https://developers.synopticdata.com/about/station-providers/"
+                          >network providers</a
+                        >.)
+                      </li>
+                      <li>
+                        <kbd>radius=KSLC,40&network=1,2&limit=8</kbd>
+                        <code>8</code> stations within <code>40</code> miles of
+                        <code>KSLC</code> that belong to the
+                        <code>ASOS/AWOS</code> and <code>RAWS</code> networks.
+                        (See list of
+                        <a
+                          href="https://developers.synopticdata.com/about/station-providers/"
+                          >network providers</a
+                        >.)
+                      </li>
+                      <li>
+                        <kbd>radius=41.5,-120.25,20&limit=10</kbd>
+                        <code>10</code> stations within <code>20</code> miles of
+                        the <code>latitude,longitude</code>
+                        location.
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
-              <br />
-
-              <hr />
-              <strong>Variable:</strong> Select the variable you wish to plot.
-
-              <hr />
-              There are three ways to specify the plot's time range:
-              <ol>
-                <li>
-                  "Start at <code>[datetime]</code> and end at
-                  <code>[datetime]</code>."
-                </li>
-                <li>
-                  "Start at <code>[datetime]</code> and end
-                  <code>[timedelta]</code> later."
-                </li>
-                <li>
-                  "Start <code>[timedelta]</code> before the end
-                  <code>[datetime]</code>."
-                </li>
-              </ol>
-
-              <strong>Start Time:</strong> Specify the starting time for the
-              plot. This must be a Pandas-parsable datetime string
-              <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if an End datetime is given,
-              a Pandas-parsable timedelta such as <kbd>30min</kbd> for 30
-              minutes, <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
-              <br />
-              <br />
-              <strong>End Time:</strong> Specify the ending time for the plot.
-              This must be a Pandas-parsable datetime string
-              <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if a Start datetime is
-              given, a Pandas-parsable timedelta such as <kbd>30min</kbd> for 30
-              minutes, <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
-              <hr />
-              <strong>Smoother:</strong>
-              You can "smooth" the data using two different methods built into
-              Pandas:
-
-              <ol>
-                <li>
-                  <a
-                    href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.resample.html"
-                    target="_blank"
-                    >Resample</a
-                  >: Reduces the amount of data points to interval selected by
-                  computing a statistic for the time window. This is useful for
-                  showing the "daily maximum temperature" for the time period.
-                </li>
-                <li>
-                  <a
-                    href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rolling.html"
-                    target="_blank"
-                    >Rolling</a
-                  >: Returns the same amount of data points but value (i.e.
-                  mean, max, min) is computed over a rolling time window.
-                </li>
-              </ol>
-              Also specify the time window (as a Pandas-parsable timedelta) and
-              the statistic to compute in the time window (e.g. Mean). WARNING:
-              A proper average for wind_direction is not yet implemented.
-
-              <hr />
-              <strong>Colors:</strong>
-              Specify the colors you want each line. Maybe you have lots of
-              stations plotted, but want to highlight only one; you can make
-              that station "red" and the others a shade of grey. Note that
-              colors are reused if there are more stations than colors.
-
-              <hr />
-              <strong>Toggles:</strong>
-              Toggle units to be returned in English or Metric units. Also
-              toggle if time is local or UTC.
             </div>
-            <div class="modal-footer">
-              <div style="font-size: 12px">
-                <i class="fa-brands fa-github"></i>
-                <a
-                  href="https://github.com/blaylockbk/SynopticPy"
-                  target="_blank"
-                  >SynopticPy </a
-                >|
-                <a
-                  href="https://github.com/blaylockbk/SynopticPy/issues"
-                  target="_blank"
-                  >Submit Issue</a
-                >|
-                <a
-                  href="https://github.com/blaylockbk/SynopticPy/discussions"
-                  target="_blank"
-                  >Ask Question</a
-                >|
+            <br />
 
+            <hr />
+            <strong>Variable:</strong> Select the variable you wish to plot.
+
+            <hr />
+            There are three ways to specify the plot's time range:
+            <ol>
+              <li>
+                "Start at <code>[datetime]</code> and end at
+                <code>[datetime]</code>."
+              </li>
+              <li>
+                "Start at <code>[datetime]</code> and end
+                <code>[timedelta]</code> later."
+              </li>
+              <li>
+                "Start <code>[timedelta]</code> before the end
+                <code>[datetime]</code>."
+              </li>
+            </ol>
+
+            <strong>Start Time:</strong> Specify the starting time for the plot.
+            This must be a Pandas-parsable datetime string
+            <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if an End datetime is given, a
+            Pandas-parsable timedelta such as <kbd>30min</kbd> for 30 minutes,
+            <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
+            <br />
+            <br />
+            <strong>End Time:</strong> Specify the ending time for the plot.
+            This must be a Pandas-parsable datetime string
+            <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if a Start datetime is given,
+            a Pandas-parsable timedelta such as <kbd>30min</kbd> for 30 minutes,
+            <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
+            <hr />
+            <strong>Smoother:</strong>
+            You can "smooth" the data using two different methods built into
+            Pandas:
+
+            <ol>
+              <li>
                 <a
-                  href="https://github.com/blaylockbk/SynopticPy/blob/main/web/timeseries.html"
+                  href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.resample.html"
                   target="_blank"
-                  >Edit Page</a
-                >|
+                  >Resample</a
+                >: Reduces the amount of data points to interval selected by
+                computing a statistic for the time window. This is useful for
+                showing the "daily maximum temperature" for the time period.
+              </li>
+              <li>
                 <a
-                  href="https://github.com/blaylockbk/SynopticPy/blob/main/web/timeseries.py"
+                  href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rolling.html"
                   target="_blank"
-                  >Edit Plot</a
-                >
-                <br />
-              </div>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
+                  >Rolling</a
+                >: Returns the same amount of data points but value (i.e. mean,
+                max, min) is computed over a rolling time window.
+              </li>
+            </ol>
+            Also specify the time window (as a Pandas-parsable timedelta) and
+            the statistic to compute in the time window (e.g. Mean). WARNING: A
+            proper average for wind_direction is not yet implemented.
+
+            <hr />
+            <strong>Colors:</strong>
+            Specify the colors you want each line. Maybe you have lots of
+            stations plotted, but want to highlight only one; you can make that
+            station "red" and the others a shade of grey. Note that colors are
+            reused if there are more stations than colors.
+
+            <hr />
+            <strong>Toggles:</strong>
+            Toggle units to be returned in English or Metric units. Also toggle
+            if time is local or UTC.
+          </div>
+          <div class="modal-footer">
+            <div style="font-size: 12px">
+              <i class="fa-brands fa-github"></i>
+              <a href="https://github.com/blaylockbk/SynopticPy" target="_blank"
+                >SynopticPy </a
+              >|
+              <a
+                href="https://github.com/blaylockbk/SynopticPy/issues"
+                target="_blank"
+                >Submit Issue</a
+              >|
+              <a
+                href="https://github.com/blaylockbk/SynopticPy/discussions"
+                target="_blank"
+                >Ask Question</a
+              >|
+
+              <a
+                href="https://github.com/blaylockbk/SynopticPy/blob/main/web/timeseries.html"
+                target="_blank"
+                >Edit Page</a
+              >|
+              <a
+                href="https://github.com/blaylockbk/SynopticPy/blob/main/web/timeseries.py"
+                target="_blank"
+                >Edit Plot</a
               >
-                Close
-              </button>
+              <br />
             </div>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
-    </h1>
+    </div>
 
     <div class="container">
-      <hr />
-
+      <br />
       <div align="center" class="contentText form-group">
         <!-- FIRST ROW -->
         <div class="row align-items-center">
@@ -461,7 +495,11 @@
             <div class="input-group mb-3">
               <div class="input-group mb-3">
                 <label class="input-group-text" for="smoothing">Smoother</label>
-                <select class="form-select" id="smootherSelector1">
+                <select
+                  class="form-select"
+                  id="smootherSelector1"
+                  onchange="checkInputValue()"
+                >
                   <option selected="selected" value="none">None</option>
                   <option value="resample">Resample</option>
                   <option value="rolling">Rolling</option>
@@ -472,10 +510,10 @@
                   class="form-control"
                   value="30min"
                   title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
+                  disabled
                 />
-                <select class="form-select" id="smootherSelector2">
-                  <option selected="selected" value="none">None</option>
-                  <option value="mean">Mean</option>
+                <select class="form-select" id="smootherSelector2" disabled>
+                  <option selected="selected" value="mean">Mean</option>
                   <option value="max">Max</option>
                   <option value="min">Min</option>
                   <option value="median">Median</option>
@@ -524,7 +562,7 @@
                   value="english"
                   checked
                 />
-                <label class="btn btn-outline-dark" for="unitsRadio1"
+                <label class="btn btn-outline-dark btn-sm" for="unitsRadio1"
                   >English Units</label
                 >
                 <input
@@ -535,7 +573,7 @@
                   autocomplete="off"
                   value="metric"
                 />
-                <label class="btn btn-outline-dark" for="unitsRadio2"
+                <label class="btn btn-outline-dark btn-sm" for="unitsRadio2"
                   >Metric Units</label
                 >
               </div>
@@ -555,7 +593,7 @@
                   value="local"
                   checked
                 />
-                <label class="btn btn-outline-dark" for="timezoneRadio1"
+                <label class="btn btn-outline-dark btn-sm" for="timezoneRadio1"
                   >Local Time</label
                 >
                 <input
@@ -566,7 +604,7 @@
                   autocomplete="off"
                   value="utc"
                 />
-                <label class="btn btn-outline-dark" for="timezoneRadio2"
+                <label class="btn btn-outline-dark btn-sm" for="timezoneRadio2"
                   >UTC Time</label
                 >
               </div>
@@ -612,20 +650,6 @@
         <li class="nav-item" role="presentation">
           <button
             class="nav-link"
-            id="station-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#station-tab-pane"
-            type="button"
-            role="tab"
-            aria-controls="station-tab-pane"
-            aria-selected="false"
-          >
-            Station Info
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
             id="map-tab"
             data-bs-toggle="tab"
             data-bs-target="#map-tab-pane"
@@ -637,8 +661,23 @@
             Map
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="station-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#station-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="station-tab-pane"
+            aria-selected="false"
+          >
+            Station Info
+          </button>
+        </li>
       </ul>
       <div class="tab-content" id="myTabContent">
+        <!-- Timeseries Figure Tab -->
         <div
           class="tab-pane fade show active"
           id="timeseries-tab-pane"
@@ -649,15 +688,7 @@
           <div id="figure-timeseries" align="center"></div>
         </div>
 
-        <div
-          class="tab-pane fade"
-          id="station-tab-pane"
-          role="tabpanel"
-          aria-labelledby="station-tab"
-          tabindex="0"
-        >
-          <div id="station-info"></div>
-        </div>
+        <!-- Map Figure Tab -->
         <div
           class="tab-pane fade"
           id="map-tab-pane"
@@ -667,23 +698,35 @@
         >
           <div id="figure-map" align="center"></div>
         </div>
-        <br />
 
-        <div style="float: left">
-          <div id="json-download"></div>
+        <!-- Station Info Tab -->
+        <div
+          class="tab-pane fade"
+          id="station-tab-pane"
+          role="tabpanel"
+          aria-labelledby="station-tab"
+          tabindex="0"
+        >
+          <div id="station-info"></div>
         </div>
-        <div style="float: right">
-          <i class="fa-brands fa-github"></i>
-          <a href="https://github.com/blaylockbk/SynopticPy" target="_blank"
-            >SynopticPy
-          </a>
-        </div>
-        <br /><br /><br />
-        <py-terminal></py-terminal>
       </div>
-    </div>
+      <!-- (CONTENT TABS)  -->
 
-    <!-- (CONTENT TABS)  -->
+      <!-- Bottom material -->
+      <br />
+      <hr />
+      <div style="float: left">
+        <div id="json-download"></div>
+      </div>
+      <div style="float: right">
+        <i class="fa-brands fa-github"></i>
+        <a href="https://github.com/blaylockbk/SynopticPy" target="_blank"
+          >SynopticPy
+        </a>
+      </div>
+      <br /><br /><br />
+      <py-terminal></py-terminal>
+    </div>
 
     <!-- prettier-ignore -->
     <py-script>
@@ -693,6 +736,7 @@
       fig = main(display)
 
     </py-script>
+
     <style>
       img {
         max-width: 98%;
