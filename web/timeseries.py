@@ -181,7 +181,7 @@ def plot_standard(
 
         if variable == "air_temp":
             variable = "air temperature"
-        elif variable == 'precip_accumulated':
+        elif variable == "precip_accumulated":
             variable = "Accumulated Precipitation"
 
         var_label = variable.replace("_", " ").title()
@@ -197,24 +197,34 @@ def plot_standard(
             # indicate this is a derived value
             label += "$^{*}$"
 
-        # Plot line
-        ax.plot(
-            df.index,
-            df[column],
-            marker="o",
-            markersize=3,
-            linestyle="-",
-            label=label,
-        )
+        if variable == "wind_direction":
+            ax.scatter(
+                df.index,
+                df[column],
+                marker="o",
+                s=3,
+                label=label,
+                zorder=100
+            )
+            ticks, labels = wind_degree_labels()
+            ax.set_yticks(ticks)
+            ax.set_yticklabels(labels)
+        else:
+            ax.plot(
+                df.index,
+                df[column],
+                marker="o",
+                markersize=3,
+                linestyle="-",
+                label=label,
+                zorder=100
+            )
 
         # Cosmetics (labels, etc.)
         ax.set_ylabel(f"{var_label} ({units})")
         ax.set_title(var_label)
+        ax.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
 
-        if variable == "wind_direction":
-            ticks, labels = wind_degree_labels()
-            ax.set_yticks(ticks)
-            ax.set_yticklabels(labels)
 
     return ax
 
@@ -730,7 +740,6 @@ def main(display):
 
     # Cosmetics
     ax.legend()
-    ax.grid(color="w", linewidth=2, alpha=0.8)
 
     fig.tight_layout()
     display(fig, target="figure-timeseries", append=False)
