@@ -134,12 +134,11 @@
             ></button>
           </div>
           <div class="modal-body" style="font-size: 15px; text-align: left">
-            This app gets data from the Synoptic Mesonet API, reads it with
-            Pandas, and plots a timeseries of the data with matplotlib. This is
-            all done in your browser powered by
-            <a href="https://pyscript.net/">pyscript</a>. The primary use of
-            this app is to plot a timeseries of data from multiple stations in a
-            single plot.
+            This station timeseries app is used to plot data from one or more
+            weather stations on the same figure. It gets data from the Synoptic
+            Mesonet API, reads it with Pandas, and plots a timeseries of the
+            data with matplotlib. This is all done in your browser powered by
+            <a href="https://pyscript.net/">pyscript</a>.
 
             <hr />
             <strong>Token:</strong>
@@ -170,6 +169,7 @@
             e.g. <kbd>PSRIM,PSINK</kbd>. If you don't know the station ID, you
             can search on
             <a href="https://mesowest.utah.edu/" target="_blank">Mesowest</a>.
+            Open the dropdown for more advanced station selection.
 
             <div class="accordion" id="accordionExample">
               <div class="accordion-item">
@@ -200,8 +200,9 @@
                         href="https://developers.synopticdata.com/mesonet/v2/stations/timeseries/"
                         >station selection parameters</a
                       >
-                      to refine your station selection. This is inerted in the
-                      API request, so you need to separate each argument with a
+                      to refine your station selection. This string is inserted
+                      in the API request, so you need to separate each argument
+                      with a
                       <code>&</code>. For example:
                     </p>
 
@@ -256,6 +257,7 @@
             <strong>Variable:</strong> Select the variable you wish to plot.
 
             <hr />
+            <strong>Start and End Datetime:</strong>
             There are three ways to specify the plot's time range:
             <ol>
               <li>
@@ -314,7 +316,9 @@
             <a
               ref="https://docs.scipy.org/doc/scipy/reference/stats.html#directional-statistical-functions"
               >SciPy Directional Statistics</a
-            >.
+            >. Also, "Spread" is a special case that is intended to be used with
+            the "Resample" method; it shows a bar of the max, min, median, and a
+            diamond for the mean within the Resample time window.
 
             <hr />
             <strong>Colors:</strong>
