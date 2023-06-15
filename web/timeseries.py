@@ -43,6 +43,34 @@ mpl.rcParams["ytick.minor.size"] = 0
 # ╚════════════════════════════════════════════════════════════════════╝
 brian_token = "d25c2abe02b94001a82e7790d9c30f06"
 
+precip_vars = [
+    "precip_accum",
+    "precip_accum_one_minute",
+    "precip_accum_ten_minute",
+    "precip_accum_fifteen_minute",
+    "precip_accum_30_minute",
+    "precip_accum_one_hour",
+    "precip_accum_three_hour",
+    "precip_storm",
+    "precip_accum_six_hour",
+    "precip_accum_24_hour",
+    "precip_smoothed",
+    "precip_manual",
+    "precip_accum_manual",
+    "precip_accum_5_minute_manual",
+    "precip_accum_10_minute_manual",
+    "precip_accum_15_minute_manual",
+    "precip_accum_3_hour_manual",
+    "precip_accum_6_hour_manual",
+    "precip_accum_24_hour_manual",
+    "precip_accum_12_hour",
+    "precip_accum_five_minute",
+    "precip_accum_since_00utc",
+    "precip_accum_since_7_local",
+    "precip_accum_since_local_midnight",
+    "precip_interval",
+]
+
 
 def spddir_to_uv(wspd, wdir, round=3):
     """Compute u and v wind components from wind speed and direction.
@@ -144,11 +172,18 @@ def plot_standard(
     if only_plot_set_1:
         df = df.filter(regex="set_1")
 
+    if "precip_intervals_set_1d" in df.columns:
+        df = df.drop("precip_intervals_set_1d", axis=1)
+
     for column in sorted(df.columns):
         variable = re.sub(r"_set_\d+d?", "", column)
         units = df.attrs.get("UNITS").get(variable)
+
         if variable == "air_temp":
             variable = "air temperature"
+        elif variable == 'precip_accumulated':
+            variable = "Accumulated Precipitation"
+
         var_label = variable.replace("_", " ").title()
 
         # Set type will be an integer (starting at 1) and my end in "d"
@@ -461,6 +496,8 @@ def main(display):
 
     # Parse variable
     variable = Element("variableSelector").value
+    if variable == "precip":
+        variable = f"{','.join(precip_vars)}&precip=1"
 
     # Parse start and end date
     startTime = Element("startTimeInput").value
