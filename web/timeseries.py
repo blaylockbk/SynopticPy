@@ -6,6 +6,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import scipy.stats
 import itertools
 import sys
 import re
@@ -198,14 +199,7 @@ def plot_standard(
             label += "$^{*}$"
 
         if variable == "wind_direction":
-            ax.scatter(
-                df.index,
-                df[column],
-                marker="o",
-                s=3,
-                label=label,
-                zorder=100
-            )
+            ax.scatter(df.index, df[column], marker="o", s=3, label=label, zorder=100)
             ticks, labels = wind_degree_labels()
             ax.set_yticks(ticks)
             ax.set_yticklabels(labels)
@@ -217,14 +211,12 @@ def plot_standard(
                 markersize=3,
                 linestyle="-",
                 label=label,
-                zorder=100
+                zorder=100,
             )
 
         # Cosmetics (labels, etc.)
         ax.set_ylabel(f"{var_label} ({units})")
         ax.set_title(var_label)
-        ax.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
-
 
     return ax
 
@@ -458,6 +450,40 @@ class Smoother:
     def label(self):
         return f"{self.interval_str} {self.method.title()} {self.stat.upper()}"
 
+    def smooth_dataframe_circular(self, df):
+        """Compute wind direction circular statistics; i.e. circular mean"""
+        preserve_attrs = df.attrs
+        if self.method is None:
+            print(f"⚠️ WARNING: No smoothing performed. {self.method=}.")
+        elif self.stat.lower() == "spread":
+            raise NotImplementedError(
+                "Spread statistics not available for wind direction"
+            )
+        else:
+            df = df.pipe(np.deg2rad)
+            statDict = {
+                "mean": scipy.stats.circmean,
+                "var": scipy.stats.circvar,
+                "std": scipy.stats.circstd,
+                "std": scipy.stats.circstd,
+                "max": np.max,
+                "min": np.min,
+                "median": np.median,
+                "count": "NOT IMPLEMENTED",
+            }
+            if self.method == "rolling":
+                df = df.rolling(self.interval).agg(
+                    statDict[self.stat], nan_policy="omit"
+                )
+            elif self.method == "resample":
+                df = df.resample(self.interval).agg(
+                    statDict[self.stat], nan_policy="omit"
+                )
+            df = df.pipe(np.rad2deg)
+
+        df.attrs = preserve_attrs
+        return df
+
     def smooth_dataframe(self, df):
         """Smooth a Pandas Dataframe according to the smoothing parameters. Index must be a datetime."""
         preserve_attrs = df.attrs
@@ -471,9 +497,9 @@ class Smoother:
                 df = df.rolling(self.interval).agg(["max", "min", "median", "mean"])
         else:
             if self.method == "rolling":
-                df = getattr(df.rolling(self.interval), self.stat)()
+                df = df.rolling(self.interval).agg(self.stat)
             elif self.method == "resample":
-                df = getattr(df.resample(self.interval), self.stat)()
+                df = df.resample(self.interval).agg(self.stat)
         df.attrs = preserve_attrs
         return df
 
@@ -713,7 +739,10 @@ def main(display):
     fig, ax = plt.subplots()
     for station, df in Z.items():
         if smooth.method:
-            df = smooth.smooth_dataframe(df)
+            if variable == "wind_direction":
+                df = smooth.smooth_dataframe_circular(df)
+            else:
+                df = smooth.smooth_dataframe(df)
 
         if smooth.method and smooth.stat == "spread":
             df.pipe(plot_spread_bars, ax=ax)
@@ -740,6 +769,8 @@ def main(display):
 
     # Cosmetics
     ax.legend()
+    ax.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
+
 
     fig.tight_layout()
     display(fig, target="figure-timeseries", append=False)

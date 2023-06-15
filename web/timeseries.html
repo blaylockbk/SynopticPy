@@ -20,7 +20,10 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+
+    <!-- Comment this line to turn off loading pyscript (only render page) -->
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
     <style>
       .spaced-list li {
         margin-bottom: 10px; /* Increase the margin-bottom value to increase spacing */
@@ -31,7 +34,7 @@
   <body>
     <!-- prettier-ignore -->
     <py-config>
-      packages = ["matplotlib", "pandas", "numpy"]
+      packages = ["matplotlib", "pandas", "numpy", "scipy"]
       [[fetch]]
         files = ["./timeseries.py"]
     </py-config>
@@ -306,8 +309,12 @@
               </li>
             </ol>
             Also specify the time window (as a Pandas-parsable timedelta) and
-            the statistic to compute in the time window (e.g. Mean). WARNING: A
-            proper average for wind_direction is not yet implemented.
+            the statistic to compute in the time window (e.g. Mean). Note: wind
+            direction statistics uses
+            <a
+              ref="https://docs.scipy.org/doc/scipy/reference/stats.html#directional-statistical-functions"
+              >SciPy Directional Statistics</a
+            >.
 
             <hr />
             <strong>Colors:</strong>
@@ -370,10 +377,12 @@
           <div class="col-sm-6">
             <!-- Station Selector ----------------------->
             <div class="input-group mb-3">
+              <!-- <button type="button" class="btn"><i class="fa-regular fa-circle-question"></i></button> -->
               <span class="input-group-text" id="stid">Stations</span>
               <input
                 type="text"
                 id="stidInput"
+                spellcheck="false"
                 class="form-control"
                 value="PSRIM,PSINK"
                 title="Comma-separated list of Station IDs or Synoptic API Station Selector string"
@@ -431,6 +440,7 @@
                 type="text"
                 id="startTimeInput"
                 class="form-control"
+                spellcheck="false"
                 value="18H"
                 title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
               />
@@ -443,6 +453,7 @@
               <input
                 type="text"
                 class="form-control"
+                spellcheck="false"
                 id="endTimeInput"
                 placeholder="YYYY-MM-DD HH:MM"
                 title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
@@ -593,10 +604,10 @@
           <div class="col-sm-6">
             <!-- Submit Button -->
             <div class="form-group" style="padding-top: 10px">
-              <div class="col-sm-4">
+              <div class="d-grid gap-2 col-6 mx-auto">
                 <button
                   type="submit"
-                  class="btn btn-success"
+                  class="btn btn-success btn-lg"
                   py-click="main(display)"
                   id="display"
                 >
