@@ -23,6 +23,8 @@
 
     <!-- Comment this line to turn off loading pyscript (only render page) -->
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <!--  -->
+
 
     <style>
       @font-face {
@@ -68,6 +70,63 @@
         } else {
           input2.disabled = false;
           input3.disabled = false;
+        }
+      }
+
+      // Change color scheme
+      function changeColors(option) {
+        if (option === "default") {
+          document.getElementById("color1").value = "#0d6efd";
+          document.getElementById("color2").value = "#dc3545";
+          document.getElementById("color3").value = "#fd7e14";
+          document.getElementById("color4").value = "#198754";
+          document.getElementById("color5").value = "#0dcaf0";
+          document.getElementById("color6").value = "#563d7c";
+          document.getElementById("color7").value = "#ffc107";
+          document.getElementById("color8").value = "#262626";
+          document.getElementById("color9").value = "#6610f2";
+          document.getElementById("color10").value = "#20c997";
+          document.getElementById("color11").value = "#e83e8c";
+          document.getElementById("color12").value = "#a64dff";
+        } else if (option === "greys") {
+          document.getElementById("color1").value = "#DC3545";
+          document.getElementById("color2").value = "#979797";
+          document.getElementById("color3").value = "#979797";
+          document.getElementById("color4").value = "#979797";
+          document.getElementById("color5").value = "#979797";
+          document.getElementById("color6").value = "#979797";
+          document.getElementById("color7").value = "#979797";
+          document.getElementById("color8").value = "#979797";
+          document.getElementById("color9").value = "#979797";
+          document.getElementById("color10").value = "#979797";
+          document.getElementById("color11").value = "#979797";
+          document.getElementById("color12").value = "#979797";
+        } else if (option === "fall") {
+          document.getElementById("color1").value = "#3A1C09";
+          document.getElementById("color2").value = "#C45E21";
+          document.getElementById("color3").value = "#FF7518";
+          document.getElementById("color4").value = "#D8A60D";
+          document.getElementById("color5").value = "#4C721D";
+          document.getElementById("color6").value = "#6F2232";
+          document.getElementById("color7").value = "#B3683D";
+          document.getElementById("color8").value = "#8B5742";
+          document.getElementById("color9").value = "#DAA520";
+          document.getElementById("color10").value = "#800000";
+          document.getElementById("color11").value = "#DA9100";
+          document.getElementById("color12").value = "#6B2269";
+        } else if (option === "nature") {
+          document.getElementById("color1").value = "#228B22";
+          document.getElementById("color2").value = "#007FFF";
+          document.getElementById("color3").value = "#F4A460";
+          document.getElementById("color4").value = "#87CEEB";
+          document.getElementById("color5").value = "#708090";
+          document.getElementById("color6").value = "#8A9A5B";
+          document.getElementById("color7").value = "#000080";
+          document.getElementById("color8").value = "#EEDD82";
+          document.getElementById("color9").value = "#87CEFA";
+          document.getElementById("color10").value = "#808080";
+          document.getElementById("color11").value = "#556B2F";
+          document.getElementById("color12").value = "#40E0D0";
         }
       }
     </script>
@@ -535,6 +594,20 @@
               <label class="input-group-text" for="colorCycle"
                 >Colors</label
               >
+              <button
+                type="button"
+                class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="background-color:var(--bs-tertiary-bg);border: var(--bs-border-width) solid var(--bs-border-color);    color: var(--bs-body-color);">
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="changeColors('default')">Default</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('greys')">Greys</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('fall')">Fall</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('nature')">Nature</a></li>
+              </ul>
+
               <input type="color" class="form-control form-control-color" name="color" value="#0d6efd" title="Choose color" id="color1">
               <input type="color" class="form-control form-control-color" name="color" value="#dc3545" title="Choose color" id="color2">
               <input type="color" class="form-control form-control-color" name="color" value="#fd7e14" title="Choose color" id="color3">

@@ -161,12 +161,7 @@ def wind_degree_labels(res="m"):
         return degrees, labels
 
 
-def plot_standard(
-    df,
-    only_plot_set_1=True,
-    *,
-    ax=None,
-):
+def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
@@ -199,7 +194,7 @@ def plot_standard(
             label += "$^{*}$"
 
         if variable == "wind_direction":
-            ax.scatter(df.index, df[column], marker="o", s=3, label=label, zorder=100)
+            ax.scatter(df.index, df[column], marker="o", s=3, label=label, **kwargs)
             ticks, labels = wind_degree_labels()
             ax.set_yticks(ticks)
             ax.set_yticklabels(labels)
@@ -211,7 +206,7 @@ def plot_standard(
                 markersize=3,
                 linestyle="-",
                 label=label,
-                zorder=100,
+                **kwargs,
             )
 
         # Cosmetics (labels, etc.)
@@ -221,7 +216,7 @@ def plot_standard(
     return ax
 
 
-def plot_spread_bars(df, ax=None):
+def plot_spread_bars(df, ax=None, **kwargs):
     """Special case when smooth.method = 'spread'"""
     if ax is None:
         ax = plt.gca()
@@ -255,7 +250,7 @@ def plot_spread_bars(df, ax=None):
         edgecolor="w",
         alpha=0.6,
         label=label,
-        zorder=1000,
+        **kwargs,
     )
 
     # Bar Median -> Max
@@ -267,12 +262,12 @@ def plot_spread_bars(df, ax=None):
         edgecolor="w",
         color=art.patches[0].get_facecolor(),
         alpha=0.6,
-        zorder=1000,
+        **kwargs,
     )
 
     # Point Mean
     ax.scatter(
-        df.index, df[column]["mean"], marker="d", s=5, color="w", alpha=0.5, zorder=1000
+        df.index, df[column]["mean"], marker="d", s=5, color="w", alpha=0.5, **kwargs
     )
 
     # Cosmetics (labels)
@@ -287,19 +282,19 @@ def plot_spread_bars(df, ax=None):
     return ax
 
 
-def plot_station_on_map(df, ax=None):
+def plot_station_on_map(df, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
     point = df.attrs.get("LONGITUDE"), df.attrs.get("LATITUDE")
-    art = ax.scatter(*point, zorder=3)
+    art = ax.scatter(*point, **kwargs)
     ax.text(
         *point,
         f"  {df.attrs.get('STID')}",
         color=art.get_facecolor()[-1],
         ha="left",
         va="center",
-        zorder=4,
+        zorder=art.get_zorder(),
     )
 
     ax.set_xlabel("Longitude")
@@ -366,6 +361,20 @@ def draw_state_polygon(state, ax=None, **kwargs):
                     ax.add_patch(polygon)
         else:
             print("⚠️ WARNING: Trouble plotting state polygon.")
+
+
+def get_network_info(id=None):
+    if id:
+        id = f"id={','.join([str(i) for i in id])}&"
+    else:
+        id = ""
+
+    url = f"https://api.synopticdata.com/v2/networks?{id}token=d25c2abe02b94001a82e7790d9c30f06"
+    data = json.loads(open_url(url).read())
+
+    df = pd.DataFrame(data["MNET"]).set_index("ID")
+    df.index = df.index.astype(int)
+    return df
 
 
 class Smoother:
@@ -721,6 +730,7 @@ def main(display):
                 df.attrs[i] = data[i]
         df.attrs["SENSOR_VARIABLES"] = senvars
         df.attrs["service"] = "stations_timeseries"
+        df.attrs = dict(sorted(df.attrs.items()))
 
         # Insert dataframe in Z dictionary
         Z[df.attrs["STID"]] = df
@@ -730,6 +740,16 @@ def main(display):
     if station_order:
         Z = {i: Z[i] for i in station_order if i in Z.keys()}
 
+    # ---------------------------
+    # Join Network ID information
+    network_ids = {i.attrs["MNET_ID"] for i in Z.values()}
+    network_df = get_network_info(network_ids)
+    for i in Z.values():
+        id = i.attrs["MNET_ID"]
+        i.attrs[
+            "MNET_ID"
+        ] = f"{id} - {network_df.loc[id].SHORTNAME} :: {network_df.loc[id].LONGNAME}"
+
     # ---------------------
     # Figures and Smoothing
     # ---------------------
@@ -737,7 +757,7 @@ def main(display):
     # ------------------------
     # Tab 1: Timeseries Figure
     fig, ax = plt.subplots()
-    for station, df in Z.items():
+    for i, (station, df) in enumerate(Z.items()):
         if smooth.method:
             if variable == "wind_direction":
                 df = smooth.smooth_dataframe_circular(df)
@@ -745,9 +765,9 @@ def main(display):
                 df = smooth.smooth_dataframe(df)
 
         if smooth.method and smooth.stat == "spread":
-            df.pipe(plot_spread_bars, ax=ax)
+            df.pipe(plot_spread_bars, ax=ax, zorder=1000 - i)
         else:
-            df.pipe(plot_standard, False, ax=ax)
+            df.pipe(plot_standard, False, ax=ax, zorder=1000 - i)
 
     # Label indicating timezone units
     ax.text(
@@ -771,7 +791,6 @@ def main(display):
     ax.legend()
     ax.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
 
-
     fig.tight_layout()
     display(fig, target="figure-timeseries", append=False)
 
@@ -788,8 +807,8 @@ def main(display):
             zorder=2,
         )
 
-    for station, df in Z.items():
-        plot_station_on_map(df, ax=ax2)
+    for i, (station, df) in enumerate(Z.items()):
+        plot_station_on_map(df, ax=ax2, zorder=1000 - i)
 
     ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
 
