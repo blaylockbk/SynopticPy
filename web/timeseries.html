@@ -288,10 +288,11 @@
             ></button>
           </div>
           <div class="modal-body" style="font-size: 15px; text-align: left">
-            This station timeseries app is used to plot data from one or more
-            weather stations on the same figure. It gets data from the Synoptic
-            Mesonet API, reads it with Pandas, and plots a timeseries of the
-            data with matplotlib. This is all done in your browser powered by
+            This station timeseries app is used to plot a single variable of
+            weather data from one or more weather stations on the same figure.
+            It gets data from the Synoptic Mesonet API, processes it with
+            Pandas, and plots a timeseries of the data with matplotlib. This is
+            all done in your browser powered by
             <a href="https://pyscript.net/">pyscript</a>.
 
             <hr />
@@ -318,13 +319,6 @@
               />
             </div>
 
-            <hr />
-            <strong>Stations:</strong> A comma-separated list of station IDs,
-            e.g. <kbd>PSRIM,PSINK</kbd>. If you don't know the station ID, you
-            can search on
-            <a href="https://mesowest.utah.edu/" target="_blank">Mesowest</a>.
-            Open the dropdown for more advanced station selection.
-
             <div class="accordion" id="accordionExample">
               <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -332,19 +326,26 @@
                     class="accordion-button collapsed"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#collapseThree"
+                    data-bs-target="#collapseOne"
                     aria-expanded="false"
-                    aria-controls="collapseThree"
+                    aria-controls="collapseOne"
                   >
-                    Backdoor: Advanced Station Selector
+                    Stations Selector
                   </button>
                 </h2>
                 <div
-                  id="collapseThree"
+                  id="collapseOne"
                   class="accordion-collapse collapse"
                   data-bs-parent="#accordionExample"
                 >
                   <div class="accordion-body">
+                    <strong>Stations:</strong> A comma-separated list of station
+                    IDs, e.g. <kbd>PSRIM,PSINK</kbd>. If you don't know the
+                    station ID, you can search on
+                    <a href="https://mesowest.utah.edu/" target="_blank"
+                      >Mesowest</a
+                    >.
+
                     <p>
                       With some knowledge of the Synoptic Mesonet API, you can
                       make more complex station queries. Instead of a list of
@@ -404,87 +405,176 @@
                   </div>
                 </div>
               </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo"
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    Variable Selector
+                  </button>
+                </h2>
+                <div
+                  id="collapseTwo"
+                  class="accordion-collapse collapse"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <strong>Variable:</strong> Select the variable you wish to
+                    plot.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree"
+                    aria-expanded="false"
+                    aria-controls="collapseThree"
+                  >
+                    Start and End Datetime
+                  </button>
+                </h2>
+                <div
+                  id="collapseThree"
+                  class="accordion-collapse collapse"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div class="accordion-body">
+                    <strong>Start and End Datetime:</strong>
+                    There are three ways to specify the plot's time range:
+                    <ol>
+                      <li>
+                        "Start at <code>[datetime]</code> and end at
+                        <code>[datetime]</code>."
+                      </li>
+                      <li>
+                        "Start at <code>[datetime]</code> and end
+                        <code>[timedelta]</code> later."
+                      </li>
+                      <li>
+                        "Start <code>[timedelta]</code> before the end
+                        <code>[datetime]</code>."
+                      </li>
+                    </ol>
+
+                    <strong>Start Time:</strong> Specify the starting time for
+                    the plot. This must be a Pandas-parsable datetime string
+                    <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if an End datetime is
+                    given, a Pandas-parsable timedelta such as
+                    <kbd>30min</kbd> for 30 minutes, <kbd>12H</kbd> for 12
+                    hours, <kbd>3D</kbd> for 3 days.
+                    <br />
+                    <br />
+                    <strong>End Time:</strong> Specify the ending time for the
+                    plot. This must be a Pandas-parsable datetime string
+                    <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if a Start datetime is
+                    given, a Pandas-parsable timedelta such as
+                    <kbd>30min</kbd> for 30 minutes, <kbd>12H</kbd> for 12
+                    hours, <kbd>3D</kbd> for 3 days.
+                    <hr />
+                    <strong>Smoother:</strong>
+                    You can "smooth" the data using two different methods built
+                    into Pandas:
+
+                    <ol>
+                      <li>
+                        <a
+                          href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.resample.html"
+                          target="_blank"
+                          >Resample</a
+                        >: Reduces the amount of data points to interval
+                        selected by computing a statistic for the time window.
+                        This is useful for showing the "daily maximum
+                        temperature" for the time period.
+                      </li>
+                      <li>
+                        <a
+                          href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rolling.html"
+                          target="_blank"
+                          >Rolling</a
+                        >: Returns the same amount of data points but value
+                        (i.e. mean, max, min) is computed over a rolling time
+                        window.
+                      </li>
+                    </ol>
+                    Also specify the time window (as a Pandas-parsable
+                    timedelta) and the statistic to compute in the time window
+                    (e.g. Mean). Note: wind direction statistics uses
+                    <a
+                      ref="https://docs.scipy.org/doc/scipy/reference/stats.html#directional-statistical-functions"
+                      >SciPy Directional Statistics</a
+                    >. Also, "Spread" is a special case that is intended to be
+                    used with the "Resample" method; it shows a bar of the max,
+                    min, median, and a diamond for the mean within the Resample
+                    time window.
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseFour"
+                      aria-expanded="false"
+                      aria-controls="collapseFour"
+                    >
+                      Color Scheme
+                    </button>
+                  </h2>
+                  <div
+                    id="collapseFour"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      Specify the colors you want each line. Maybe you have lots
+                      of stations plotted, but want to highlight only one; you
+                      can make that station "red" and the others a shade of
+                      grey. Note that colors are reused if there are more
+                      stations than colors.
+                      <br />There are some predefined color schemes to make it
+                      easy to change all the colors at once or reset to the
+                      default color scheme. Just click the drop down next to the
+                      colors and select one of the schemes for one you like.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseFive"
+                      aria-expanded="false"
+                      aria-controls="collapseFive"
+                    >
+                      Units and Timezone Toggles
+                    </button>
+                  </h2>
+                  <div
+                    id="collapseFive"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      <strong>Toggles:</strong>
+                      Toggle units to be returned in English or Metric units.
+                      Also toggle if time is local or UTC.
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <br />
-
-            <hr />
-            <strong>Variable:</strong> Select the variable you wish to plot.
-
-            <hr />
-            <strong>Start and End Datetime:</strong>
-            There are three ways to specify the plot's time range:
-            <ol>
-              <li>
-                "Start at <code>[datetime]</code> and end at
-                <code>[datetime]</code>."
-              </li>
-              <li>
-                "Start at <code>[datetime]</code> and end
-                <code>[timedelta]</code> later."
-              </li>
-              <li>
-                "Start <code>[timedelta]</code> before the end
-                <code>[datetime]</code>."
-              </li>
-            </ol>
-
-            <strong>Start Time:</strong> Specify the starting time for the plot.
-            This must be a Pandas-parsable datetime string
-            <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if an End datetime is given, a
-            Pandas-parsable timedelta such as <kbd>30min</kbd> for 30 minutes,
-            <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
-            <br />
-            <br />
-            <strong>End Time:</strong> Specify the ending time for the plot.
-            This must be a Pandas-parsable datetime string
-            <kbd>YYYY-MM-DD HH:MM</kbd> <i>or</i> if a Start datetime is given,
-            a Pandas-parsable timedelta such as <kbd>30min</kbd> for 30 minutes,
-            <kbd>12H</kbd> for 12 hours, <kbd>3D</kbd> for 3 days.
-            <hr />
-            <strong>Smoother:</strong>
-            You can "smooth" the data using two different methods built into
-            Pandas:
-
-            <ol>
-              <li>
-                <a
-                  href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.resample.html"
-                  target="_blank"
-                  >Resample</a
-                >: Reduces the amount of data points to interval selected by
-                computing a statistic for the time window. This is useful for
-                showing the "daily maximum temperature" for the time period.
-              </li>
-              <li>
-                <a
-                  href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rolling.html"
-                  target="_blank"
-                  >Rolling</a
-                >: Returns the same amount of data points but value (i.e. mean,
-                max, min) is computed over a rolling time window.
-              </li>
-            </ol>
-            Also specify the time window (as a Pandas-parsable timedelta) and
-            the statistic to compute in the time window (e.g. Mean). Note: wind
-            direction statistics uses
-            <a
-              ref="https://docs.scipy.org/doc/scipy/reference/stats.html#directional-statistical-functions"
-              >SciPy Directional Statistics</a
-            >. Also, "Spread" is a special case that is intended to be used with
-            the "Resample" method; it shows a bar of the max, min, median, and a
-            diamond for the mean within the Resample time window.
-
-            <hr />
-            <strong>Colors:</strong>
-            Specify the colors you want each line. Maybe you have lots of
-            stations plotted, but want to highlight only one; you can make that
-            station "red" and the others a shade of grey. Note that colors are
-            reused if there are more stations than colors.
-
-            <hr />
-            <strong>Toggles:</strong>
-            Toggle units to be returned in English or Metric units. Also toggle
-            if time is local or UTC.
           </div>
           <div class="modal-footer">
             <div style="font-size: 12px">
