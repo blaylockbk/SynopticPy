@@ -80,19 +80,28 @@
       function changeStations(option) {
         if (option === "Peter Sinks") {
           document.getElementById("stidInput").value = "PSRIM,PSINK";
-        } else if (option === "Monterey & Utah") {
-          document.getElementById("stidInput").value = "KMRY,UKBKB,KLGU";
+        } else if (option === "Monterey & Spanish Fork") {
+          document.getElementById("stidInput").value = "KMRY,UKBKB";
         } else if (option === "Monterey, CA") {
           document.getElementById("stidInput").value =
-            "radius=KMRY,10&limit=10";
+            "radius=E4129,10&limit=10";
+        } else if (option === "Family") {
+          document.getElementById("stidInput").value =
+            "KMRY,UKBKB,KLGU,C8948,E9049,KUMP";
+        } else if (option === "John Horel") {
+          document.getElementById("stidInput").value =
+            "WBB,GNI,FREUT,LMR,BFLAT";
         } else if (option === "University of Utah") {
           document.getElementById("stidInput").value = "radius=WBB,10&limit=10";
+        } else if (option === "Arches National Park") {
+          document.getElementById("stidInput").value = "radius=38.73, -109.59,20&limit=10";
         }
       }
 
       // Change color scheme
       function changeColors(option) {
         if (option === "default") {
+          // Tried to mimic the colors in the default bootstrap theme
           document.getElementById("color1").value = "#0d6efd";
           document.getElementById("color2").value = "#dc3545";
           document.getElementById("color3").value = "#fd7e14";
@@ -106,6 +115,7 @@
           document.getElementById("color11").value = "#e83e8c";
           document.getElementById("color12").value = "#a64dff";
         } else if (option === "greys") {
+          // Invented by Brian Blaylock
           document.getElementById("color1").value = "#DC3545";
           document.getElementById("color2").value = "#979797";
           document.getElementById("color3").value = "#979797";
@@ -119,31 +129,89 @@
           document.getElementById("color11").value = "#979797";
           document.getElementById("color12").value = "#979797";
         } else if (option === "fall") {
-          document.getElementById("color1").value = "#3A1C09";
-          document.getElementById("color2").value = "#C45E21";
-          document.getElementById("color3").value = "#FF7518";
+          // Invented by Brian Blaylock
+          document.getElementById("color1").value = "#800000";
+          document.getElementById("color2").value = "#e37a3e";
+          document.getElementById("color3").value = "#4C721D";
           document.getElementById("color4").value = "#D8A60D";
-          document.getElementById("color5").value = "#4C721D";
-          document.getElementById("color6").value = "#6F2232";
-          document.getElementById("color7").value = "#B3683D";
-          document.getElementById("color8").value = "#8B5742";
-          document.getElementById("color9").value = "#DAA520";
-          document.getElementById("color10").value = "#800000";
-          document.getElementById("color11").value = "#DA9100";
+          document.getElementById("color5").value = "#763712";
+          document.getElementById("color6").value = "#6B2269";
+          document.getElementById("color7").value = "#800000";
+          document.getElementById("color8").value = "#e37a3e";
+          document.getElementById("color9").value = "#4C721D";
+          document.getElementById("color10").value = "#D8A60D";
+          document.getElementById("color11").value = "#763712";
           document.getElementById("color12").value = "#6B2269";
-        } else if (option === "nature") {
-          document.getElementById("color1").value = "#228B22";
-          document.getElementById("color2").value = "#007FFF";
-          document.getElementById("color3").value = "#F4A460";
-          document.getElementById("color4").value = "#87CEEB";
-          document.getElementById("color5").value = "#708090";
-          document.getElementById("color6").value = "#8A9A5B";
-          document.getElementById("color7").value = "#000080";
-          document.getElementById("color8").value = "#EEDD82";
-          document.getElementById("color9").value = "#87CEFA";
-          document.getElementById("color10").value = "#808080";
-          document.getElementById("color11").value = "#556B2F";
-          document.getElementById("color12").value = "#40E0D0";
+        } else if (option === "viridis") {
+          // This is from the matplotlib 'viridis' colormap
+          document.getElementById("color1").value = "#440154";
+          document.getElementById("color2").value = "#482173";
+          document.getElementById("color3").value = "#433e85";
+          document.getElementById("color4").value = "#38588c";
+          document.getElementById("color5").value = "#2d708e";
+          document.getElementById("color6").value = "#25858e";
+          document.getElementById("color7").value = "#1e9b8a";
+          document.getElementById("color8").value = "#2ab07f";
+          document.getElementById("color9").value = "#52c569";
+          document.getElementById("color10").value = "#86d549";
+          document.getElementById("color11").value = "#c2df23";
+          document.getElementById("color12").value = "#fde725";
+        } else if (option === "spectral") {
+          // This is from the matplotlib 'Spectra' colormap
+          document.getElementById("color1").value = "#9e0142";
+          document.getElementById("color2").value = "#d0384e";
+          document.getElementById("color3").value = "#ee6445";
+          document.getElementById("color4").value = "#fa9b58";
+          document.getElementById("color5").value = "#fece7c";
+          document.getElementById("color6").value = "#fff1a8";
+          document.getElementById("color7").value = "#f4faad";
+          document.getElementById("color8").value = "#d1ed9c";
+          document.getElementById("color9").value = "#97d5a4";
+          document.getElementById("color10").value = "#5cb7aa";
+          document.getElementById("color11").value = "#3682ba";
+          document.getElementById("color12").value = "#5e4fa2";
+        } else if (option === "tab") {
+          // This is from the matplotlib 'tab20' colormap
+          document.getElementById("color1").value = "#1f77b4";
+          document.getElementById("color2").value = "#ff7f0e";
+          document.getElementById("color3").value = "#2ca02c";
+          document.getElementById("color4").value = "#d62728";
+          document.getElementById("color5").value = "#9467bd";
+          document.getElementById("color6").value = "#8c564b";
+          document.getElementById("color7").value = "#e377c2";
+          document.getElementById("color8").value = "#7f7f7f";
+          document.getElementById("color9").value = "#bcbd22";
+          document.getElementById("color10").value = "#17becf";
+          document.getElementById("color11").value = "#3e3e3e";
+          document.getElementById("color12").value = "#f1f7a2";
+        } else if (option === "earth") {
+          // This is from the matplotlib 'terrain' colormap
+          document.getElementById("color1").value = "#333399";
+          document.getElementById("color2").value = "#1470d6";
+          document.getElementById("color3").value = "#00a8d0";
+          document.getElementById("color4").value = "#15d06a";
+          document.getElementById("color5").value = "#75e37d";
+          document.getElementById("color6").value = "#d1f690";
+          document.getElementById("color7").value = "#e8e28d";
+          document.getElementById("color8").value = "#baa774";
+          document.getElementById("color9").value = "#8a695a";
+          document.getElementById("color10").value = "#a38984";
+          document.getElementById("color11").value = "#d1c4c1";
+          document.getElementById("color12").value = "#383838";
+        } else if (option === "simple") {
+          // From Sasha Trubetskoy's "20 Simple, Distinct Colors"
+          document.getElementById("color1").value = "#e6194B";
+          document.getElementById("color2").value = "#3cb44b";
+          document.getElementById("color3").value = "#ffe119";
+          document.getElementById("color4").value = "#4363d8";
+          document.getElementById("color5").value = "#f58231";
+          document.getElementById("color6").value = "#911eb4";
+          document.getElementById("color7").value = "#42d4f4";
+          document.getElementById("color8").value = "#f032e6";
+          document.getElementById("color9").value = "#bfef45";
+          document.getElementById("color10").value = "#fabed4";
+          document.getElementById("color11").value = "#469990";
+          document.getElementById("color12").value = "#dcbeff";
         }
       }
     </script>
@@ -482,9 +550,12 @@
               ></button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#" onclick="changeStations('Peter Sinks')">Peter Sinks</a></li>
-                <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey & Utah')">Monterey and Utah</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey & Spanish Fork')">Monterey & Spanish Fork</a></li>
                 <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey, CA')">Monterey, CA</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Family')">Family</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('John Horel')">John Horel</a></li>
                 <li><a class="dropdown-item" href="#" onclick="changeStations('University of Utah')">University of Utah</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Arches National Park')">Arches National Park</a></li>
               </ul>
               <input
                 type="text"
@@ -640,7 +711,11 @@
                 <li><a class="dropdown-item" href="#" onclick="changeColors('default')">Default</a></li>
                 <li><a class="dropdown-item" href="#" onclick="changeColors('greys')">Greys</a></li>
                 <li><a class="dropdown-item" href="#" onclick="changeColors('fall')">Fall</a></li>
-                <li><a class="dropdown-item" href="#" onclick="changeColors('nature')">Nature</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('viridis')">Viridis</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('spectral')">Spectral</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('tab')">Tab</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('earth')">Earth</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('simple')">Simple</a></li>
               </ul>
 
               <input type="color" class="form-control form-control-color" name="color" value="#0d6efd" title="Choose color" id="color1">

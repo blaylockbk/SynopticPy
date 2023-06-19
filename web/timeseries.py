@@ -739,6 +739,12 @@ def main(display):
     # Sort stations in order they were requested
     if station_order:
         Z = {i: Z[i] for i in station_order if i in Z.keys()}
+    else:
+        try:
+            # Try to sort stations by DISTANCE
+            Z = dict(sorted(Z.items(), key=lambda i: i[1].attrs.get("DISTANCE")))
+        except:
+            pass
 
     # ---------------------------
     # Join Network ID information
@@ -819,7 +825,7 @@ def main(display):
     points = zip(latitudes, longitudes)
     pairs = list(itertools.product(points, repeat=2))
 
-    threshold = 0.5
+    threshold = 2.5  # degree lat/lon before map zooms out to show full state
     pad = 0.08
     max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
     xlim = (min(longitudes) - pad / 2, max(longitudes) + pad / 2)
