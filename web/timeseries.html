@@ -24,7 +24,7 @@
     <!-- Comment this line to turn off loading pyscript (only render page) -->
     <!--  -->
     <!--  -->
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <!-- <script defer src="https://pyscript.net/latest/pyscript.js"></script> -->
     <!--  -->
     <!--  -->
     <!--  -->
@@ -310,7 +310,14 @@
             >. Using your own token prevents running into this problem and gives
             you access to features you may have for your account.
             <div class="input-group mb-3">
-              <span class="input-group-text" id="token">Token</span>
+              <a
+                type="button"
+                class="btn btn-danger"
+                href="https://customer.synopticdata.com/credentials/"
+                target="_blank"
+                title="Help me find my token..."
+                >Token</a
+              >
               <input
                 type="text"
                 id="tokenInput"
@@ -479,42 +486,63 @@
                     given, a Pandas-parsable timedelta such as
                     <kbd>30min</kbd> for 30 minutes, <kbd>12H</kbd> for 12
                     hours, <kbd>3D</kbd> for 3 days.
-                    <hr />
-                    <strong>Smoother:</strong>
-                    You can "smooth" the data using two different methods built
-                    into Pandas:
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapseSmooth"
+                      aria-expanded="false"
+                      aria-controls="collapseSmooth"
+                    >
+                      Smoothing Options
+                    </button>
+                  </h2>
+                  <div
+                    id="collapseSmooth"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div class="accordion-body">
+                      <strong>Smoother:</strong>
+                      You can "smooth" the data using two different methods
+                      built into Pandas:
 
-                    <ol>
-                      <li>
-                        <a
-                          href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.resample.html"
-                          target="_blank"
-                          >Resample</a
-                        >: Reduces the amount of data points to interval
-                        selected by computing a statistic for the time window.
-                        This is useful for showing the "daily maximum
-                        temperature" for the time period.
-                      </li>
-                      <li>
-                        <a
-                          href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rolling.html"
-                          target="_blank"
-                          >Rolling</a
-                        >: Returns the same amount of data points but value
-                        (i.e. mean, max, min) is computed over a rolling time
-                        window.
-                      </li>
-                    </ol>
-                    Also specify the time window (as a Pandas-parsable
-                    timedelta) and the statistic to compute in the time window
-                    (e.g. Mean). Note: wind direction statistics uses
-                    <a
-                      ref="https://docs.scipy.org/doc/scipy/reference/stats.html#directional-statistical-functions"
-                      >SciPy Directional Statistics</a
-                    >. Also, "Spread" is a special case that is intended to be
-                    used with the "Resample" method; it shows a bar of the max,
-                    min, median, and a diamond for the mean within the Resample
-                    time window.
+                      <ol>
+                        <li>
+                          <a
+                            href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.resample.html"
+                            target="_blank"
+                            >Resample</a
+                          >: Reduces the amount of data points to interval
+                          selected by computing a statistic for the time window.
+                          This is useful for showing the "daily maximum
+                          temperature" for the time period.
+                        </li>
+                        <li>
+                          <a
+                            href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.rolling.html"
+                            target="_blank"
+                            >Rolling</a
+                          >: Returns the same amount of data points but value
+                          (i.e. mean, max, min) is computed over a rolling time
+                          window.
+                        </li>
+                      </ol>
+                      Also specify the time window (as a Pandas-parsable
+                      timedelta) and the statistic to compute in the time window
+                      (e.g. Mean). Note: wind direction statistics uses
+                      <a
+                        ref="https://docs.scipy.org/doc/scipy/reference/stats.html#directional-statistical-functions"
+                        >SciPy Directional Statistics</a
+                      >. Also, "Spread" is a special case that is intended to be
+                      used with the "Resample" method; it shows a bar of the
+                      max, min, median, and a diamond for the mean within the
+                      Resample time window. plot.
+                    </div>
                   </div>
                 </div>
                 <div class="accordion-item">
