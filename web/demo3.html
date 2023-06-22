@@ -10,6 +10,8 @@
   <body>
     <py-config>
       packages = ["matplotlib"]
+      [[fetch]]
+        files = ["fonts/Hubot-Sans.ttf", "fonts/Hubot-Sans-Bold.ttf"]
     </py-config>
 
     <div class="container">
@@ -21,7 +23,21 @@
 
     <py-script>
       import matplotlib.pyplot as plt
+      import matplotlib as mpl
+      from pathlib import Path
+
+      print(mpl.font_manager.findSystemFonts(fontpaths=["./fonts"], fontext='ttf'))
+      for font in mpl.font_manager.findSystemFonts(["./fonts"]):
+          mpl.font_manager.fontManager.addfont(font)
+
+      print(mpl.font_manager.findSystemFonts())
+      print(sorted(Path('.').resolve().glob("*")))
+
+      plt.rcParams["font.sans-serif"] = "Hubot-Sans"
+
       plt.plot([1,2,3])
+      plt.title("Hi There", fontsize=30, fontweight="bold")
+      plt.xlabel("X-label")
       plt.tight_layout()
       display(plt, target="graph-area", append=False)
     </py-script>

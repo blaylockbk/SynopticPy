@@ -18,9 +18,13 @@ print(f"imported matplotlib {mpl.__version__}")
 print(f"imported pandas {pd.__version__}")
 print(f"imported numpy {np.__version__}")
 
+for font in mpl.font_manager.findSystemFonts(["./fonts"]):
+    mpl.font_manager.fontManager.addfont(font)
+plt.rcParams["font.sans-serif"] = ["Mona Sans", "Hubot-Sans"]
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"
 mpl.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
 mpl.rcParams["figure.figsize"] = [10, 6]
+mpl.rcParams['figure.dpi'] = 140
 mpl.rcParams["axes.labelsize"] = "large"
 mpl.rcParams["xtick.labelsize"] = "medium"
 mpl.rcParams["ytick.labelsize"] = "medium"
