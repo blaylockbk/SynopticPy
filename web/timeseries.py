@@ -20,7 +20,7 @@ print(f"imported numpy {np.__version__}")
 
 for font in mpl.font_manager.findSystemFonts(["./fonts"]):
     mpl.font_manager.fontManager.addfont(font)
-plt.rcParams["font.sans-serif"] = ["Mona Sans", "Hubot-Sans"]
+plt.rcParams["font.sans-serif"] = ["Mona Sans", "Mona-Sans", "Hubot-Sans"]
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"
 mpl.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
 mpl.rcParams["figure.figsize"] = [10, 6]
