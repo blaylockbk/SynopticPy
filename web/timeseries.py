@@ -704,7 +704,14 @@ def main(display):
     try:
         data = json.loads(open_url(url).read())
     except:
-        print(f"💥 FATAL: Could not load {url}")
+        print(f"💥 FATAL: Could not load or read {url}")
+        fig, ax = plot_message(
+            "Error loading the JSON. Please report this issue and provide the full Synoptic API request URL from fatal output below.",
+        )
+        display(fig, target="figure-timeseries", append=False)
+        display(fig, target="figure-map", append=False)
+        Element("station-info").element.innerHTML = "<br><br><h1>Error loading JSON</h1>"
+        return
 
     if data["SUMMARY"]["RESPONSE_MESSAGE"].upper() == "OK":
         status_symbol = "✅"
@@ -741,7 +748,6 @@ def main(display):
         # Convert datetime index string to datetime
         if obtimezone.lower() == "local":
             # Drop timezone info to preserve local time
-            print("INFO: Observation time is the station's local timezone.")
             df.index = pd.to_datetime(df.index).tz_localize(None)
         else:
             df.index = pd.to_datetime(df.index)
