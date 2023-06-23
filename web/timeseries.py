@@ -709,7 +709,6 @@ def main(display):
             "json-download"
         ).element.innerHTML = f"<i class='fa-solid fa-download'></i> <a href='{url_hidden}' target='_blank' title='Raw JSON: supply your own API token'>JSON</a>"
 
-
     # --------------
     # Read JSON data
     try:
