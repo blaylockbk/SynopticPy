@@ -24,7 +24,7 @@ plt.rcParams["font.sans-serif"] = ["Mona Sans", "Hubot-Sans"]
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"
 mpl.rcParams["date.autoformatter.hour"] = "%b %d\n%H:%M"
 mpl.rcParams["figure.figsize"] = [10, 6]
-mpl.rcParams['figure.dpi'] = 140
+mpl.rcParams["figure.dpi"] = 140
 mpl.rcParams["axes.labelsize"] = "large"
 mpl.rcParams["xtick.labelsize"] = "medium"
 mpl.rcParams["ytick.labelsize"] = "medium"
@@ -165,6 +165,30 @@ def wind_degree_labels(res="m"):
         return degrees, labels
 
 
+def plot_message(text, **kwargs):
+    fig, ax = plt.subplots()
+
+    # Add text in the middle of the axes
+    ax.text(
+        0.5,
+        0.5,
+        text,
+        ha="center",
+        va="center",
+        wrap=True,
+        fontsize=25,
+        transform=ax.transAxes,
+        **kwargs,
+    )
+
+    # Hide the axis ticks and labels
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_frame_on(False)
+
+    return fig, ax
+
+
 def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
@@ -175,7 +199,11 @@ def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
     if "precip_intervals_set_1d" in df.columns:
         df = df.drop("precip_intervals_set_1d", axis=1)
 
-    for column in sorted(df.columns):
+    # Additional set values will have different linestyle, alpha, but same color.
+    linestyles = itertools.cycle(["-", "--", ":", ".-"])
+    alphas = np.linspace(1, 0.3, len(df.columns))
+
+    for i, (column, linestyle, alpha) in enumerate(zip(sorted(df.columns), linestyles, alphas)):
         variable = re.sub(r"_set_\d+d?", "", column)
         units = df.attrs.get("UNITS").get(variable)
 
@@ -198,7 +226,7 @@ def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
             label += "$^{*}$"
 
         if variable == "wind_direction":
-            ax.scatter(df.index, df[column], marker="o", s=3, label=label, **kwargs)
+            ax.scatter(df.index, df[column], marker="o", s=3, label=label, alpha=alpha, **kwargs)
             ticks, labels = wind_degree_labels()
             ax.set_yticks(ticks)
             ax.set_yticklabels(labels)
@@ -208,7 +236,8 @@ def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
                 df[column],
                 marker="o",
                 markersize=3,
-                linestyle="-",
+                linestyle=linestyle,
+                alpha=alpha,
                 label=label,
                 **kwargs,
             )
@@ -351,7 +380,10 @@ def draw_state_polygon(state, ax=None, **kwargs):
 
     url = f"https://raw.githubusercontent.com/johan/world.geo.json/master/countries/USA/{state}.geo.json"
 
-    data = json.loads(open_url(url).read())
+    try:
+        data = json.loads(open_url(url).read())
+    except:
+        print(f"⚠️ WARNING: Could not read GeoJSON for {state=} {url=}.")
 
     for feature in data["features"]:
         if feature["geometry"]["type"] == "Polygon":
@@ -364,7 +396,7 @@ def draw_state_polygon(state, ax=None, **kwargs):
                     polygon = Polygon(i, closed=True, **kwargs)
                     ax.add_patch(polygon)
         else:
-            print("⚠️ WARNING: Trouble plotting state polygon.")
+            print(f"⚠️ WARNING: Trouble plotting polygon for {state=}.")
 
 
 def get_network_info(id=None):
@@ -590,10 +622,10 @@ def main(display):
 
     if start > end:
         print(f"⛔ ERROR: Start time must be before end time. {start=}, {end=}")
-    if (end - start) > pd.to_timedelta("356D"):
-        start = end - pd.to_timedelta("356D")
+    if (end - start) > pd.to_timedelta("365D"):
+        start = end - pd.to_timedelta("365D")
         print("⚠️ WARNING: Requested too long a timeseries.")
-        print("    └ Only returning last 366 days requested.")
+        print("    └ Only returning last 365 days requested.")
 
     # Parse smoother options
     smooth = Smoother()
@@ -682,6 +714,15 @@ def main(display):
         f"{status_symbol} Response Message: {data['SUMMARY']['RESPONSE_MESSAGE']}. Received [{data['SUMMARY'].get('NUMBER_OF_OBJECTS')}] stations. Timer: {data['SUMMARY'].get('DATA_QUERY_TIME', 'n/a')}"
     )
 
+    if data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK":
+        fig, ax = plot_message(
+            data["SUMMARY"]["RESPONSE_MESSAGE"],
+        )
+        display(fig, target="figure-timeseries", append=False)
+        display(fig, target="figure-map", append=False)
+        Element("station-info").element.innerHTML = "<br><br><h1>No Stations Found</h1>"
+        return
+
     # ------------------------------------------------------------------
     # Organize Station Data
     # ------------------------------------------------------------------
@@ -698,7 +739,12 @@ def main(display):
         df.attrs = stn
 
         # Convert datetime index string to datetime
-        df.index = pd.to_datetime(df.index)
+        if obtimezone.lower() == "local":
+            # Drop timezone info to preserve local time
+            print("INFO: Observation time is the station's local timezone.")
+            df.index = pd.to_datetime(df.index).tz_localize(None)
+        else:
+            df.index = pd.to_datetime(df.index)
 
         # Sort column order alphabetically
         df = df.reindex(columns=df.columns.sort_values())
