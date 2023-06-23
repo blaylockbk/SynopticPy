@@ -203,7 +203,9 @@ def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
     linestyles = itertools.cycle(["-", "--", ":", ".-"])
     alphas = np.linspace(1, 0.3, len(df.columns))
 
-    for i, (column, linestyle, alpha) in enumerate(zip(sorted(df.columns), linestyles, alphas)):
+    for i, (column, linestyle, alpha) in enumerate(
+        zip(sorted(df.columns), linestyles, alphas)
+    ):
         variable = re.sub(r"_set_\d+d?", "", column)
         units = df.attrs.get("UNITS").get(variable)
 
@@ -226,7 +228,15 @@ def plot_standard(df, only_plot_set_1=True, *, ax=None, **kwargs):
             label += "$^{*}$"
 
         if variable == "wind_direction":
-            ax.scatter(df.index, df[column], marker="o", s=3, label=label, alpha=alpha, **kwargs)
+            ax.scatter(
+                df.index,
+                df[column],
+                marker="o",
+                s=3,
+                label=label,
+                alpha=alpha,
+                **kwargs,
+            )
             ticks, labels = wind_degree_labels()
             ax.set_yticks(ticks)
             ax.set_yticklabels(labels)
@@ -710,7 +720,9 @@ def main(display):
         )
         display(fig, target="figure-timeseries", append=False)
         display(fig, target="figure-map", append=False)
-        Element("station-info").element.innerHTML = "<br><br><h1>Error loading JSON</h1>"
+        Element(
+            "station-info"
+        ).element.innerHTML = "<br><br><h1>Error loading JSON</h1>"
         return
 
     if data["SUMMARY"]["RESPONSE_MESSAGE"].upper() == "OK":
@@ -723,7 +735,7 @@ def main(display):
 
     if data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK":
         fig, ax = plot_message(
-            data["SUMMARY"]["RESPONSE_MESSAGE"],
+            "No stations found for this request, or your account does not have access to the requested station(s).",
         )
         display(fig, target="figure-timeseries", append=False)
         display(fig, target="figure-map", append=False)
