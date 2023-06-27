@@ -96,6 +96,9 @@
         } else if (option === "Arches National Park") {
           document.getElementById("stidInput").value =
             "radius=38.73, -109.59,20&limit=10";
+        } else if (option === "Western States") {
+          document.getElementById("stidInput").value =
+            "KSLC,KWMC,KBOI,KSEA,KEUG,KMRY,KSNA";
         }
       }
 
@@ -675,6 +678,7 @@
                 <li><a class="dropdown-item" href="#" onclick="changeStations('John Horel')">John Horel</a></li>
                 <li><a class="dropdown-item" href="#" onclick="changeStations('University of Utah')">University of Utah</a></li>
                 <li><a class="dropdown-item" href="#" onclick="changeStations('Arches National Park')">Arches National Park</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Western States')">Western States</a></li>
               </ul>
               <input
                 type="text"

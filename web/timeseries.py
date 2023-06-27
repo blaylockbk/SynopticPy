@@ -393,7 +393,9 @@ def draw_state_polygon(state, ax=None, **kwargs):
     try:
         data = json.loads(open_url(url).read())
     except:
-        print(f"⚠️ WARNING: Could not read GeoJSON for {state=} {url=}.")
+        print(f"⛔ ERROR: Could not get GeoJSON for {state=}")
+        print(f"     └─ {url=}")
+        return
 
     for feature in data["features"]:
         if feature["geometry"]["type"] == "Polygon":
@@ -729,17 +731,29 @@ def main(display):
         status_symbol = "✅"
     else:
         status_symbol = "❌"
+
     print(
         f"{status_symbol} Response Message: {data['SUMMARY']['RESPONSE_MESSAGE']}. Received [{data['SUMMARY'].get('NUMBER_OF_OBJECTS')}] stations. Timer: {data['SUMMARY'].get('DATA_QUERY_TIME', 'n/a')}"
     )
 
-    if data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK":
+    if (
+        data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK"
+        and data["SUMMARY"].get("NUMBER_OF_OBJECTS") == 0
+    ):
         fig, ax = plot_message(
             "No stations found for this request, or your account does not have access to the requested station(s).",
         )
         display(fig, target="figure-timeseries", append=False)
         display(fig, target="figure-map", append=False)
         Element("station-info").element.innerHTML = "<br><br><h1>No Stations Found</h1>"
+        return
+    elif data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK":
+        fig, ax = plot_message(data["SUMMARY"]["RESPONSE_MESSAGE"])
+        display(fig, target="figure-timeseries", append=False)
+        display(fig, target="figure-map", append=False)
+        Element(
+            "station-info"
+        ).element.innerHTML = f'<br><br><h1>Error:<br>{data["SUMMARY"]["RESPONSE_MESSAGE"]}</h1><br> Problems with this URL <a href="{url}" target="_blank">{url}</a>. If you do not believe you are in error, please <a href="https://github.com/blaylockbk/SynopticPy/issues" target="_blank">report this</a>.'
         return
 
     # ------------------------------------------------------------------
