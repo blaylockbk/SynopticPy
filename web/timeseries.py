@@ -1,6 +1,7 @@
 from pyscript import Element
 from pyodide.http import open_url
 import js
+import io
 import json
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -410,39 +411,39 @@ def draw_state_polygon(state, ax=None, **kwargs):
         else:
             print(f"⚠️ WARNING: Trouble plotting polygon for {state=}.")
 
-def draw_city_names(xlim, ylim, ax=None,**kwargs):
-    """Add City Names to map from a list of world airports."""
+
+def draw_city_names(xlim, ylim, ax=None, **kwargs):
+    """Add City Names to map from a list of world airports.
+
+    US Cities from https://github.com/kelvins/US-Cities-Database
+    """
     if ax is None:
         ax = plt.gca()
 
-    url = f"https://raw.githubusercontent.com/chadhutchins182/Airports/master/airports.json"
-
     try:
-        data = json.loads(open_url(url).read())
-        df = pd.DataFrame(data).T
-        df = df.loc[df.country == "US"]
-        df = df[(df["lat"].between(*ylim)) & (df["lon"].between(*xlim))]
+        df = pd.read_csv("./data/us-cities.csv")
+        df = df[(df["LATITUDE"].between(*ylim)) & (df["LONGITUDE"].between(*xlim))]
     except:
-        print(f"⛔ ERROR: Could not get city names from airports JSON file.")
-        print(f"     └─ {url=}")
+        print(f"⛔ ERROR: Could not get city names from file.")
         return
 
     if len(df) == 0:
+        # print(f"⚠️ Warning: No nearby cities found.")
         return
 
     for i, row in df.iterrows():
         ax.text(
-            row.lon,
-            row.lat,
-            row.city,
+            row.LONGITUDE,
+            row.LATITUDE,
+            row.CITY,
             fontsize=35,
             fontweight="bold",
             va="center",
             ha="center",
-            alpha=0.5,
-            color='w',
+            alpha=0.8,
+            color="w",
             clip_on=True,
-            zorder=2
+            zorder=2,
         )
 
 
