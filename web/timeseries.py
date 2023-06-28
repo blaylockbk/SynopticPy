@@ -410,6 +410,41 @@ def draw_state_polygon(state, ax=None, **kwargs):
         else:
             print(f"⚠️ WARNING: Trouble plotting polygon for {state=}.")
 
+def draw_city_names(xlim, ylim, ax=None,**kwargs):
+    """Add City Names to map from a list of world airports."""
+    if ax is None:
+        ax = plt.gca()
+
+    url = f"https://raw.githubusercontent.com/chadhutchins182/Airports/master/airports.json"
+
+    try:
+        data = json.loads(open_url(url).read())
+        df = pd.DataFrame(data).T
+        df = df.loc[df.country == "US"]
+        df = df[(df["lat"].between(*ylim)) & (df["lon"].between(*xlim))]
+    except:
+        print(f"⛔ ERROR: Could not get city names from airports JSON file.")
+        print(f"     └─ {url=}")
+        return
+
+    if len(df) == 0:
+        return
+
+    for i, row in df.iterrows():
+        ax.text(
+            row.lon,
+            row.lat,
+            row.city,
+            fontsize=35,
+            fontweight="bold",
+            va="center",
+            ha="center",
+            alpha=0.5,
+            color='w',
+            clip_on=True,
+            zorder=2
+        )
+
 
 def get_network_info(id=None):
     if id:
@@ -916,6 +951,7 @@ def main(display):
     if max_distance < threshold:
         plt.gca().set_xlim(*xlim)
         plt.gca().set_ylim(*ylim)
+        draw_city_names(xlim, ylim, ax=ax2)
 
     fig2.tight_layout()
     display(fig2, target="figure-map", append=False)
