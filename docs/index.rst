@@ -25,8 +25,10 @@ The `Synoptic Mesonet API <https://synopticdata.com/mesonet-api>`_ (formerly Mes
    .. figure:: _static/synoptic_logo.png
       :width: 300
 
-I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a `Pandas DataFrame <https://pandas.pydata.org/docs/>`_. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete `MesoPy <https://github.com/mesowx/MesoPy>`_ python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more ready-to-use.
+.. note::
+   You can create timeseries of observations from weather stations using my `Station Timeseries Web App <https://blaylockbk.github.io/SynopticPy/web/timeseries.html#>`_. This is a quick way to use SynopticPy without writing any code yourself.
 
+SynopticPy is a collection of functions I use to conveniently access data from the Synoptic API and convert the JSON data to a `Pandas DataFrame <https://pandas.pydata.org/docs/>`_. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete `MesoPy <https://github.com/mesowx/MesoPy>`_ python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more ready-to-use.
 
 If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.
 
