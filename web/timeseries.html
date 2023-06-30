@@ -250,13 +250,21 @@
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://github.com/blaylockbk/Herbie">🏁 Herbie</a>
+              <a class="nav-link" href="https://github.com/blaylockbk/Herbie"
+                >🏁 Herbie</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://github.com/blaylockbk/goes2go">🌎 GOES-2-go</a>
+              <a class="nav-link" href="https://github.com/blaylockbk/goes2go"
+                >🌎 GOES-2-go</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://github.com/blaylockbk/SynopticPy">🌡️ SynopticPy</a>
+              <a
+                class="nav-link"
+                href="https://github.com/blaylockbk/SynopticPy"
+                >🌡️ SynopticPy</a
+              >
             </li>
           </ul>
         </div>
@@ -264,15 +272,27 @@
         <a class="navbar-brand"
           ><h2 style="display: inline">Station Timeseries</h2></a
         >
-        <!-- README button; trigger modal -->
-        <button
-          type="button"
-          class="btn btn-outline-info"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          README
-        </button>
+        <div class="d-flex gap-2">
+          <div class="dropdown">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="bd-theme">
+              Theme
+            </button>
+            <ul class="dropdown-menu">
+              <li><button class="dropdown-item" data-bs-theme-value="auto">Auto</button></li>
+              <li><button class="dropdown-item" data-bs-theme-value="light">Light</li>
+              <li><button class="dropdown-item" data-bs-theme-value="dark">Dark</li>
+            </ul>
+          </div>
+          <!-- README button; trigger modal -->
+          <button
+            type="button"
+            class="btn btn-outline-info"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+          >
+            README
+          </button>
+        </div>
       </div>
     </nav>
 
@@ -878,7 +898,9 @@
                   value="english"
                   checked
                 />
-                <label class="btn btn-outline-secondary btn-sm" for="unitsRadio1"
+                <label
+                  class="btn btn-outline-secondary btn-sm"
+                  for="unitsRadio1"
                   >English Units</label
                 >
                 <input
@@ -889,7 +911,9 @@
                   autocomplete="off"
                   value="metric"
                 />
-                <label class="btn btn-outline-secondary btn-sm" for="unitsRadio2"
+                <label
+                  class="btn btn-outline-secondary btn-sm"
+                  for="unitsRadio2"
                   >Metric Units</label
                 >
               </div>
@@ -909,7 +933,9 @@
                   value="local"
                   checked
                 />
-                <label class="btn btn-outline-secondary btn-sm" for="timezoneRadio1"
+                <label
+                  class="btn btn-outline-secondary btn-sm"
+                  for="timezoneRadio1"
                   >Local Time</label
                 >
                 <input
@@ -920,7 +946,9 @@
                   autocomplete="off"
                   value="utc"
                 />
-                <label class="btn btn-outline-secondary btn-sm" for="timezoneRadio2"
+                <label
+                  class="btn btn-outline-secondary btn-sm"
+                  for="timezoneRadio2"
                   >UTC Time</label
                 >
               </div>
