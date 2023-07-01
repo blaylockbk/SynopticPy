@@ -22,3 +22,5 @@ _version.py
 .gitpod.yml
 
 .DS_Store
+node_modules
+dev

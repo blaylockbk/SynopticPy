@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Layout ({{ global.env }})</title>
+  </head>
+  <body>
+    <div>
+      <a href="{{ root }}">Home</a>
+      <a href="{{ root }}/page2">Page 2</a>
+      <a href="{{ root }}/page3">Page 3</a>
+    </div>
+    {{ content | safe }}
+  </body>
+</html>
