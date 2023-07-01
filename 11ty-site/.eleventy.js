@@ -1,5 +1,5 @@
 module.exports = function(eleventyConfig) {
-  // Return your Object options:
+  eleventyConfig.addPassthroughCopy("pages/app/assets");
   return {
     dir: {
       input: "pages",

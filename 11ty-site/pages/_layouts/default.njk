@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Layout ({{ global.env }})</title>
+    <title>Title ({{ global.env }})</title>
+
+    {% include "head_basic.njk" %}
+    {% include "head_pyscript.njk" %}
   </head>
   <body>
     <div>
@@ -12,5 +15,7 @@
       <a href="{{ root }}/page3">Page 3</a>
     </div>
     {{ content | safe }}
+
+    <script src="{{ root }}/assets/test.js"></script>
   </body>
 </html>
