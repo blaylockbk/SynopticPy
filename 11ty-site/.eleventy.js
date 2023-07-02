@@ -1,7 +1,7 @@
-const eleventyPluginFilesMinifier = require("@sherby/eleventy-plugin-files-minifier");
+// const eleventyPluginFilesMinifier = require("@sherby/eleventy-plugin-files-minifier");
 
 module.exports = function(eleventyConfig) {
-  eleventyConfig.addPlugin(eleventyPluginFilesMinifier);
+  // eleventyConfig.addPlugin(eleventyPluginFilesMinifier);
   eleventyConfig.addPassthroughCopy("pages/app/assets");
   return {
     dir: {
