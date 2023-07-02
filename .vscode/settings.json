@@ -35,6 +35,7 @@
         "app_dev": "generator",
     },
     "cSpell.words": [
+        "Herbie",
         "meteogram",
         "synopticpy",
         "Timeseries"

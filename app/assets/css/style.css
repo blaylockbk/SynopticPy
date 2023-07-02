@@ -1,0 +1,14 @@
+body {
+  font-family: "Mona Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main{
+  flex: 1 1 0;
+}
+
+.spaced-list li {
+  margin-bottom: 10px; /* Increase the margin-bottom value to increase spacing */
+}
