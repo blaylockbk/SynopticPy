@@ -21,6 +21,7 @@
   "homepage": "https://github.com/blaylockbk/SynopticPy#readme",
   "devDependencies": {
     "@11ty/eleventy": "^2.0.1",
+    "@sherby/eleventy-plugin-files-minifier": "^1.1.1",
     "cross-env": "^7.0.3",
     "rimraf": "^5.0.1"
   }

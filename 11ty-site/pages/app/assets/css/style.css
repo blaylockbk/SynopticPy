@@ -1,5 +1,12 @@
 body {
   font-family: "Mona Sans", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main{
+  flex: 1 1 0;
 }
 
 .spaced-list li {

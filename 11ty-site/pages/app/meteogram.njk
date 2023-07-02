@@ -1,0 +1,322 @@
+---
+title: Meteogram
+---
+
+<div class="container my-4">
+  <div class="d-flex justify-content-between">
+    <h1>{{ title }}</h1>
+    <div>
+      {% include "modal_meteogram-readme.njk" %}
+    </div>
+  </div>
+  <div align="center" class="contentText form-group">
+    <!-- FIRST ROW -->
+    <div class="row align-items-center">
+      <div class="col-sm-4">
+        <!-- Station Selector ----------------------->
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="stid">Station</span>
+          <input
+            type="text"
+            id="stidInput"
+            class="form-control"
+            value="WBB"
+            title="Station ID or `latitude,longitude` pair"
+          />
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <!-- Variable ----------------------->
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="variable">Variable</label>
+          <select class="form-select" id="variableSelector_1">
+            <option selected="selected" value="air_temp">
+              🌡️ Air Temperature
+            </option>
+            <option value="dew_point_temperature">💦 Dew Point</option>
+            <option value="relative_humidity">💧 Relative Humidity</option>
+            <option value="pressure">🎈 Pressure</option>
+            <option value="sea_level_pressure">⛵ Sea Level Pressure</option>
+            <option value="altimeter">🏔️ Altimiter</option>
+            <option value="snow_depth">❄️ Snow Depth</option>
+            <option value="solar_radiation">☀️ Solar Radiation</option>
+            <option value="PM_25_concentration">🏭 PM 2.5 Concentration</option>
+            <option value="ozone_concentration">😎 Ozone Concentration</option>
+            <option value="volt">🔋 Battery Voltage</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <!-- Variable ----------------------->
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="variable">Variable</label>
+          <select class="form-select" id="variableSelector_2">
+            <option selected="selected" value="air_temp">
+              🌡️ Air Temperature
+            </option>
+            <option value="dew_point_temperature">💦 Dew Point</option>
+            <option value="relative_humidity">💧 Relative Humidity</option>
+            <option value="pressure">🎈 Pressure</option>
+            <option value="sea_level_pressure">⛵ Sea Level Pressure</option>
+            <option value="altimeter">🏔️ Altimiter</option>
+            <option value="snow_depth">❄️ Snow Depth</option>
+            <option value="solar_radiation">☀️ Solar Radiation</option>
+            <option value="PM_25_concentration">🏭 PM 2.5 Concentration</option>
+            <option value="ozone_concentration">😎 Ozone Concentration</option>
+            <option value="volt">🔋 Battery Voltage</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- SECOND ROW -->
+    <div class="row align-items-center">
+      <div class="col-sm-6">
+        <!-- Start Time ----------------------->
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="startTime">Start time (UTC)</span>
+          <input
+            type="text"
+            id="startTimeInput"
+            class="form-control"
+            value="18H"
+            title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <!-- End Time ----------------------->
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="endTime">End time (UTC)</span>
+          <input
+            type="text"
+            class="form-control"
+            id="endTimeInput"
+            placeholder="YYYY-MM-DD HH:MM"
+            title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
+          />
+        </div>
+        <script>
+          // Get the input element by ID
+          var endTimeInput = document.getElementById("endTimeInput");
+
+          // Create a new Date object with the current datetime
+          var currentDate = new Date();
+
+          // Format the datetime as YYYY-MM-DD HH:MM
+          var formattedDatetime = currentDate
+            .toISOString()
+            .slice(0, 16)
+            .replace("T", " ");
+
+          // Set the formatted datetime as the value of the input element
+          endTimeInput.value = formattedDatetime;
+        </script>
+      </div>
+    </div>
+
+    <!-- FOURTH ROW -->
+    <div class="row align-items-center">
+      <div class="col-sm-6">
+        <!-- Smoother ----------------------->
+        <div class="input-group mb-3">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="smoothing">Smoother</label>
+            <select class="form-select" id="smootherSelector1">
+              <option selected="selected" value="none">None</option>
+              <option value="resample">Resample</option>
+              <option value="rolling">Rolling</option>
+            </select>
+            <input
+              type="text"
+              id="smootherInput"
+              class="form-control"
+              value="30min"
+              title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
+            />
+            <select class="form-select" id="smootherSelector2">
+              <option selected="selected" value="none">None</option>
+              <option value="mean">Mean</option>
+              <option value="max">Max</option>
+              <option value="min">Min</option>
+              <option value="median">Median</option>
+              <option value="std">Standard Deviation</option>
+              <option value="var">Variance</option>
+              <option value="count">Count</option>
+              <option value="spread" disabled>Spread</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <!-- Colors ----------------------->
+        <!-- prettier-ignore -->
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="colorCycle"
+            >Colors</label
+          >
+          <input type="color" class="form-control form-control-color" name="color" value="#0d6efd" title="Choose color" id="color1">
+          <input type="color" class="form-control form-control-color" name="color" value="#dc3545" title="Choose color" id="color2">
+        </div>
+      </div>
+    </div>
+    <!-- THIRD ROW -->
+    <div class="row align-items-center">
+      <!-- Units toggle----------------------->
+      <div class="col-sm-3">
+        <div class="input-group mb-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <input
+              type="radio"
+              class="btn-check"
+              name="unitsRadioOptions"
+              id="unitsRadio1"
+              autocomplete="off"
+              value="english"
+              checked
+            />
+            <label class="btn btn-outline-dark" for="unitsRadio1"
+              >English Units</label
+            >
+            <input
+              type="radio"
+              class="btn-check"
+              name="unitsRadioOptions"
+              id="unitsRadio2"
+              autocomplete="off"
+              value="metric"
+            />
+            <label class="btn btn-outline-dark" for="unitsRadio2"
+              >Metric Units</label
+            >
+          </div>
+        </div>
+      </div>
+      <!-- (Units toggle) -->
+      <!-- timezone toggle----------------------->
+      <div class="col-sm-3">
+        <div class="input-group mb-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <input
+              type="radio"
+              class="btn-check"
+              name="timezoneRadioOptions"
+              id="timezoneRadio1"
+              autocomplete="off"
+              value="local"
+              checked
+            />
+            <label class="btn btn-outline-dark" for="timezoneRadio1"
+              >Local Time</label
+            >
+            <input
+              type="radio"
+              class="btn-check"
+              name="timezoneRadioOptions"
+              id="timezoneRadio2"
+              autocomplete="off"
+              value="utc"
+            />
+            <label class="btn btn-outline-dark" for="timezoneRadio2"
+              >UTC Time</label
+            >
+          </div>
+        </div>
+      </div>
+      <!-- (timezone toggle) -->
+      <div class="col-sm-6">
+        <!-- Submit Button -->
+        <div class="form-group" style="padding-top: 10px">
+          <div class="col-sm-4">
+            <button
+              type="submit"
+              class="btn btn-success"
+              py-click="main(display)"
+              id="display"
+            >
+              Make Plot
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT TABS  -->
+  <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="timeseries-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#timeseries-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="timeseries-tab-pane"
+        aria-selected="true"
+      >
+        Timeseries
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="station-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#station-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="station-tab-pane"
+        aria-selected="false"
+      >
+        Station Info
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="map-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#map-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="map-tab-pane"
+        aria-selected="false"
+      >
+        Map
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <div
+      class="tab-pane fade show active"
+      id="timeseries-tab-pane"
+      role="tabpanel"
+      aria-labelledby="timeseries-tab"
+      tabindex="0"
+    >
+      <div id="figure-userVariables" align="center"></div>
+      <div id="figure-windVariables" align="center"></div>
+      <div id="figure-precVariables" align="center"></div>
+    </div>
+
+    <div
+      class="tab-pane fade"
+      id="station-tab-pane"
+      role="tabpanel"
+      aria-labelledby="station-tab"
+      tabindex="0"
+    >
+      <div id="station-info"></div>
+    </div>
+    <div
+      class="tab-pane fade"
+      id="map-tab-pane"
+      role="tabpanel"
+      aria-labelledby="map-tab"
+      tabindex="0"
+    >
+      <div id="figure-map" align="center"></div>
+    </div>
+    <py-terminal></py-terminal>
+  </div>
+</div>

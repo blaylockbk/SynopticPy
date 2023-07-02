@@ -16,10 +16,8 @@
         // "statusBar.background": "#43A047",
         // "statusBarItem.remoteBackground": "#465A9B",
         // "button.background": "#2180AF",
-
     },
     "python.formatting.provider": "black",
-
     "actionButtons": {
         "reloadButton": null,
         "loadNpmCommands": false,
@@ -37,7 +35,12 @@
         "app_dev": "generator",
     },
     "cSpell.words": [
-        "synopticpy"
-    ]
+        "meteogram",
+        "synopticpy",
+        "Timeseries"
+    ],
+    "path-autocomplete.pathMappings": {
+        "{{root}}/": "${folder}/11ty-site/dev/app",
+        "{{assets}}/": "${folder}/11ty-site/dev/app/assets",
+    }
 }
-

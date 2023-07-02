@@ -1,5 +1,4 @@
 {
   "layout": "default.njk",
-  "description": "default description for project",
-  "title": "Default Project Title"
+  "description": "default description for project"
 }
