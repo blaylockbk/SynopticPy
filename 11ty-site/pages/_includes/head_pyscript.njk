@@ -1,10 +1,10 @@
 {# PyScript #}
 <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
 
-<!-- Comment this line to turn off loading pyscript (only render page) -->
-<!--  -->
-<!--  -->
+{% if global.allowPyScript %}
+{# 
+  If you don't want to load in this script, use 
+  npm run dev:site` instead of `npm run dev`
+#}
 <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-<!--  -->
-<!--  -->
-<!--  -->
+{% endif %}

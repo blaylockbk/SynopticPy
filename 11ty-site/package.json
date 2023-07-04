@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run clean:dev && cross-env ELEVENTY_ENV=dev npx @11ty/eleventy --serve --output=./dev",
     "clean:dev": "npx rimraf ./dev",
     "clean": "npx rimraf ../app ./dev",
-    "build": "npm run clean && cross-env ELEVENTY_ENV=prod npx @11ty/eleventy --output=../"
+    "dev:site": "npm run clean:dev && cross-env ELEVENTY_ENV=dev ALLOW_PY_SCRIPT=0 npx @11ty/eleventy --serve --output=./dev",
+    "dev": "npm run clean:dev && cross-env ELEVENTY_ENV=dev ALLOW_PY_SCRIPT=1 npx @11ty/eleventy --serve --output=./dev",
+    "build": "npm run clean && cross-env ELEVENTY_ENV=prod ALLOW_PY_SCRIPT=1 npx @11ty/eleventy --output=../"
   },
   "repository": {
     "type": "git",
