@@ -51,9 +51,9 @@
 
     btnToActive.classList.add("active");
     btnToActive.setAttribute("aria-pressed", "true");
-    if(theme === 'light') themeSwitcher.innerHTML = `<i class="fas fa-sun"></i><span class="sr-only">Light Theme</span>`;
-    else if (theme === 'dark') themeSwitcher.innerHTML = `<i class="fas fa-moon"></i><span class="sr-only">Dark Theme</span>`
-    else themeSwitcher.innerHTML = `<i class="fas fa-adjust"></i><span class="sr-only">Auto Theme</span>`
+    if(theme === 'light') themeSwitcher.innerHTML = `<i class="fas fa-sun fa-fw"></i><span class="sr-only">Light Theme</span>`;
+    else if (theme === 'dark') themeSwitcher.innerHTML = `<i class="fas fa-moon fa-fw"></i><span class="sr-only">Dark Theme</span>`
+    else themeSwitcher.innerHTML = `<i class="fas fa-adjust fa-fw"></i><span class="sr-only">Auto Theme</span>`
     
 
     if (focus) {
