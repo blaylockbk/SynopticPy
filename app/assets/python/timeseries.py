@@ -19,7 +19,7 @@ print(f"imported matplotlib {mpl.__version__}")
 print(f"imported pandas {pd.__version__}")
 print(f"imported numpy {np.__version__}")
 
-for font in mpl.font_manager.findSystemFonts(["./fonts"]):
+for font in mpl.font_manager.findSystemFonts(["../fonts"]):
     mpl.font_manager.fontManager.addfont(font)
 plt.rcParams["font.sans-serif"] = ["Mona Sans", "Mona-Sans", "Hubot-Sans"]
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"

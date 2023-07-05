@@ -12,3 +12,7 @@ main{
 .spaced-list li {
   margin-bottom: 10px; /* Increase the margin-bottom value to increase spacing */
 }
+
+img{
+  max-width: 100%;
+}

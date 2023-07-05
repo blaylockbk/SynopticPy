@@ -27,25 +27,7 @@
                 "singleInstance": true,
                 "color": "#FADE2A",
                 "command": "conda activate basic38; cd docs;  ./remake_docs.sh",
-            },
-            {
-                "name": "Dev:site",
-                "singleInstance": true,
-                "color": "#FADE2A",
-                "command": "(cd 11ty-site && npm run dev:site)",
-            },
-            {
-                "name": "Dev",
-                "singleInstance": true,
-                "color": "#FADE2A",
-                "command": "(cd 11ty-site && npm run dev)",
-            },
-            {
-                "name": "Build",
-                "singleInstance": true,
-                "color": "#FADE2A",
-                "command": "(cd 11ty-site && npm run build)",
-            },
+            }
         ]
     },
     "esbonio.server.enabled": true,

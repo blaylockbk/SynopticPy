@@ -1,1 +1,168 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1" name="viewport"><title>SynopticPy App</title><link href="https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/Balloon_logo/square_balloon.jpg" rel="icon" type="image/jpeg"><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"></script><script src="/SynopticPy/app/assets/js/themeSwitcher.js"></script><style>@font-face{font-family:"Mona Sans";src:url(/SynopticPy/app/assets/fonts/Mona-Sans.woff2) format("woff2")}</style><link href="/SynopticPy/app/assets/css/style.css" rel="stylesheet"><script src="https://kit.fontawesome.com/f6cc126dcc.js" crossorigin="anonymous"></script><link href="https://pyscript.net/latest/pyscript.css" rel="stylesheet"><script src="https://pyscript.net/latest/pyscript.js" defer></script></head><body><nav class="bg-dark border-bottom border-bottom-dark navbar" data-bs-theme="dark"><div class="container-fluid"><a class="navbar-brand">SynopticPy App <small class="d-md-inline-block d-none ms-3 text-secondary"></small></a><div class="d-flex gap-2"><div class="dropdown"><button class="btn btn-dark dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">Pages</button><ul class="dropdown-menu dropdown-menu-end"><li><a class="dropdown-item" href="/SynopticPy/app/timeseries/">Timeseries</a></li><li><a class="dropdown-item" href="/SynopticPy/app/meteogram/">Meteogram</a></li></ul></div><div class="dropdown"><button class="btn btn-dark" aria-expanded="false" data-bs-toggle="dropdown" type="button" id="bd-theme" title="Select Theme"><i class="fas fa-adjust"></i></button><ul class="dropdown-menu dropdown-menu-end"><li><button class="dropdown-item" data-bs-theme-value="auto"><i class="fas fa-fw me-2 fa-adjust"></i> Auto</button></li><li><button class="dropdown-item" data-bs-theme-value="light"><i class="fas fa-fw me-2 fa-sun"></i> Light</button></li><li><button class="dropdown-item" data-bs-theme-value="dark"><i class="fas fa-fw me-2 fa-moon"></i> Dark</button></li></ul></div><a class="btn btn-dark" href="https://github.com/blaylockbk/SynopticPy" target="_blank" title="SynopticPy on GitHub"><span class="sr-only">GitHub</span> <i class="fa-brands fa-github"></i></a></div></div></nav><main><div class="container my-4"><h1>Welcome to the app</h1></div></main><footer class="border-top text-bg-light"><div class="d-flex align-items-center container gap-4 justify-content-between py-4"><div class="d-flex align-items-center gap-2 lead"><strong>Related Projects:</strong> <a class="btn btn-light btn-sm" href="https://github.com/blaylockbk/Herbie" target="_blank">🏁 Herbie</a> <a class="btn btn-light btn-sm" href="https://github.com/blaylockbk/goes2go" target="_blank">🌎 GOES-2-go</a></div><div><div>© Brian Blaylock, 2023</div></div></div></footer></body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    
+    <title>SynopticPy App</title>
+    
+
+    <!---->
+    
+<link
+  rel="icon"
+  type="image/jpeg"
+  href="https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/Balloon_logo/square_balloon.jpg"
+/>
+
+
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+  crossorigin="anonymous"
+></script>
+<script src="/SynopticPy/app/assets/js/themeSwitcher.js"></script>
+
+
+<style>
+  @font-face {
+    font-family: "Mona Sans";
+    src: url("/SynopticPy/app/assets/fonts/Mona-Sans.woff2") format("woff2");
+  }
+</style>
+
+
+<link rel="stylesheet" href="/SynopticPy/app/assets/css/style.css" />
+
+
+<script
+  src="https://kit.fontawesome.com/f6cc126dcc.js"
+  crossorigin="anonymous"
+></script>
+
+    <!---->
+    
+<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+
+
+
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+
+  </head>
+
+  <body>
+    <nav
+  class="navbar bg-dark border-bottom border-bottom-dark"
+  data-bs-theme="dark"
+>
+  <div class="container-fluid">
+    <!-- Title -->
+    <a class="navbar-brand"
+      >SynopticPy App <small class="text-secondary ms-3 d-none d-md-inline-block"></small></a
+    >
+
+    <div class="d-flex gap-2">
+      
+      <div class="dropdown">
+        <button
+          class="btn btn-dark dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Pages
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a class="dropdown-item " href="/SynopticPy/app/timeseries/"
+              >Timeseries</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item " href="/SynopticPy/app/meteogram/">Meteogram</a>
+          </li>
+        </ul>
+      </div>
+
+      
+      <div class="dropdown">
+        <button
+          class="btn btn-dark"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          id="bd-theme"
+          title="Select Theme"
+        >
+          <i class="fas fa-adjust"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <button class="dropdown-item" data-bs-theme-value="auto">
+              <i class="fas fa-adjust fa-fw me-2"></i> Auto
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" data-bs-theme-value="light">
+              <i class="fas fa-sun fa-fw me-2"></i> Light
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" data-bs-theme-value="dark">
+              <i class="fas fa-moon fa-fw me-2"></i> Dark
+            </button>
+          </li>
+        </ul>
+      </div>
+      
+      
+      <a href="https://github.com/blaylockbk/SynopticPy" target="_blank" class="btn btn-dark" title="SynopticPy on GitHub">
+        <span class="sr-only">GitHub</span>
+        <i class="fa-brands fa-github"></i>
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+    <main><div class="container my-4">
+  <h1>Welcome to the app</h1>
+</div>
+</main>
+
+    <footer class="text-bg-light border-top">
+  <div
+    class="container py-4 d-flex align-items-center justify-content-between gap-4"
+  >
+    <div class="d-flex align-items-center gap-2 lead">
+      <strong>Related Projects:</strong>
+      <a
+        href="https://github.com/blaylockbk/Herbie"
+        target="_blank"
+        class="btn btn-light btn-sm"
+        >🏁 Herbie</a
+      >
+      <a
+        href="https://github.com/blaylockbk/goes2go"
+        target="_blank"
+        class="btn btn-light btn-sm"
+        >🌎 GOES-2-go</a
+      >
+    </div>
+    <div>
+      <div>&copy; Brian Blaylock, 2023</div>
+      
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>

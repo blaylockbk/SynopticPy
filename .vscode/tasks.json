@@ -31,8 +31,25 @@
         {
             "label": "publish",
             "type": "shell",
-            // TODO: use bumpversion
             "command": "conda activate pypi && python setup.py sdist bdist_wheel && twine check dist/* && twine upload --skip-existing dist/*"
+        },
+        {
+            "label": "11ty - Develop",
+            "type": "shell",
+            "command": "(cd 11ty-site && npm run dev)",
+            "problemMatcher": []
+        },
+        {
+            "label": "11ty - Develop (Site Only)",
+            "type": "shell",
+            "command": "(cd 11ty-site && npm run dev:site)",
+            "problemMatcher": []
+        },
+        {
+            "label": "11ty - Build",
+            "type": "shell",
+            "command": "(cd 11ty-site && npm run build)",
+            "problemMatcher": []
         }
     ]
 }
