@@ -1,0 +1,559 @@
+---
+title: Timeseries
+---
+
+<!-- prettier-ignore -->
+<py-config>
+  packages = ["matplotlib", "pandas", "numpy", "scipy"]
+  [[fetch]]
+    files = ["../assets/python/timeseries.py", "../assets/fonts/Mona-Sans.ttf", "../assets/fonts/Hubot-Sans.ttf", "../assets/data/us-cities.csv"]
+</py-config>
+
+<script>
+  // If Smoother method selector is none, then disable the interval and stat input,
+  // but if user selects a smoother, then activate the interval and stat inputs.
+  function checkInputValue() {
+    var input1Value = document.getElementById("smootherSelector1").value;
+    var input2 = document.getElementById("smootherInput");
+    var input3 = document.getElementById("smootherSelector2");
+
+    if (input1Value === "none") {
+      input2.disabled = true;
+      input3.disabled = true;
+    } else {
+      input2.disabled = false;
+      input3.disabled = false;
+    }
+  }
+
+  // Change Stations
+  function changeStations(option) {
+    if (option === "Peter Sinks") {
+      document.getElementById("stidInput").value = "PSRIM,PSINK";
+    } else if (option === "Monterey & Spanish Fork") {
+      document.getElementById("stidInput").value = "KMRY,UKBKB";
+    } else if (option === "Monterey, CA") {
+      document.getElementById("stidInput").value = "radius=E4129,10&limit=10";
+    } else if (option === "Family") {
+      document.getElementById("stidInput").value =
+        "KMRY,UKBKB,KLGU,C8948,E9049,KUMP";
+    } else if (option === "John Horel") {
+      document.getElementById("stidInput").value = "WBB,GNI,FREUT,LMR,BFLAT";
+    } else if (option === "University of Utah") {
+      document.getElementById("stidInput").value = "radius=WBB,10&limit=10";
+    } else if (option === "Arches National Park") {
+      document.getElementById("stidInput").value =
+        "radius=38.73, -109.59,20&limit=10";
+    } else if (option === "Western States") {
+      document.getElementById("stidInput").value =
+        "KSLC,KWMC,KBOI,KSEA,KEUG,KMRY,KSNA";
+    }
+  }
+
+  // Change color scheme
+  function changeColors(option) {
+    if (option === "default") {
+      // Tried to mimic the colors in the default bootstrap theme
+      document.getElementById("color1").value = "#0d6efd";
+      document.getElementById("color2").value = "#dc3545";
+      document.getElementById("color3").value = "#fd7e14";
+      document.getElementById("color4").value = "#198754";
+      document.getElementById("color5").value = "#0dcaf0";
+      document.getElementById("color6").value = "#563d7c";
+      document.getElementById("color7").value = "#ffc107";
+      document.getElementById("color8").value = "#262626";
+      document.getElementById("color9").value = "#6610f2";
+      document.getElementById("color10").value = "#20c997";
+      document.getElementById("color11").value = "#e83e8c";
+      document.getElementById("color12").value = "#a64dff";
+    } else if (option === "greys") {
+      // Invented by Brian Blaylock
+      document.getElementById("color1").value = "#DC3545";
+      document.getElementById("color2").value = "#979797";
+      document.getElementById("color3").value = "#979797";
+      document.getElementById("color4").value = "#979797";
+      document.getElementById("color5").value = "#979797";
+      document.getElementById("color6").value = "#979797";
+      document.getElementById("color7").value = "#979797";
+      document.getElementById("color8").value = "#979797";
+      document.getElementById("color9").value = "#979797";
+      document.getElementById("color10").value = "#979797";
+      document.getElementById("color11").value = "#979797";
+      document.getElementById("color12").value = "#979797";
+    } else if (option === "fall") {
+      // Invented by Brian Blaylock
+      document.getElementById("color1").value = "#800000";
+      document.getElementById("color2").value = "#e37a3e";
+      document.getElementById("color3").value = "#4C721D";
+      document.getElementById("color4").value = "#D8A60D";
+      document.getElementById("color5").value = "#763712";
+      document.getElementById("color6").value = "#6B2269";
+      document.getElementById("color7").value = "#800000";
+      document.getElementById("color8").value = "#e37a3e";
+      document.getElementById("color9").value = "#4C721D";
+      document.getElementById("color10").value = "#D8A60D";
+      document.getElementById("color11").value = "#763712";
+      document.getElementById("color12").value = "#6B2269";
+    } else if (option === "viridis") {
+      // This is from the matplotlib 'viridis' colormap
+      document.getElementById("color1").value = "#440154";
+      document.getElementById("color2").value = "#482173";
+      document.getElementById("color3").value = "#433e85";
+      document.getElementById("color4").value = "#38588c";
+      document.getElementById("color5").value = "#2d708e";
+      document.getElementById("color6").value = "#25858e";
+      document.getElementById("color7").value = "#1e9b8a";
+      document.getElementById("color8").value = "#2ab07f";
+      document.getElementById("color9").value = "#52c569";
+      document.getElementById("color10").value = "#86d549";
+      document.getElementById("color11").value = "#c2df23";
+      document.getElementById("color12").value = "#fde725";
+    } else if (option === "spectral") {
+      // This is from the matplotlib 'Spectra' colormap
+      document.getElementById("color1").value = "#9e0142";
+      document.getElementById("color2").value = "#d0384e";
+      document.getElementById("color3").value = "#ee6445";
+      document.getElementById("color4").value = "#fa9b58";
+      document.getElementById("color5").value = "#fece7c";
+      document.getElementById("color6").value = "#fff1a8";
+      document.getElementById("color7").value = "#f4faad";
+      document.getElementById("color8").value = "#d1ed9c";
+      document.getElementById("color9").value = "#97d5a4";
+      document.getElementById("color10").value = "#5cb7aa";
+      document.getElementById("color11").value = "#3682ba";
+      document.getElementById("color12").value = "#5e4fa2";
+    } else if (option === "tab") {
+      // This is from the matplotlib 'tab20' colormap
+      document.getElementById("color1").value = "#1f77b4";
+      document.getElementById("color2").value = "#ff7f0e";
+      document.getElementById("color3").value = "#2ca02c";
+      document.getElementById("color4").value = "#d62728";
+      document.getElementById("color5").value = "#9467bd";
+      document.getElementById("color6").value = "#8c564b";
+      document.getElementById("color7").value = "#e377c2";
+      document.getElementById("color8").value = "#7f7f7f";
+      document.getElementById("color9").value = "#bcbd22";
+      document.getElementById("color10").value = "#17becf";
+      document.getElementById("color11").value = "#3e3e3e";
+      document.getElementById("color12").value = "#f1f7a2";
+    } else if (option === "earth") {
+      // This is from the matplotlib 'terrain' colormap
+      document.getElementById("color1").value = "#333399";
+      document.getElementById("color2").value = "#1470d6";
+      document.getElementById("color3").value = "#00a8d0";
+      document.getElementById("color4").value = "#15d06a";
+      document.getElementById("color5").value = "#75e37d";
+      document.getElementById("color6").value = "#d1f690";
+      document.getElementById("color7").value = "#e8e28d";
+      document.getElementById("color8").value = "#baa774";
+      document.getElementById("color9").value = "#8a695a";
+      document.getElementById("color10").value = "#a38984";
+      document.getElementById("color11").value = "#d1c4c1";
+      document.getElementById("color12").value = "#383838";
+    } else if (option === "simple") {
+      // From Sasha Trubetskoy's "20 Simple, Distinct Colors"
+      document.getElementById("color1").value = "#e6194B";
+      document.getElementById("color2").value = "#3cb44b";
+      document.getElementById("color3").value = "#ffe119";
+      document.getElementById("color4").value = "#4363d8";
+      document.getElementById("color5").value = "#f58231";
+      document.getElementById("color6").value = "#911eb4";
+      document.getElementById("color7").value = "#42d4f4";
+      document.getElementById("color8").value = "#f032e6";
+      document.getElementById("color9").value = "#bfef45";
+      document.getElementById("color10").value = "#fabed4";
+      document.getElementById("color11").value = "#469990";
+      document.getElementById("color12").value = "#dcbeff";
+    }
+  }
+</script>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between">
+    <h1>Timeseries</h1>
+    <div>
+      {% include "modal/timeseries-readme.njk" %}
+    </div>
+  </div>
+  <div align="center" class="contentText form-group">
+    <!-- FIRST ROW -->
+    <div class="row align-items-center">
+      <div class="col-sm-6">
+        <!-- Station Selector ----------------------->
+        <!-- prettier-ignore -->
+        <div class="input-group mb-3">
+              <!-- <button type="button" class="btn"><i class="fa-regular fa-circle-question"></i></button> -->
+              <span class="input-group-text" id="stid">Stations</span>
+              <button
+                type="button"
+                class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="
+                  background-color: var(--bs-tertiary-bg);
+                  border: var(--bs-border-width) solid var(--bs-border-color);
+                  color: var(--bs-body-color);
+                "
+              ></button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Peter Sinks')">Peter Sinks</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey & Spanish Fork')">Monterey & Spanish Fork</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey, CA')">Monterey, CA</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Family')">Family</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('John Horel')">John Horel</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('University of Utah')">University of Utah</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Arches National Park')">Arches National Park</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Western States')">Western States</a></li>
+              </ul>
+              <input
+                type="text"
+                id="stidInput"
+                spellcheck="false"
+                class="form-control"
+                value="PSRIM,PSINK"
+                title="Comma-separated list of Station IDs or Synoptic API Station Selector string"
+              />
+            </div>
+      </div>
+      <div class="col-sm-6">
+        <!-- Variable ----------------------->
+        <!-- prettier-ignore -->
+        <div class="input-group mb-3">
+              <label class="input-group-text" for="variable">Variable</label>
+              <select class="form-select" id="variableSelector">
+                <option disabled style="font-size: 0.5em"></option>
+                <option selected="selected" value="air_temp">🌡️ Air Temperature</option>
+
+                <option disabled style="font-size: 0.5em"></option>
+                <option value="relative_humidity">💧 Relative Humidity</option>
+                <option value="dew_point_temperature">💦 Dew Point</option>
+
+                <option disabled style="font-size: 0.5em"></option>
+                <option value="wind_speed">🍃 Wind Speed</option>
+                <option value="wind_direction">🧭 Wind Direction</option>
+                <option value="wind_gust">🌬️ Wind Gust</option>
+                <option value="wind_direction,wind_speed" disabled>🏹 Wind Barbs</option>
+
+                <option disabled style="font-size: 0.5em"></option>
+                <option value="precip">☔ Accumulated Precipitation</option>
+                <option value="snow_depth">❄️ Snow Depth</option>
+
+                <option disabled style="font-size: 0.5em"></option>
+                <option value="pressure">🎈 Pressure</option>
+                <option value="altimeter">🏔️ Altimeter</option>
+                <option value="sea_level_pressure">⛵ Sea Level Pressure</option>
+
+                <option disabled style="font-size: 0.5em"></option>
+                <option value="solar_radiation">☀️ Solar Radiation</option>
+                <option value="volt">🔋 Battery Voltage</option>
+
+                <option disabled style="font-size: 0.5em"></option>
+                <option value="PM_25_concentration">🏭 PM 2.5 Concentration</option>
+                <option value="ozone_concentration">😎 Ozone Concentration</option>
+              </select>
+            </div>
+      </div>
+    </div>
+    <!-- SECOND ROW -->
+    <div class="row align-items-center">
+      <div class="col-sm-6">
+        <!-- Start Time ----------------------->
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="startTime">Start time (UTC)</span>
+          <input
+            type="text"
+            id="startTimeInput"
+            class="form-control"
+            spellcheck="false"
+            value="18H"
+            title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
+          />
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <!-- End Time ----------------------->
+        <div class="input-group mb-3">
+          <span class="input-group-text" id="endTime">End time (UTC)</span>
+          <input
+            type="text"
+            class="form-control"
+            spellcheck="false"
+            id="endTimeInput"
+            placeholder="YYYY-MM-DD HH:MM"
+            title="Pandas-parsable datetime (e.g., YYYY-MM-DD HH:MM) or timedelta (e.g., 30min, 1H, 6H)"
+          />
+        </div>
+        <script>
+          // Get the input element by ID
+          var endTimeInput = document.getElementById("endTimeInput");
+
+          // Create a new Date object with the current datetime
+          var currentDate = new Date();
+
+          // Format the datetime as YYYY-MM-DD HH:MM
+          var formattedDatetime = currentDate
+            .toISOString()
+            .slice(0, 16)
+            .replace("T", " ");
+
+          // Set the formatted datetime as the value of the input element
+          endTimeInput.value = formattedDatetime;
+        </script>
+      </div>
+    </div>
+
+    <!-- FOURTH ROW -->
+    <div class="row align-items-center">
+      <div class="col-sm-6">
+        <!-- Smoother ----------------------->
+        <div class="input-group mb-3">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="smoothing">Smoother</label>
+            <select
+              class="form-select"
+              id="smootherSelector1"
+              onchange="checkInputValue()"
+            >
+              <option selected="selected" value="none">None</option>
+              <option value="resample">Resample</option>
+              <option value="rolling">Rolling</option>
+            </select>
+            <input
+              type="text"
+              id="smootherInput"
+              class="form-control"
+              value="30min"
+              title="Pandas-parsable timedelta (e.g., 30min, 1H, 6H)"
+              disabled
+            />
+            <select class="form-select" id="smootherSelector2" disabled>
+              <option selected="selected" value="mean">Mean</option>
+              <option value="max">Max</option>
+              <option value="min">Min</option>
+              <option value="median">Median</option>
+              <option value="std">Standard Deviation</option>
+              <option value="var">Variance</option>
+              <option value="count">Count</option>
+              <option value="spread">Spread</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <!-- Colors ----------------------->
+        <!-- prettier-ignore -->
+        <div class="input-group mb-3">
+              <label class="input-group-text" for="colorCycle"
+                >Colors</label
+              >
+              <button
+                type="button"
+                class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="background-color:var(--bs-tertiary-bg);border: var(--bs-border-width) solid var(--bs-border-color);    color: var(--bs-body-color);">
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="changeColors('default')">Default</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('greys')">Greys</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('fall')">Fall</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('viridis')">Viridis</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('spectral')">Spectral</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('tab')">Tab</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('earth')">Earth</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeColors('simple')">Simple</a></li>
+              </ul>
+
+              <input type="color" class="form-control form-control-color" name="color" value="#0d6efd" title="Choose color" id="color1">
+              <input type="color" class="form-control form-control-color" name="color" value="#dc3545" title="Choose color" id="color2">
+              <input type="color" class="form-control form-control-color" name="color" value="#fd7e14" title="Choose color" id="color3">
+              <input type="color" class="form-control form-control-color" name="color" value="#198754" title="Choose color" id="color4">
+              <input type="color" class="form-control form-control-color" name="color" value="#0dcaf0" title="Choose color" id="color5">
+              <input type="color" class="form-control form-control-color" name="color" value="#563d7c" title="Choose color" id="color6">
+              <input type="color" class="form-control form-control-color" name="color" value="#ffc107" title="Choose color" id="color7">
+              <input type="color" class="form-control form-control-color" name="color" value="#262626" title="Choose color" id="color8">
+              <input type="color" class="form-control form-control-color" name="color" value="#6610f2" title="Choose color" id="color9">
+              <input type="color" class="form-control form-control-color" name="color" value="#20c997" title="Choose color" id="color10">
+              <input type="color" class="form-control form-control-color" name="color" value="#e83e8c" title="Choose color" id="color11">
+              <input type="color" class="form-control form-control-color" name="color" value="#a64dff" title="Choose color" id="color12">
+            </div>
+      </div>
+    </div>
+    <!-- THIRD ROW -->
+    <div class="row align-items-center">
+      <!-- Units toggle----------------------->
+      <div class="col-sm-3">
+        <div class="input-group mb-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <input
+              type="radio"
+              class="btn-check"
+              name="unitsRadioOptions"
+              id="unitsRadio1"
+              autocomplete="off"
+              value="english"
+              checked
+            />
+            <label class="btn btn-outline-secondary btn-sm" for="unitsRadio1"
+              >English Units</label
+            >
+            <input
+              type="radio"
+              class="btn-check"
+              name="unitsRadioOptions"
+              id="unitsRadio2"
+              autocomplete="off"
+              value="metric"
+            />
+            <label class="btn btn-outline-secondary btn-sm" for="unitsRadio2"
+              >Metric Units</label
+            >
+          </div>
+        </div>
+      </div>
+      <!-- (Units toggle) -->
+      <!-- timezone toggle----------------------->
+      <div class="col-sm-3">
+        <div class="input-group mb-3">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <input
+              type="radio"
+              class="btn-check"
+              name="timezoneRadioOptions"
+              id="timezoneRadio1"
+              autocomplete="off"
+              value="local"
+              checked
+            />
+            <label class="btn btn-outline-secondary btn-sm" for="timezoneRadio1"
+              >Local Time</label
+            >
+            <input
+              type="radio"
+              class="btn-check"
+              name="timezoneRadioOptions"
+              id="timezoneRadio2"
+              autocomplete="off"
+              value="utc"
+            />
+            <label class="btn btn-outline-secondary btn-sm" for="timezoneRadio2"
+              >UTC Time</label
+            >
+          </div>
+        </div>
+      </div>
+      <!-- (timezone toggle) -->
+      <div class="col-sm-6">
+        <!-- Submit Button -->
+        <div class="form-group" style="padding-top: 10px">
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <button
+              type="submit"
+              class="btn btn-success btn-lg"
+              py-click="main(display)"
+              id="display"
+            >
+              Make Plot
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT TABS  -->
+  <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="timeseries-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#timeseries-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="timeseries-tab-pane"
+        aria-selected="true"
+      >
+        Timeseries
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="map-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#map-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="map-tab-pane"
+        aria-selected="false"
+      >
+        Map
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="station-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#station-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="station-tab-pane"
+        aria-selected="false"
+      >
+        Station Info
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <!-- Timeseries Figure Tab -->
+    <div
+      class="tab-pane fade show active"
+      id="timeseries-tab-pane"
+      role="tabpanel"
+      aria-labelledby="timeseries-tab"
+      tabindex="0"
+    >
+      <div id="figure-timeseries" align="center"></div>
+    </div>
+
+    <!-- Map Figure Tab -->
+    <div
+      class="tab-pane fade"
+      id="map-tab-pane"
+      role="tabpanel"
+      aria-labelledby="map-tab"
+      tabindex="0"
+    >
+      <div id="figure-map" align="center"></div>
+    </div>
+
+    <!-- Station Info Tab -->
+    <div
+      class="tab-pane fade"
+      id="station-tab-pane"
+      role="tabpanel"
+      aria-labelledby="station-tab"
+      tabindex="0"
+    >
+      <div id="station-info"></div>
+    </div>
+  </div>
+  <!-- (CONTENT TABS)  -->
+
+  <!-- Bottom material -->
+  <div id="json-download"></div>
+  <py-terminal></py-terminal>
+</div>
+
+<!-- prettier-ignore -->
+<py-script>
+  import sys
+  sys.path.append("../assets/python")
+  from timeseries import main
+  print()
+  print("Making new API request...")
+  fig = main(display)
+
+</py-script>

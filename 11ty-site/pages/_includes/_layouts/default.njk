@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {% if title %}
+    <title>{{ title }} | SynopticPy App</title>
+    {% else %}
+    <title>SynopticPy App</title>
+    {% endif %}
+
+    <!---->
+    {% include "head/basic.njk" %}
+    <!---->
+    {% include "head/pyscript.njk" %}
+  </head>
+
+  <body>
+    {% include "navbar.njk" %}
+
+    <main>{{ content | safe }}</main>
+
+    {% include "footer.njk" %}
+  </body>
+</html>

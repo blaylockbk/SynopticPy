@@ -1,0 +1,29 @@
+{
+  "name": "synopticpy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "clean:dev": "npx rimraf ./dev",
+    "clean": "npx rimraf ../app ./dev",
+    "dev:site": "npm run clean:dev && cross-env ELEVENTY_ENV=dev ALLOW_PY_SCRIPT=0 npx @11ty/eleventy --serve --output=./dev",
+    "dev": "npm run clean:dev && cross-env ELEVENTY_ENV=dev ALLOW_PY_SCRIPT=1 npx @11ty/eleventy --serve --output=./dev",
+    "build": "npm run clean && cross-env ELEVENTY_ENV=prod ALLOW_PY_SCRIPT=1 npx @11ty/eleventy --output=../"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blaylockbk/SynopticPy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blaylockbk/SynopticPy/issues"
+  },
+  "homepage": "https://github.com/blaylockbk/SynopticPy#readme",
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "@sherby/eleventy-plugin-files-minifier": "^1.1.1",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.1"
+  }
+}

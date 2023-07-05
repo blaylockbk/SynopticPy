@@ -1,0 +1,72 @@
+<nav
+  class="navbar bg-dark border-bottom border-bottom-dark"
+  data-bs-theme="dark"
+>
+  <div class="container-fluid">
+    <!-- Title -->
+    <a class="navbar-brand"
+      >SynopticPy App <small class="text-secondary ms-3 d-none d-md-inline-block">{{ title }}</small></a
+    >
+
+    <div class="d-flex gap-2">
+      {# Pages #}
+      <div class="dropdown">
+        <button
+          class="btn btn-dark dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Pages
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <a class="dropdown-item {{ 'active' if '/timeseries' in page.url }}" href="{{ root }}/timeseries/"
+              >Timeseries</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item {{ 'active' if '/meteogram' in page.url }}" href="{{ root }}/meteogram/">Meteogram</a>
+          </li>
+        </ul>
+      </div>
+
+      {# Theme Switcher #}
+      <div class="dropdown">
+        <button
+          class="btn btn-dark"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          id="bd-theme"
+          title="Select Theme"
+        >
+          <i class="fas fa-adjust"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <button class="dropdown-item" data-bs-theme-value="auto">
+              <i class="fas fa-adjust fa-fw me-2"></i> Auto
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" data-bs-theme-value="light">
+              <i class="fas fa-sun fa-fw me-2"></i> Light
+            </button>
+          </li>
+          <li>
+            <button class="dropdown-item" data-bs-theme-value="dark">
+              <i class="fas fa-moon fa-fw me-2"></i> Dark
+            </button>
+          </li>
+        </ul>
+      </div>
+      
+      {# GitHub #}
+      <a href="https://github.com/blaylockbk/SynopticPy" target="_blank" class="btn btn-dark" title="SynopticPy on GitHub">
+        <span class="sr-only">GitHub</span>
+        <i class="fa-brands fa-github"></i>
+      </a>
+    </div>
+  </div>
+</nav>

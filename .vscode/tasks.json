@@ -9,30 +9,45 @@
             "command": "echo Hello ${env:USER} ${env:USERNAME}"
         },
         {
-            "label": "conda activate",
-            "type": "shell",
-            "command": "conda activate synoptic && conda env list"
-        },
-        {
-            "label": "build docs",
-            "type": "shell",
-            "command": "cd docs && ./remake_docs.sh"
-        },
-        {
-            "label": "create conda environment",
+            "label": "Conda: create environment",
             "type": "shell",
             "command": "conda env create -f environment.yml"
         },
         {
-            "label": "update conda environment",
+            "label": "Conda: update environment",
             "type": "shell",
             "command": "conda env update -f environment.yml --prune"
         },
         {
-            "label": "publish",
+            "label": "Sphinx: Build docs",
             "type": "shell",
-            // TODO: use bumpversion
+            "command": "cd docs && ./remake_docs.sh"
+        },
+        {
+            "label": "PyPI: publish",
+            "type": "shell",
             "command": "conda activate pypi && python setup.py sdist bdist_wheel && twine check dist/* && twine upload --skip-existing dist/*"
+        },
+        {
+            "label": "Build 11ty - Develop",
+            "detail": "Builds the full site in 'develop' mode (not tracked by Git).",
+            "type": "shell",
+            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev)",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build 11ty - Develop (Site Only)",
+            "detail": "Builds the site without pyscript in 'develop' mode (not tracked by Git).",
+            "type": "shell",
+            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev:site)",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build 11ty - Publish",
+            "detail": "Builds the full site in 'production' mode (tracked by Git).",
+            "type": "shell",
+            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run build)",
+            "problemMatcher": []
         }
     ]
 }

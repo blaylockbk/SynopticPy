@@ -8,18 +8,16 @@
         // MesoWest Red: #990000
         // New Synoptic Blue: #1D4795
         // New Synoptic Blue 2 : #74C1E3
-        "activityBar.background": "#990000",
-        "activityBarBadge.background": "#FADE2A",
-        "activityBarBadge.foreground":"#2180AF",
+        // "activityBar.background": "#990000",
+        // "activityBarBadge.background": "#FADE2A",
+        // "activityBarBadge.foreground":"#2180AF",
         "titleBar.activeBackground": "#1D4795",
-        "titleBar.activeForeground": "#ffffff",
-        "statusBar.background": "#43A047",
-        "statusBarItem.remoteBackground": "#465A9B",
-        "button.background": "#2180AF",
-
+        // "titleBar.activeForeground": "#ffffff",
+        // "statusBar.background": "#43A047",
+        // "statusBarItem.remoteBackground": "#465A9B",
+        // "button.background": "#2180AF",
     },
     "python.formatting.provider": "black",
-
     "actionButtons": {
         "reloadButton": null,
         "loadNpmCommands": false,
@@ -29,9 +27,21 @@
                 "singleInstance": true,
                 "color": "#FADE2A",
                 "command": "conda activate basic38; cd docs;  ./remake_docs.sh",
-            },
+            }
         ]
     },
     "esbonio.server.enabled": true,
+    "material-icon-theme.folders.associations": {
+        "app_dev": "generator",
+    },
+    "cSpell.words": [
+        "Herbie",
+        "meteogram",
+        "synopticpy",
+        "Timeseries"
+    ],
+    "path-autocomplete.pathMappings": {
+        "{{root}}/": "${folder}/11ty-site/dev/app",
+        "{{assets}}/": "${folder}/11ty-site/dev/app/assets",
+    }
 }
-
