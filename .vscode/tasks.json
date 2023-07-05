@@ -32,21 +32,21 @@
             "label": "Build 11ty - Develop",
             "detail": "Builds the full site in 'develop' mode (not tracked by Git).",
             "type": "shell",
-            "command": "(cd 11ty-site && npm run dev)",
+            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev)",
             "problemMatcher": []
         },
         {
             "label": "Build 11ty - Develop (Site Only)",
             "detail": "Builds the site without pyscript in 'develop' mode (not tracked by Git).",
             "type": "shell",
-            "command": "(cd 11ty-site && npm run dev:site)",
+            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev:site)",
             "problemMatcher": []
         },
         {
             "label": "Build 11ty - Publish",
             "detail": "Builds the full site in 'production' mode (tracked by Git).",
             "type": "shell",
-            "command": "(cd 11ty-site && npm run build)",
+            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run build)",
             "problemMatcher": []
         }
     ]

@@ -19,7 +19,15 @@ print(f"imported matplotlib {mpl.__version__}")
 print(f"imported pandas {pd.__version__}")
 print(f"imported numpy {np.__version__}")
 
-for font in mpl.font_manager.findSystemFonts(["../fonts"]):
+
+# from pathlib import Path
+# print("Current Directory: ", Path("./").resolve())
+# print("   Contents:", list(Path("./").resolve().glob("*")))
+# print("Back one Directory: ", Path("../").resolve())
+# print("   Contents:", list(Path("../").resolve().glob("*")))
+
+
+for font in mpl.font_manager.findSystemFonts(["../assets/fonts"]):
     mpl.font_manager.fontManager.addfont(font)
 plt.rcParams["font.sans-serif"] = ["Mona Sans", "Mona-Sans", "Hubot-Sans"]
 mpl.rcParams["date.autoformatter.day"] = "%b %d\n%Y"
@@ -421,7 +429,7 @@ def draw_city_names(xlim, ylim, ax=None, **kwargs):
         ax = plt.gca()
 
     try:
-        df = pd.read_csv("./data/us-cities.csv")
+        df = pd.read_csv("../assets/data/us-cities.csv")
         df = df[(df["LATITUDE"].between(*ylim)) & (df["LONGITUDE"].between(*xlim))]
     except:
         print(f"⛔ ERROR: Could not get city names from file.")
