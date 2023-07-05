@@ -429,7 +429,7 @@ def draw_city_names(xlim, ylim, ax=None, **kwargs):
         ax = plt.gca()
 
     try:
-        df = pd.read_csv("./data/us-cities.csv")
+        df = pd.read_csv("../assets/data/us-cities.csv")
         df = df[(df["LATITUDE"].between(*ylim)) & (df["LONGITUDE"].between(*xlim))]
     except:
         print(f"⛔ ERROR: Could not get city names from file.")
