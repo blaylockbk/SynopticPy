@@ -26,11 +26,19 @@
 
 The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations.
 
-# 📔 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)
-
-# 📈 [SynopticPy Web App: Timeseries](https://blaylockbk.github.io/SynopticPy/app/timeseries)
-
 Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service) for open-access data. More data and enhances services are available through a [paid tier](https://synopticdata.com/pricing) (available through Synoptic, not me).
+
+> # 📔 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)
+>
+> SynopticPy is a Python package that helps you get mesonet data from the Synoptic API and load the data into Pandas Dataframes.
+
+> # 📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)
+>
+> The SynopticPy web app lets you plot station data from Synoptic in your browser powered by pyscript!.
+
+# SynopticPy
+
+I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a **[Pandas DataFrame](https://pandas.pydata.org/docs/)**. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](https://github.com/mesowx/MesoPy) python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more _ready-to-use_.
 
 > ### 🌐 Register for a free account at the Synoptic API Webpage
 >
@@ -38,16 +46,14 @@ Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synopti
 >
 > You will need to obtain an API token before using this python package.
 
-I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a **[Pandas DataFrame](https://pandas.pydata.org/docs/)**. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](https://github.com/mesowx/MesoPy) python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more _ready-to-use_.
-
-- [👨🏻‍🏭 Contributing Guidelines and Disclaimer](https://synopticpy.readthedocs.io/en/latest/user_guide/contribute.html)
-- [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions)
-- [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
-
 If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.
 
 **Best of Luck 🍀**  
 -Brian
+
+- [👨🏻‍🏭 Contributing Guidelines and Disclaimer](https://synopticpy.readthedocs.io/en/latest/user_guide/contribute.html)
+- [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions)
+- [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
 
 ---
 
@@ -65,7 +71,7 @@ conda install -c conda-forge synopticpy
 
 ## Install with pip
 
-Install the last published version from PyPI. 
+Install the last published version from PyPI.
 
 ```bash
 # Install latest release
@@ -85,6 +91,7 @@ pip install -e .
 ```
 
 ## Optional Dependencies
+
 It's optional, but you will likely want `cartopy` too. You may also want https://github.com/blaylockbk/carpenter_workshop.git
 
 # 🔨 Setup

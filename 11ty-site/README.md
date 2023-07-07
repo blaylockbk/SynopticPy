@@ -25,7 +25,7 @@ The web app is built using the [11ty](https://www.11ty.dev/) static site generat
  ├─📂pages/          # Holds the content of the website
  │  ├─📂_data/           
  │  ├─📂_includes/     
- │  ├─📂app/          # HTML pages for the app; These are
+ │  ├─📂app/          # HTML, CSS, Python, fonts, etc. that make the webpage 
  │  ├─📂web/          
  │  └─📄index.njk      
  ├─📄.eleventy.js    
