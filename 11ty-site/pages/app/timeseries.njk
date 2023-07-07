@@ -1,5 +1,6 @@
 ---
 title: Timeseries
+allowPyScript: true
 ---
 
 <!-- prettier-ignore -->
@@ -171,13 +172,11 @@ title: Timeseries
 <div class="container py-4">
   <div class="d-flex justify-content-between">
     <h1>Timeseries</h1>
-    <div>
-      {% include "modal/timeseries-readme.njk" %}
-    </div>
+    <div>{% include "modal/timeseries-readme.njk" %}</div>
   </div>
-  <div align="center" class="contentText form-group">
+  <div class="contentText form-group">
     <!-- FIRST ROW -->
-    <div class="row align-items-center">
+    <div class="row">
       <div class="col-sm-6">
         <!-- Station Selector ----------------------->
         <!-- prettier-ignore -->
@@ -255,7 +254,7 @@ title: Timeseries
       </div>
     </div>
     <!-- SECOND ROW -->
-    <div class="row align-items-center">
+    <div class="row">
       <div class="col-sm-6">
         <!-- Start Time ----------------------->
         <div class="input-group mb-3">
@@ -303,10 +302,10 @@ title: Timeseries
     </div>
 
     <!-- FOURTH ROW -->
-    <div class="row align-items-center">
+    <div class="row">
       <div class="col-sm-6">
         <!-- Smoother ----------------------->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <div class="input-group mb-3">
             <label class="input-group-text" for="smoothing">Smoother</label>
             <select
@@ -342,7 +341,7 @@ title: Timeseries
       <div class="col-sm-6">
         <!-- Colors ----------------------->
         <!-- prettier-ignore -->
-        <div class="input-group mb-3">
+        <div class="input-group">
               <label class="input-group-text" for="colorCycle"
                 >Colors</label
               >
@@ -380,11 +379,11 @@ title: Timeseries
       </div>
     </div>
     <!-- THIRD ROW -->
-    <div class="row align-items-center">
+    <div class="row">
       <!-- Units toggle----------------------->
       <div class="col-sm-3">
-        <div class="input-group mb-3">
-          <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="input-group">
+          <div class="btn-group w-100" role="group" aria-label="Basic example">
             <input
               type="radio"
               class="btn-check"
@@ -394,7 +393,7 @@ title: Timeseries
               value="english"
               checked
             />
-            <label class="btn btn-outline-secondary btn-sm" for="unitsRadio1"
+            <label class="btn btn-outline-secondary" for="unitsRadio1"
               >English Units</label
             >
             <input
@@ -405,7 +404,7 @@ title: Timeseries
               autocomplete="off"
               value="metric"
             />
-            <label class="btn btn-outline-secondary btn-sm" for="unitsRadio2"
+            <label class="btn btn-outline-secondary" for="unitsRadio2"
               >Metric Units</label
             >
           </div>
@@ -414,8 +413,8 @@ title: Timeseries
       <!-- (Units toggle) -->
       <!-- timezone toggle----------------------->
       <div class="col-sm-3">
-        <div class="input-group mb-3">
-          <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="input-group">
+          <div class="btn-group w-100" role="group" aria-label="Basic example">
             <input
               type="radio"
               class="btn-check"
@@ -425,7 +424,7 @@ title: Timeseries
               value="local"
               checked
             />
-            <label class="btn btn-outline-secondary btn-sm" for="timezoneRadio1"
+            <label class="btn btn-outline-secondary" for="timezoneRadio1"
               >Local Time</label
             >
             <input
@@ -436,7 +435,7 @@ title: Timeseries
               autocomplete="off"
               value="utc"
             />
-            <label class="btn btn-outline-secondary btn-sm" for="timezoneRadio2"
+            <label class="btn btn-outline-secondary" for="timezoneRadio2"
               >UTC Time</label
             >
           </div>
@@ -445,18 +444,14 @@ title: Timeseries
       <!-- (timezone toggle) -->
       <div class="col-sm-6">
         <!-- Submit Button -->
-        <div class="form-group" style="padding-top: 10px">
-          <div class="d-grid gap-2 col-6 mx-auto">
-            <button
-              type="submit"
-              class="btn btn-success btn-lg"
-              py-click="main(display)"
-              id="display"
-            >
-              Make Plot
-            </button>
-          </div>
-        </div>
+        <button
+          type="submit"
+          class="btn btn-success w-100"
+          py-click="main(display)"
+          id="display"
+        >
+          Make Plot
+        </button>
       </div>
     </div>
   </div>

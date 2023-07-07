@@ -1,5 +1,6 @@
 ---
 title: Meteogram
+allowPyScript: true
 ---
 
 <div class="container my-4">
@@ -11,10 +12,10 @@ title: Meteogram
   </div>
   <div align="center" class="contentText form-group">
     <!-- FIRST ROW -->
-    <div class="row align-items-center">
+    <div class="row mb-3">
       <div class="col-sm-4">
         <!-- Station Selector ----------------------->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <span class="input-group-text" id="stid">Station</span>
           <input
             type="text"
@@ -27,7 +28,7 @@ title: Meteogram
       </div>
       <div class="col-sm-4">
         <!-- Variable ----------------------->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <label class="input-group-text" for="variable">Variable</label>
           <select class="form-select" id="variableSelector_1">
             <option selected="selected" value="air_temp">
@@ -48,7 +49,7 @@ title: Meteogram
       </div>
       <div class="col-sm-4">
         <!-- Variable ----------------------->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <label class="input-group-text" for="variable">Variable</label>
           <select class="form-select" id="variableSelector_2">
             <option selected="selected" value="air_temp">
@@ -69,10 +70,10 @@ title: Meteogram
       </div>
     </div>
     <!-- SECOND ROW -->
-    <div class="row align-items-center">
+    <div class="row mb-3">
       <div class="col-sm-6">
         <!-- Start Time ----------------------->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <span class="input-group-text" id="startTime">Start time (UTC)</span>
           <input
             type="text"
@@ -85,7 +86,7 @@ title: Meteogram
       </div>
       <div class="col-sm-6">
         <!-- End Time ----------------------->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <span class="input-group-text" id="endTime">End time (UTC)</span>
           <input
             type="text"
@@ -115,11 +116,11 @@ title: Meteogram
     </div>
 
     <!-- FOURTH ROW -->
-    <div class="row align-items-center">
+    <div class="row mb-3">
       <div class="col-sm-6">
         <!-- Smoother ----------------------->
-        <div class="input-group mb-3">
-          <div class="input-group mb-3">
+        <div class="input-group">
+          <div class="input-group">
             <label class="input-group-text" for="smoothing">Smoother</label>
             <select class="form-select" id="smootherSelector1">
               <option selected="selected" value="none">None</option>
@@ -150,7 +151,7 @@ title: Meteogram
       <div class="col-sm-6">
         <!-- Colors ----------------------->
         <!-- prettier-ignore -->
-        <div class="input-group mb-3">
+        <div class="input-group">
           <label class="input-group-text" for="colorCycle"
             >Colors</label
           >
@@ -160,11 +161,11 @@ title: Meteogram
       </div>
     </div>
     <!-- THIRD ROW -->
-    <div class="row align-items-center">
+    <div class="row mb-3">
       <!-- Units toggle----------------------->
       <div class="col-sm-3">
-        <div class="input-group mb-3">
-          <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="input-group">
+          <div class="btn-group w-100" role="group" aria-label="Basic example">
             <input
               type="radio"
               class="btn-check"
@@ -174,7 +175,7 @@ title: Meteogram
               value="english"
               checked
             />
-            <label class="btn btn-outline-dark" for="unitsRadio1"
+            <label class="btn btn-outline-secondary" for="unitsRadio1"
               >English Units</label
             >
             <input
@@ -185,7 +186,7 @@ title: Meteogram
               autocomplete="off"
               value="metric"
             />
-            <label class="btn btn-outline-dark" for="unitsRadio2"
+            <label class="btn btn-outline-secondary" for="unitsRadio2"
               >Metric Units</label
             >
           </div>
@@ -194,8 +195,8 @@ title: Meteogram
       <!-- (Units toggle) -->
       <!-- timezone toggle----------------------->
       <div class="col-sm-3">
-        <div class="input-group mb-3">
-          <div class="btn-group" role="group" aria-label="Basic example">
+        <div class="input-group">
+          <div class="btn-group w-100" role="group" aria-label="Basic example">
             <input
               type="radio"
               class="btn-check"
@@ -205,7 +206,7 @@ title: Meteogram
               value="local"
               checked
             />
-            <label class="btn btn-outline-dark" for="timezoneRadio1"
+            <label class="btn btn-outline-secondary" for="timezoneRadio1"
               >Local Time</label
             >
             <input
@@ -216,7 +217,7 @@ title: Meteogram
               autocomplete="off"
               value="utc"
             />
-            <label class="btn btn-outline-dark" for="timezoneRadio2"
+            <label class="btn btn-outline-secondary" for="timezoneRadio2"
               >UTC Time</label
             >
           </div>
@@ -225,18 +226,14 @@ title: Meteogram
       <!-- (timezone toggle) -->
       <div class="col-sm-6">
         <!-- Submit Button -->
-        <div class="form-group" style="padding-top: 10px">
-          <div class="col-sm-4">
             <button
               type="submit"
-              class="btn btn-success"
+              class="btn btn-success w-100"
               py-click="main(display)"
               id="display"
             >
               Make Plot
             </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
