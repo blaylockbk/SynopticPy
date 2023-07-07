@@ -28,13 +28,10 @@ The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoW
 
 Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service) for open-access data. More data and enhances services are available through a [paid tier](https://synopticdata.com/pricing) (available through Synoptic, not me).
 
-> # 📔 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)
->
-> SynopticPy is a Python package that helps you get mesonet data from the Synoptic API and load the data into Pandas Dataframes.
+|     |    |
+| :---: | :---: |
+|<H2>📔 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)</H2> SynopticPy is a Python package that helps you get mesonet data from the Synoptic API and load the data into Pandas Dataframes.    | <h2>📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)</h2> The SynopticPy web app lets you plot station data from Synoptic in your browser powered by pyscript!    |
 
-> # 📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)
->
-> The SynopticPy web app lets you plot station data from Synoptic in your browser powered by pyscript!.
 
 # SynopticPy
 
