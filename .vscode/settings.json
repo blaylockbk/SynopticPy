@@ -18,22 +18,7 @@
         // "button.background": "#2180AF",
     },
     "python.formatting.provider": "black",
-    "actionButtons": {
-        "reloadButton": null,
-        "loadNpmCommands": false,
-        "commands": [
-            {
-                "name": "Remake Docs",
-                "singleInstance": true,
-                "color": "#FADE2A",
-                "command": "conda activate basic38; cd docs;  ./remake_docs.sh",
-            }
-        ]
-    },
     "esbonio.server.enabled": true,
-    "material-icon-theme.folders.associations": {
-        "app_dev": "generator",
-    },
     "cSpell.words": [
         "Herbie",
         "meteogram",
