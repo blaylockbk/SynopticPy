@@ -28,25 +28,20 @@
             "type": "shell",
             "command": "conda activate pypi && python setup.py sdist bdist_wheel && twine check dist/* && twine upload --skip-existing dist/*"
         },
+        //
+        // Tasks for developing the 11ty site
         {
             "label": "Build 11ty - Develop",
-            "detail": "Builds the full site in 'develop' mode (not tracked by Git).",
+            "detail": "Builds the full site in 'develop' mode.",
             "type": "shell",
             "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev)",
             "problemMatcher": []
         },
         {
-            "label": "Build 11ty - Develop (Site Only)",
-            "detail": "Builds the site without pyscript in 'develop' mode (not tracked by Git).",
+            "label": "Build 11ty - Develop (pyscript off)",
+            "detail": "Builds the site without pyscript in 'develop' mode.",
             "type": "shell",
             "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev:site)",
-            "problemMatcher": []
-        },
-        {
-            "label": "Build 11ty - Publish",
-            "detail": "Builds the full site in 'production' mode (tracked by Git).",
-            "type": "shell",
-            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run build)",
             "problemMatcher": []
         }
     ]
