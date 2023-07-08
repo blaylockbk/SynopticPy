@@ -202,11 +202,11 @@ def plot_station_on_map(df, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
-    point = df.attrs.get("LONGITUDE"), df.attrs.get("LATITUDE")
+    point = float(df["start"].get("LONGITUDE")), float(df["start"].get("LATITUDE"))
     art = ax.scatter(*point, **kwargs)
     ax.text(
         *point,
-        f"  {df.attrs.get('STID')}",
+        f"  {df['start'].get('STID')}",
         color=art.get_facecolor()[-1],
         ha="left",
         va="center",
@@ -511,7 +511,6 @@ def main(display):
 
     # ------------------------
     # Tab 1: Table Latest
-
     table_latest = ""
     for STID, (meta_df, value_df) in Z.items():
         table_latest += f"<br>"
@@ -524,43 +523,42 @@ def main(display):
 
     # -------------------------
     # Tab 2: Station Map Figure
-    # TODO
-    #    fig2, ax2 = plt.subplots()  # Map
-    #    states = {df.attrs.get("STATE") for _, df in Z.items()}
-    #    for state in states:
-    #        draw_state_polygon(
-    #            state,
-    #            facecolor=".9",
-    #            edgecolor=".5",
-    #            alpha=0.5,
-    #            zorder=2,
-    #        )
-    #
-    #    for i, (station, df) in enumerate(Z.items()):
-    #        plot_station_on_map(df, ax=ax2, zorder=1000 - i)
-    #
-    #    ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
-    #
-    #    # Map bounds
-    #    # Use zoomed-in map boundary if max distance between stations is large.
-    #    latitudes = [i.attrs["LATITUDE"] for i in Z.values()]
-    #    longitudes = [i.attrs["LONGITUDE"] for i in Z.values()]
-    #    points = zip(latitudes, longitudes)
-    #    pairs = list(itertools.product(points, repeat=2))
-    #
-    #    threshold = 2.5  # degree lat/lon before map zooms out to show full state
-    #    pad = 0.08
-    #    max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
-    #    xlim = (min(longitudes) - pad / 2, max(longitudes) + pad / 2)
-    #    ylim = (min(latitudes) - pad, max(latitudes) + pad)
-    #
-    #    if max_distance < threshold:
-    #        plt.gca().set_xlim(*xlim)
-    #        plt.gca().set_ylim(*ylim)
-    #        draw_city_names(xlim, ylim, ax=ax2)
-    #
-    #    fig2.tight_layout()
-    #    display(fig2, target="figure-map", append=False)
+    fig2, ax2 = plt.subplots()  # Map
+    states = {df["start"].get("STATE") for _, (df, _) in Z.items()}
+    for state in states:
+        draw_state_polygon(
+            state,
+            facecolor=".9",
+            edgecolor=".5",
+            alpha=0.5,
+            zorder=2,
+        )
+
+    for i, (station, (df, _)) in enumerate(Z.items()):
+        plot_station_on_map(df, ax=ax2, zorder=1000 - i)
+
+    ax2.grid(color="w", linewidth=2, alpha=0.8, zorder=1)
+
+    # Map bounds
+    # Use zoomed-in map boundary if max distance between stations is large.
+    latitudes = [float(i["start"]["LATITUDE"]) for i, _ in Z.values()]
+    longitudes = [float(i["start"]["LONGITUDE"]) for i, _ in Z.values()]
+    points = zip(latitudes, longitudes)
+    pairs = list(itertools.product(points, repeat=2))
+
+    threshold = 2.5  # degree lat/lon before map zooms out to show full state
+    pad = 0.08
+    max_distance = max(list(map(lambda x: calculate_distance(*x[0], *x[1]), pairs)))
+    xlim = (min(longitudes) - pad / 2, max(longitudes) + pad / 2)
+    ylim = (min(latitudes) - pad, max(latitudes) + pad)
+
+    if max_distance < threshold:
+        plt.gca().set_xlim(*xlim)
+        plt.gca().set_ylim(*ylim)
+        draw_city_names(xlim, ylim, ax=ax2)
+
+    fig2.tight_layout()
+    display(fig2, target="figure-map", append=False)
 
     # ---------------------------------
     # Tab 3: Station Information Tables
