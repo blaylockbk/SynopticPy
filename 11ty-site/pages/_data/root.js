@@ -1,1 +1,1 @@
-module.exports = process.env.ELEVENTY_ENV === 'dev' ? '/app' : '/SynopticPy/app'
+module.exports = process.env.ELEVENTY_ENV === "dev" ? "/app" : "/SynopticPy";
