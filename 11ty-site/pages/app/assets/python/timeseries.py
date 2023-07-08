@@ -782,22 +782,14 @@ def main(display):
 
     if (
         data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK"
-        and data["SUMMARY"].get("NUMBER_OF_OBJECTS") == 0
     ):
-        fig, ax = plot_message(
-            "No stations found for this request, or your account does not have access to the requested station(s).",
-        )
-        display(fig, target="figure-timeseries", append=False)
-        display(fig, target="figure-map", append=False)
-        Element("station-info").element.innerHTML = "<br><br><h1>No Stations Found</h1>"
-        return
-    elif data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK":
-        fig, ax = plot_message(data["SUMMARY"]["RESPONSE_MESSAGE"])
+        msg = data["SUMMARY"]["RESPONSE_MESSAGE"].replace("Please contact support@synopticdata.com.", "")
+        fig, ax = plot_message(msg)
         display(fig, target="figure-timeseries", append=False)
         display(fig, target="figure-map", append=False)
         Element(
             "station-info"
-        ).element.innerHTML = f'<br><br><h1>Error:<br>{data["SUMMARY"]["RESPONSE_MESSAGE"]}</h1><br> Problems with this URL <a href="{url}" target="_blank">{url}</a>. If you do not believe you are in error, please <a href="https://github.com/blaylockbk/SynopticPy/issues" target="_blank">report this</a>.'
+        ).element.innerHTML = f'<br><br><h1>Error:<br>{msg}</h1><br> Problems with this URL <a href="{url}" target="_blank">{url}</a>. If you do not believe you are in error, please <a href="https://github.com/blaylockbk/SynopticPy/issues" target="_blank">report this</a>.'
         return
 
     # ------------------------------------------------------------------

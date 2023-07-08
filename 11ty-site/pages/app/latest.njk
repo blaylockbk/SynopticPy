@@ -1,0 +1,266 @@
+---
+title: Latest
+allowPyScript: true
+---
+
+<!-- prettier-ignore -->
+<py-config>
+  packages = ["matplotlib", "pandas", "numpy", "scipy"]
+  [[fetch]]
+    files = ["../assets/python/latest.py", "../assets/fonts/Mona-Sans.ttf", "../assets/fonts/Hubot-Sans.ttf", "../assets/data/us-cities.csv"]
+</py-config>
+
+<script>
+  // Change Stations
+  function changeStations(option) {
+    if (option === "Peter Sinks") {
+      document.getElementById("stidInput").value = "PSRIM,PSINK";
+    } else if (option === "Monterey & Spanish Fork") {
+      document.getElementById("stidInput").value = "KMRY,UKBKB";
+    } else if (option === "Monterey, CA") {
+      document.getElementById("stidInput").value = "radius=E4129,10&limit=10";
+    } else if (option === "Family") {
+      document.getElementById("stidInput").value =
+        "KMRY,UKBKB,KLGU,C8948,E9049,KUMP";
+    } else if (option === "John Horel") {
+      document.getElementById("stidInput").value = "WBB,GNI,FREUT,LMR,BFLAT";
+    } else if (option === "University of Utah") {
+      document.getElementById("stidInput").value = "radius=WBB,10&limit=10";
+    } else if (option === "Arches National Park") {
+      document.getElementById("stidInput").value =
+        "radius=38.73, -109.59,20&limit=10";
+    } else if (option === "Western States") {
+      document.getElementById("stidInput").value =
+        "KSLC,KWMC,KBOI,KSEA,KEUG,KMRY,KSNA";
+    }
+  }
+</script>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between">
+    <h1>Latest</h1>
+    <div>{% include "modal/latest-readme.njk" %}</div>
+  </div>
+  <div class="contentText form-group">
+    <!-- FIRST ROW -->
+    <div class="row">
+      <div class="col-sm-6">
+        <!-- Station Selector ----------------------->
+        <!-- prettier-ignore -->
+        <div class="input-group mb-3">
+              <!-- <button type="button" class="btn"><i class="fa-regular fa-circle-question"></i></button> -->
+              <span class="input-group-text" id="stid">Stations</span>
+              <button
+                type="button"
+                class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                style="
+                  background-color: var(--bs-tertiary-bg);
+                  border: var(--bs-border-width) solid var(--bs-border-color);
+                  color: var(--bs-body-color);
+                "
+              ></button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Peter Sinks')">Peter Sinks</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey & Spanish Fork')">Monterey & Spanish Fork</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Monterey, CA')">Monterey, CA</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Family')">Family</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('John Horel')">John Horel</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('University of Utah')">University of Utah</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Arches National Park')">Arches National Park</a></li>
+                <li><a class="dropdown-item" href="#" onclick="changeStations('Western States')">Western States</a></li>
+              </ul>
+              <input
+                type="text"
+                id="stidInput"
+                spellcheck="false"
+                class="form-control"
+                value="PSRIM,PSINK"
+                title="Comma-separated list of Station IDs or Synoptic API Station Selector string"
+              />
+            </div>
+      </div>
+      <div class="col-sm-6">
+        <!-- Variable ----------------------->
+        <!-- prettier-ignore -->
+        <div class="input-group mb-3">
+
+            </div>
+      </div>
+    </div>
+
+    <!-- THIRD ROW -->
+    <div class="row">
+      <!-- Units toggle----------------------->
+      <div class="col-sm-3">
+        <div class="input-group">
+          <div class="btn-group w-100" role="group" aria-label="Basic example">
+            <input
+              type="radio"
+              class="btn-check"
+              name="unitsRadioOptions"
+              id="unitsRadio1"
+              autocomplete="off"
+              value="english"
+              checked
+            />
+            <label class="btn btn-outline-secondary" for="unitsRadio1"
+              >English Units</label
+            >
+            <input
+              type="radio"
+              class="btn-check"
+              name="unitsRadioOptions"
+              id="unitsRadio2"
+              autocomplete="off"
+              value="metric"
+            />
+            <label class="btn btn-outline-secondary" for="unitsRadio2"
+              >Metric Units</label
+            >
+          </div>
+        </div>
+      </div>
+      <!-- (Units toggle) -->
+      <!-- timezone toggle----------------------->
+      <div class="col-sm-3">
+        <div class="input-group">
+          <div class="btn-group w-100" role="group" aria-label="Basic example">
+            <input
+              type="radio"
+              class="btn-check"
+              name="timezoneRadioOptions"
+              id="timezoneRadio1"
+              autocomplete="off"
+              value="local"
+              checked
+            />
+            <label class="btn btn-outline-secondary" for="timezoneRadio1"
+              >Local Time</label
+            >
+            <input
+              type="radio"
+              class="btn-check"
+              name="timezoneRadioOptions"
+              id="timezoneRadio2"
+              autocomplete="off"
+              value="utc"
+            />
+            <label class="btn btn-outline-secondary" for="timezoneRadio2"
+              >UTC Time</label
+            >
+          </div>
+        </div>
+      </div>
+      <!-- (timezone toggle) -->
+      <div class="col-sm-6">
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-success w-100"
+          py-click="main(display)"
+          id="display"
+        >
+          Get Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT TABS  -->
+  <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="latest-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#latest-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="latest-tab-pane"
+        aria-selected="true"
+      >
+        Latest
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="map-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#map-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="map-tab-pane"
+        aria-selected="false"
+      >
+        Map
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="station-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#station-tab-pane"
+        type="button"
+        role="tab"
+        aria-controls="station-tab-pane"
+        aria-selected="false"
+      >
+        Station Info
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content" id="myTabContent">
+    <!-- latest table Tab -->
+    <div
+      class="tab-pane fade show active"
+      id="latest-tab-pane"
+      role="tabpanel"
+      aria-labelledby="latest-tab"
+      tabindex="0"
+    >
+      <div id="table-latest" align="center"></div>
+    </div>
+
+    <!-- Map Figure Tab -->
+    <div
+      class="tab-pane fade"
+      id="map-tab-pane"
+      role="tabpanel"
+      aria-labelledby="map-tab"
+      tabindex="0"
+    >
+      <div id="figure-map" align="center"></div>
+    </div>
+
+    <!-- Station Info Tab -->
+    <div
+      class="tab-pane fade"
+      id="station-tab-pane"
+      role="tabpanel"
+      aria-labelledby="station-tab"
+      tabindex="0"
+    >
+      <div id="station-info"></div>
+    </div>
+  </div>
+  <!-- (CONTENT TABS)  -->
+
+  <!-- Bottom material -->
+  <div id="json-download"></div>
+  <py-terminal></py-terminal>
+</div>
+
+<!-- prettier-ignore -->
+<py-script>
+  import sys
+  sys.path.append("../assets/python")
+  from latest import main
+  print()
+  print("Making new API request...")
+  fig = main(display)
+
+</py-script>
