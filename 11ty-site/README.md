@@ -7,11 +7,16 @@
    conda create --name synoptic -c conda-forge nodejs
    conda activate synoptic
    ```
+   And add npm to your PATH
+   ```
+   # e.g., in ~/.bashrc
+   export PATH=/home/blaylock/miniconda3/envs/synoptic/bin:$PATH
+   ```
 2. `cd 11ty-site` - Every time
 3. `npm install` - Do once, or anytime a NPM dependency changes
 4. `npm run dev` - Builds the full site in _develop mode_, (not tracked by Git).
 5. `npm run dev:site` - Builds the site without PyScript in _develop mode_, (not tracked by Git).
-6. ~~`npm run build` - Builds the full site in _production mode_, (tracked by Git).~~ The page build is completed by GitHub Actions (./github/workflows/static.yml)
+6. ~~`npm run build` - Builds the full site in _production mode_, (tracked by Git).~~ Do NOT run this command; the page build is instead completed by GitHub Actions (./github/workflows/static.yml)
 
 # SynopticPy App Organization
 
