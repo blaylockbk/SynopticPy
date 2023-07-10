@@ -371,6 +371,10 @@ def main(display):
         station_selector = f"stid={stid.upper()}"
         station_order = stid.upper().split(",")
 
+    # Parse within
+    within = "12H"
+    within = int(pd.to_timedelta(within).total_seconds() // 60)
+
     # Parse units
     for ele in js.document.getElementsByName("unitsRadioOptions"):
         if ele.checked:
@@ -399,6 +403,7 @@ def main(display):
         f"units={units}",
         f"obtimezone={obtimezone}",
         f"token={token}",
+        f"within={within}",
     ]
     url = base_url + "&".join(arguments)
     url_hidden = url.replace(token, "*****")
@@ -497,13 +502,12 @@ def main(display):
     # ---------------------------
     # Join Network ID information
     # TODO:
-    # network_ids = {df['start']["MNET_ID"] for stid, (df, _) in Z.items()}
-    # network_df = get_network_info(network_ids)
-    # for i in Z.values():
-    #    id = i.attrs["MNET_ID"]
-    #    i.attrs[
-    #        "MNET_ID"
-    #    ] = f"{id} - {network_df.loc[id].SHORTNAME} :: {network_df.loc[id].LONGNAME}"
+    network_ids = {df["start"]["MNET_ID"] for stid, (df, _) in Z.items()}
+    network_df = get_network_info(network_ids)
+    for stid, (metadata_df, value_df) in Z.items():
+        mnet_id = int(metadata_df["end"]["MNET_ID"])
+        metadata_df.loc["MNET_ID"] = f"{mnet_id} - {network_df.loc[mnet_id].SHORTNAME} :: {network_df.loc[mnet_id].LONGNAME}"
+        Z[stid] = (metadata_df, value_df)
 
     # ---------------------
     # Figures and Smoothing

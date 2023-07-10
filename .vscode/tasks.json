@@ -34,14 +34,14 @@
             "label": "Build 11ty - Develop",
             "detail": "Builds the full site in 'develop' mode.",
             "type": "shell",
-            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev)",
+            "command": "(cd 11ty-site && npm run dev)",
             "problemMatcher": []
         },
         {
             "label": "Build 11ty - Develop (pyscript off)",
             "detail": "Builds the site without pyscript in 'develop' mode.",
             "type": "shell",
-            "command": "(eval \"$(conda shell.bash hook)\" && conda activate synoptic && cd 11ty-site && npm run dev:site)",
+            "command": "(cd 11ty-site && npm run dev:site)",
             "problemMatcher": []
         }
     ]
