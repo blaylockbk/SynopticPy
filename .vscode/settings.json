@@ -1,4 +1,20 @@
 {
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "cSpell.words": [
+        "Herbie",
+        "meteogram",
+        "synopticpy",
+        "Timeseries"
+    ],
+    "path-autocomplete.pathMappings": {
+        "{{assets}}/": "${folder}/11ty-site/dev/app/assets",
+        "{{root}}/": "${folder}/11ty-site/dev/app"
+    },
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
     "workbench.colorCustomizations": {
         // Colors Based on MesoWest colors
         // https://mesowest.utah.edu/
@@ -11,22 +27,10 @@
         // "activityBar.background": "#990000",
         // "activityBarBadge.background": "#FADE2A",
         // "activityBarBadge.foreground":"#2180AF",
-        "titleBar.activeBackground": "#1D4795",
+        "titleBar.activeBackground": "#1D4795"
         // "titleBar.activeForeground": "#ffffff",
         // "statusBar.background": "#43A047",
         // "statusBarItem.remoteBackground": "#465A9B",
         // "button.background": "#2180AF",
-    },
-    "python.formatting.provider": "black",
-    "esbonio.server.enabled": true,
-    "cSpell.words": [
-        "Herbie",
-        "meteogram",
-        "synopticpy",
-        "Timeseries"
-    ],
-    "path-autocomplete.pathMappings": {
-        "{{root}}/": "${folder}/11ty-site/dev/app",
-        "{{assets}}/": "${folder}/11ty-site/dev/app/assets",
     }
 }
