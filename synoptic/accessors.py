@@ -101,7 +101,6 @@ class SynopticAccessor:
             cbar_kw = {**cm_tmp().cbar_kwargs, **cbar_kw}
 
         for stid, info in df[stations].iteritems():
-
             if color_by is not None:
                 kw["c"] = info[color_by]
 

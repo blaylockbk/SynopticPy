@@ -18,6 +18,7 @@ import toml
 from pathlib import Path
 import requests
 
+
 ########################################################################
 # Append Path object with my custom expand method so user can use
 # environment variables in the config file (e.g., ${HOME}).

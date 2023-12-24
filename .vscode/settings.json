@@ -32,5 +32,7 @@
         // "statusBar.background": "#43A047",
         // "statusBarItem.remoteBackground": "#465A9B",
         // "button.background": "#2180AF",
-    }
+    },
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

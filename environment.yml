@@ -27,6 +27,7 @@ dependencies:
 
   # Formatter and Testing
   # ---------------------
+  - ruff
   - black
   - isort
   - pylint
