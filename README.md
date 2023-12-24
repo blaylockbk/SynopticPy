@@ -2,7 +2,7 @@
     align='center'
 >
 
-<img src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/SynopticPy_logo.png" width=50%>
+![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/SynopticPy_logo.png)
 
 # ☁ Synoptic API for Python (_unofficial_)
 
@@ -13,7 +13,8 @@
 [![DOI](https://zenodo.org/badge/288617886.svg)](https://zenodo.org/badge/latestdoi/288617886)
 
 ![License](https://img.shields.io/github/license/blaylockbk/SynopticPy)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Tests (Python)](https://github.com/blaylockbk/SynopticPy/actions/workflows/tests-python.yml/badge.svg)](https://github.com/blaylockbk/SynopticPy/actions/workflows/tests-python.yml)
 [![Documentation Status](https://readthedocs.org/projects/synopticpy/badge/?version=latest)](https://synopticpy.readthedocs.io/?badge=latest)
 [![Python](https://img.shields.io/pypi/pyversions/SynopticPy.svg)](https://pypi.org/project/SynopticPy/)
 [![Conda Recipe](https://img.shields.io/badge/recipe-synopticpy-green.svg)](https://anaconda.org/conda-forge/synopticpy)

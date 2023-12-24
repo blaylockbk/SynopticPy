@@ -22,10 +22,12 @@ dependencies:
   - requests
   - scipy
   - toml
+  - windrose
   - xarray
 
   # Formatter and Testing
   # ---------------------
+  - ruff
   - black
   - isort
   - pylint
