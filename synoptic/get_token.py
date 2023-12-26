@@ -1,22 +1,18 @@
 ## Brian Blaylock
 ## January 8, 2020
 
-"""
-======================
-🎫 Synoptic API Token
-======================
+"""🎫 Synoptic API Token.
+
 SynopticPy needs to know your public Synoptic API token.
 
-You likely wont need to do anything with these functions.
-
-The first time you import a ``synoptic.services`` function, it will
+The first time you import a `synoptic.services` function, it will
 ask you for your API token and store that information in
-``~/.config/SynopticPy/config.cfg``. You may edit that config file if
-you need. Please refer to the :ref:`User Guide`. for more info.
-
+`~/.config/SynopticPy/config.cfg`. You may edit that config file if
+you need.
 """
 
 import os
+import re
 from pathlib import Path
 
 import requests
@@ -24,7 +20,7 @@ import toml
 
 
 ########################################################################
-# Append Path object with my custom expand method so user can use
+# Overload Path object with my custom expand method so user can use
 # environment variables in the config file (e.g., ${HOME}).
 def _expand(self):
     """
@@ -33,7 +29,7 @@ def _expand(self):
     Example
     -------
     >>> Path('$HOME').expand()
-    >>> PosixPath('/p/home/blaylock')
+    PosixPath('/p/home/blaylock')
     """
     return Path(os.path.expandvars(self)).expanduser().resolve()
 
@@ -41,116 +37,156 @@ def _expand(self):
 Path.expand = _expand
 
 
-########################################################################
-def test_token(config, verbose=True, configure_on_fail=True):
-    """
-    Test that the token can get data from Synoptic.
+TOKEN_HELP = """
+   ╭─SynopticPy HELP──────────────────────────────────────────────────────────╮
+   │ Dear SynopticPy User,                                                    │
+   │                                                                          │
+   │ Thanks for installing SynopticPy. Before you get started, you            │
+   │ need a valid Synoptic API token. To use the open-access datasets:        │
+   │                                                                          │
+   │ 1) Go to https://synopticdata.com/pricing/open-access-pricing/ and       │
+   │    select 'Get Started' to create your new, free account.                │
+   │                                                                          │
+   │ 2) When logged in, you can manage your API credentials at                │
+   │    https://customer.synopticdata.com/credentials/                        │
+   │    Here you can view and generate new public tokens.                     │
+   ╰──────────────────────────────────────────────────────────────────────────╯
+"""
 
-    If the test fails, the user is prompted with instructions to acquire
-    a valid token. The user will be asked what the token is, and will
-    save that info into the config file located at
-    ``~/.config/SynopticPy/config.cfg``.
+########################################################################
+
+
+class ANSI:
+    """ANSI color and escape codes."""
+
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    ITALIC = "\033[3m"
+    UNDERLINE = "\033[4m"
+    STRIKETHROUGH = "\033[9m"
+
+    # Text color codes
+    BLACK = "\033[30m"
+    RED = "\033[31m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    BLUE = "\033[34m"
+    MAGENTA = "\033[35m"
+    CYAN = "\033[36m"
+    WHITE = "\033[37m"
+
+    # Background color codes
+    BLACK_BG = "\033[40m"
+    RED_BG = "\033[41m"
+    GREEN_BG = "\033[42m"
+    YELLOW_BG = "\033[43m"
+    BLUE_BG = "\033[44m"
+    MAGENTA_BG = "\033[45m"
+    CYAN_BG = "\033[46m"
+    WHITE_BG = "\033[47m"
+
+    @staticmethod
+    def text(text, color):
+        """Show ANSI-colored text.
+
+        Usage
+        -----
+        >>> print(f"Color {ANSI.text('me', ANSI.GREEN)}.")
+        """
+        return f"{color}{text}{ANSI.RESET}"
+
+
+class Token:
+    """Synoptic API Token.
+
+    A Synoptic API public token is 32-characters string. You can create
+    a new token or find existing tokens at your Synoptic account at
+    https://customer.synopticdata.com/credentials/
 
     Parameters
     ----------
-    configure_on_fail : bool
+    token : str
+        Your Synoptic API token.
 
-        - True: Help the user update the config file with ``config_token``
-        - False: Do not update (prevents infinite loop if user keeps adding an invalid token).
-
-    verbose : bool
-
-        - True: Print details as this function runs.
-        - False: Do not print anything if the token check passes.
-
-    Returns
-    -------
-    A valid API token
-
+    Usage
+    -----
+    >>> myToken = Token("123abc")
+    >>> myToken.is_valid
+    False
     """
-    token = config["default"].get("token")
 
-    if token in [None, ""]:
-        # There isn't an API token defined, so configure one.
-        return config_token(config)
+    def __init__(self, token=None):
+        if token is None:
+            print(TOKEN_HELP)
+            self.token = input("What is your Synoptic API token? >>> ").strip()
+        else:
+            self.token = token.strip()
 
-    if verbose:
-        print(f"🧪 Testing your token: {token}")
+    def __str__(self):
+        """Token's string representation."""
+        return self.token
 
-    # Test token with a quick metadata request for a single station
-    URL = "https://api.synopticdata.com/v2/stations/metadata?"
-    params = dict(stid="WBB", token=token)
-    json = requests.get(URL, params).json()
-    response = json["SUMMARY"]["RESPONSE_MESSAGE"]
+    def __repr__(self):
+        """Representation of the Token class."""
+        return f"🎫 Synoptic API token: {ANSI.text(self.token, ANSI.GREEN)}"
 
-    if response == "OK":
+    def is_valid(self, verbose=True):
+        """Test that the token is valid."""
         if verbose:
-            print(f"🔓 API Access Enabled. Response is [{response}].")
-        return config
-    else:
-        print(f"🤦🏻‍♂️ Failed: {token} is not valid. {response}")
-        print()
-        print("----------------------------")
-        print("Token Configuration Required")
-        print("----------------------------")
-        if configure_on_fail:
-            config_token(config)
+            print(f"🧪 Testing token {ANSI.text(self.token, ANSI.GREEN)}")
+
+        # Test token with a quick metadata request for a single station
+        URL = "https://api.synopticdata.com/v2/stations/metadata?"
+        params = dict(stid="WBB", token=self.token)
+        json = requests.get(URL, params).json()
+        response = json["SUMMARY"]["RESPONSE_MESSAGE"]
+
+        if response == "OK":
+            if verbose:
+                print(f"🔓 Access with token is {ANSI.text(response, ANSI.GREEN)}.")
+            return True
+
         else:
             print(
-                f" ╭─SynopticPy──────────────────────────────────────────╮\n"
-                f" │ ERROR: Please update config file with a valid token:│\n"
-                f" │ {str(_config_file):^52s}│\n"
-                f" ╰─────────────────────────────────────────────────────╯\n"
+                f"🤦🏻‍♂️ ERROR: {ANSI.text(self.token, ANSI.GREEN)} is not a valid Synoptic API token. {ANSI.text(response, ANSI.RED)}"
             )
+            return False
 
 
-def config_token(config, new_token=None):
-    """Update the config.cfg file with your Synoptic API token.
-
-    Parameters
-    ----------
-    new_token : None or str
-        If None, the user will be asked to input the token (default).
-        Else, the config file will be updated with `new_token`.
-
-    Returns
-    -------
-    A valid API token, if it passes ``test_token``. Else, None.
-
-    """
-    # Read the config file and get the token
-    token = config["default"].get("token")
-
-    print(f"Config File: {_config_path}")
+def configure_token(token=None):
+    """Update the SynopticPy config file with a new Synoptic API token."""
     if token is None:
-        print("Current Token: 🕵🏻‍♂️ NOT ASSIGNED")
-    else:
-        print(f"Current Token: {token}")
+        print(TOKEN_HELP)
+        token = input("What is your Synoptic API token? >>> ")
 
-    if new_token is None:
-        print(msg)
-        new_token = input("What is your Synoptic API token? >>> ")
+    if not isinstance(token, Token):
+        token = Token(token)
 
-    # Save the new_token to the config.toml file
-    config["default"] = {**config["default"], **{"token": new_token}}
-
-    try:
-        with open(_config_file, "w") as f:
-            toml.dump(config, f)
-
-        print("\nThanks! I will do a quick test...")
-
-        # Don't want to run into an infinite loop, so set configure_on_fail=False
-        config = test_token(config, configure_on_fail=False)
-        return config
-    except:
+    if not token.is_valid():
         raise ValueError(
             f"\n"
-            f" ╭─SynopticPy──────────────────────────────────────────╮\n"
-            f" │ ERROR: Please update config file with a valid token:│\n"
-            f" │ {str(_config_file):^52s}│\n"
-            f" ╰─────────────────────────────────────────────────────╯\n"
+            f"╭─SynopticPy ERROR────────────────────────────────────╮\n"
+            f"│ Invalid Token.                                      │\n"
+            f"│ {ANSI.text(token, ANSI.GREEN):<52s}│\n"
+            f"│ Will not update config.                             │\n"
+            f"│ Please update config file with a valid token:       │\n"
+            f"│ {str(_config_file):^52s}│\n"
+            f"╰─────────────────────────────────────────────────────╯\n"
+            f"{TOKEN_HELP}"
         )
+
+    # Read the contents of the config file
+    with open(_config_file) as file:
+        file_content = file.read()
+
+    # Replace the token in the content with the new token
+    updated_content = re.sub(r"token\s?=\s?.*", f'token = "{token}"', file_content)
+
+    # Write the updated content back to the file
+    with open(_config_file, "w") as file:
+        file.write(updated_content)
+
+    print(f"Updated {str(_config_file)} with new token.")
 
 
 ########################################################################
@@ -173,46 +209,16 @@ token = ""
 # Synoptic API token. If you have issues, you can edit this file with
 # your valid token directly. For example:
 #
-# token="1234567890abcdefghijklm"
-#
 # Or, if you have an environment variable SYNOPTIC_TOKEN set, then
 # SynopticPy will use that token instead.
 """
 
-msg = f"""
-    ╭─SynopticPy───────────────────────────────────────────────────────────────╮
-    │ Dear SynopticPy User,                                                    │
-    │                                                                          │
-    │ Thanks for installing SynopticPy. Before you get started, you            │
-    │ need to register for a free Synoptic Data account and obtain an          │
-    │ API token. Follow these instructions:                                    │
-    │                                                                          │
-    │ 1) Go to https://developers.synopticdata.com/mesonet/v2/getting-started/ │
-    │    and click "Sign Up Now!" to register for an account.                  │
-    │                                                                          │
-    │ 2) Go to your profile settings and locate your public token at           │
-    │    https://developers.synopticdata.com/settings/.                        │
-    │    You may also generate a new token in the "Manage Tokens" tab,         │
-    │    if desired.                                                           │
-    │                                                                          │
-    │ 3) Copy a public token (not your key!), and paste into this input        │
-    │    dialogue. Or exit out of this dialog and edit the file                │
-    │    {str(_config_file):^70s}│
-    │    with your token.                                                      │
-    │                                                                          │
-    │ Good luck and happy programing! 🍀                                       │
-    │ Brian Blaylock                                                           │
-    ╰──────────────────────────────────────────────────────────────────────────╯\n
-"""
 
 ########################################################################
 # Load config file (create one if needed)
 try:
     # Load the SynopticPy config file
     config = toml.load(_config_file)
-
-    # Test the token.
-    config = test_token(config, verbose=False)
 
 except:
     try:
@@ -222,19 +228,22 @@ except:
             f.write(default_toml)
 
         print(
-            f" ╭─SynopticPy───────────────────────────────────────────╮\n"
-            f" │ INFO: Created a default config file.                 │\n"
+            f" ╭─SynopticPy INFO──────────────────────────────────────╮\n"
+            f" │ Created a default config file.                       │\n"
             f" │ You may view/edit SynopticPys's configuration here:  │\n"
             f" │ {str(_config_file):^53s}│\n"
             f" ╰──────────────────────────────────────────────────────╯\n"
         )
 
+        # Ask user for their token and put it in the configure file.
+        configure_token()
+
         # Load the new SynopticPy config file
         config = toml.load(_config_file)
     except (OSError, FileNotFoundError, PermissionError):
         print(
-            f" ╭─SynopticPy──────────────────────────────────────────╮\n"
-            f" │ WARNING: Unable to create config file               │\n"
+            f" ╭─SynopticPy WARNING──────────────────────────────────╮\n"
+            f" │ Unable to create config file                        │\n"
             f" │ {str(_config_file):^53s}│\n"
             f" │ SynopticPy will use standard default settings.      │\n"
             f" │ Or, you may set env variable SYNOPTICPY_CONFIG_PATH.│\n"
@@ -242,15 +251,21 @@ except:
         )
         config = toml.loads(default_toml)
 
-# Test the token.
-config = test_token(config, verbose=False)
-
-
 if os.getenv("SYNOPTIC_TOKEN"):
     config["default"]["token"] = os.getenv("SYNOPTIC_TOKEN")
     print(
-        " ╭─SynopticPy───────────────────────────────────────────╮\n"
-        " │ INFO: Overriding the configured token because the    │\n"
+        " ╭─SynopticPy INFO──────────────────────────────────────╮\n"
+        " │ Overriding the configured token because the          │\n"
         " │ environment variable SYNOPTIC_TOKEN is set.          │\n"
         " ╰──────────────────────────────────────────────────────╯\n"
     )
+
+# Test the token is valid
+if not Token(config["default"]["token"]).is_valid():
+    print(
+        "ERROR: Config file's token is not valid."
+        "Maybe you can edit the config file manually to correct the issue."
+    )
+
+# =============================================================================
+# That's all. You should have access to the config variable with a valid token.
