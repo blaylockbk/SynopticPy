@@ -1,10 +1,8 @@
 ## Brian Blaylock
 ## August 13, 2020    COVID-19 Era
 
-"""
-==================
-👨🏻‍💻 Services
-==================
+"""Synoptic Services.
+
 Get mesonet data from the `Synoptic API services
 <https://developers.synopticdata.com/>`_ and return data as a
 Pandas.DataFrame. Requires a `Synoptic API token
@@ -92,7 +90,7 @@ import urllib
 import numpy as np
 import pandas as pd
 
-from synoptic.get_token import config
+from synoptic import config, TOKEN
 
 # Available API Services
 # https://developers.synopticdata.com/mesonet/v2/
@@ -159,16 +157,13 @@ def spddir_to_uv(wspd, wdir):
 ## You can turn these off in your requests by setting `rename_set_1`
 ## and `rename_value_1` to False in your function call where applicable.
 def _rename_set_1(df):
-    """
-    Rename Variable Columns Names
+    """Rename Variable Columns Names.
 
     Remove the 'set_1' and 'set_1d' from column names
     Sets 2+ will retain their full names.
     The user should refer to SENSOR_VARIABLES to see which
     variables are derived
-
     """
-
     ## Get list of current column names
     dummy_columns = list(df.columns)
 
@@ -216,8 +211,7 @@ def _rename_set_1(df):
 
 
 def _rename_value_1(df):
-    """
-    Rename Variable Row (index) Names
+    """Rename Variable Row (index) Names.
 
     Remove the ``value_1`` and ``value_1d`` from column names.
     Values 2+ will retain their full names. If both
@@ -227,9 +221,7 @@ def _rename_value_1(df):
 
     The user should refer to SENSOR_VARIABLES to see which
     variables are derived.
-
     """
-
     ## Get list of current column names
     dummy_rows = list(df.index)
 
@@ -275,10 +267,7 @@ def _rename_value_1(df):
 
 
 def _parse_latest_nearesttime(data, rename_value_1):
-    """
-    Parsing JSON for ``latest`` and ``nearesttime`` is the same.
-
-    """
+    """Parse JSON for ``latest`` and ``nearesttime`` is the same."""
     # Here's a dictionary to store all SENSOR_VARIABLES and RENAMED
     # WARNING: Some of these could be overwritten
     senvars = {}
@@ -355,7 +344,7 @@ def synoptic_api(
     hide_token=config["default"].get("hide_token", False),
     **params,
 ):
-    """
+    r"""
     Request data from the Synoptic API. Returns a **requests** object.
 
     References
@@ -394,7 +383,6 @@ def synoptic_api(
     .. code:: python
 
         synoptic_api('metadata', stid=['WBB', 'KSLC']).json()
-
     """
     help_url = "https://developers.synopticdata.com/mesonet/v2/"
     assert (
@@ -494,7 +482,7 @@ def synoptic_api(
 
 
 def stations_metadata(verbose=config["default"].get("verbose", True), **params):
-    """
+    r"""
     Get station metadata for stations as a Pandas DataFrame.
 
     https://developers.synopticdata.com/mesonet/v2/stations/metadata/
@@ -507,7 +495,6 @@ def stations_metadata(verbose=config["default"].get("verbose", True), **params):
 
     Others: STATION SELECTION PARAMETERS
     https://developers.synopticdata.com/mesonet/v2/station-selectors/
-
     """
     assert any(
         [i in _stn_selector for i in params]
@@ -553,7 +540,7 @@ def stations_timeseries(
     rename_set_1=config["default"].get("rename_set_1", True),
     **params,
 ):
-    """
+    r"""
     Get station data for time series.
 
     https://developers.synopticdata.com/mesonet/v2/stations/timeseries/
@@ -606,7 +593,6 @@ def stations_timeseries(
 
     Examples
     --------
-
     .. code:: python
 
         stations_timeseries(stid='WBB', recent=100)
@@ -622,7 +608,6 @@ def stations_timeseries(
         plt.plot(df['dew_point_temperature'])
         plt.gca().xaxis.set_major_formatter(DateFormatter('%b %d %H:%M'))
         plt.legend()
-
     """
     check1 = "start" in params and "end" in params
     check2 = "recent" in params
@@ -714,8 +699,8 @@ def stations_nearesttime(
     rename_value_1=config["default"].get("rename_value_1", True),
     **params,
 ):
-    """
-    Get station data nearest a datetime. (Very similar to the latest service.)
+    r"""
+    Get station data nearest a datetime. (Very similar to the latest service).
 
     https://developers.synopticdata.com/mesonet/v2/stations/nearesttime/
 
@@ -753,7 +738,6 @@ def stations_nearesttime(
     .. code:: python
 
         stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
-
     """
     assert "attime" in params, "🤔 `attime` is a required parameter (datetime)."
     assert any(
@@ -777,8 +761,8 @@ def stations_latest(
     rename_value_1=config["default"].get("rename_value_1", True),
     **params,
 ):
-    """
-    Get the latest station data. (Very similar to the nearesttime service.)
+    r"""
+    Get the latest station data. (Very similar to the nearesttime service).
 
     https://developers.synopticdata.com/mesonet/v2/stations/latest/
 
@@ -812,11 +796,9 @@ def stations_latest(
 
     Examples
     --------
-
     .. code:: python
 
         stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
-
     """
     assert any(
         [i in _stn_selector for i in params]
@@ -835,7 +817,7 @@ def stations_latest(
 
 
 def stations_precipitation(verbose=config["default"].get("verbose", True), **params):
-    """
+    r"""
     Get the precipitation data.
 
     https://developers.synopticdata.com/mesonet/v2/stations/precipitation/
@@ -868,7 +850,7 @@ def stations_precipitation(verbose=config["default"].get("verbose", True), **par
 
 def networks(verbose=config["default"].get("verbose", True), **params):
     """
-    Return a DataFrame of available Networks and their metadata
+    Return a DataFrame of available Networks and their metadata.
 
     https://developers.synopticdata.com/mesonet/v2/networks/
     https://developers.synopticdata.com/about/station-network-type/
@@ -880,7 +862,6 @@ def networks(verbose=config["default"].get("verbose", True), **params):
         Filter by network number.
     shortname : str or list of str
         Network shortname, i.e. 'NWS/FAA', 'RAWS', 'UTAH DOT',
-
     """
     # Get the data
     web = synoptic_api("networks", verbose=verbose, **params)
@@ -899,8 +880,8 @@ def networks(verbose=config["default"].get("verbose", True), **params):
 
 
 def networktypes(verbose=config["default"].get("verbose", True), **params):
-    """
-    Get a DataFrame of network types
+    r"""
+    Get a DataFrame of network types.
 
     https://developers.synopticdata.com/mesonet/v2/networktypes/
     https://developers.synopticdata.com/about/station-network-type/
@@ -910,9 +891,7 @@ def networktypes(verbose=config["default"].get("verbose", True), **params):
     \*\*params : keyword arguments
     id : int
         Select just the network type you want
-
     """
-
     # Get the data
     web = synoptic_api("networktypes", verbose=verbose, **params)
     data = web.json()
@@ -927,7 +906,7 @@ def networktypes(verbose=config["default"].get("verbose", True), **params):
 
 def variables(verbose=config["default"].get("verbose", True), **params):
     """
-    Return a DataFrame of available station variables
+    Return a DataFrame of available station variables.
 
     https://developers.synopticdata.com/mesonet/v2/variables/
     https://developers.synopticdata.com/mesonet/v2/api-variables/
@@ -936,7 +915,6 @@ def variables(verbose=config["default"].get("verbose", True), **params):
     ----------
     **param : keyword arguments
         There are none for the 'variables' service.
-
     """
     # Get the data
     web = synoptic_api("variables", verbose=verbose, **params)
@@ -952,7 +930,7 @@ def variables(verbose=config["default"].get("verbose", True), **params):
 
 def qctypes(verbose=config["default"].get("verbose", True), **params):
     """
-    Return a DataFrame of available quality control (QC) types
+    Return a DataFrame of available quality control (QC) types.
 
     https://developers.synopticdata.com/mesonet/v2/qctypes/
     https://developers.synopticdata.com/about/qc/
@@ -961,7 +939,6 @@ def qctypes(verbose=config["default"].get("verbose", True), **params):
     ----------
     **param : keyword arguments
         Available parameters include ``id`` and ``shortname``
-
     """
     # Get the data
     web = synoptic_api("qctypes", verbose=verbose, **params)

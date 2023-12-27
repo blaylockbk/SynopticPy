@@ -1,13 +1,5 @@
-## Brian Blaylock
-## September 1, 2020
+"""Quick Plots."""
 
-"""
-==========
-📈 Plots
-==========
-Quick plots from the Synoptic API
-
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -46,7 +38,6 @@ def plot_timeseries(
         Same as for `stations_timeseries`
 
     """
-
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
@@ -96,7 +87,7 @@ def plot_timeseries(
 
 def plot_timeseries_wind(data=None, figsize=(10, 5), **params):
     """
-    3-panel plot showing wind timeseries (wind speed/gust, direction, quiver)
+    3-panel plot showing wind timeseries (wind speed/gust, direction, quiver).
 
     Consider resampling the data to smooth it out and so times with no
     data is not shown in the plot.
@@ -107,7 +98,6 @@ def plot_timeseries_wind(data=None, figsize=(10, 5), **params):
         df.resample('1H').mean()
 
     """
-
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
@@ -243,9 +233,9 @@ def map_metadata(
     # User must supply the data as returned from stations_timeseries
     # or the param keywords used to make the API request.
     if data is None:
-        a = ss.stations_metadata(verbose=verbose, **params)
+        df = ss.stations_metadata(verbose=verbose, **params)
     else:
-        a = data
+        df = data
 
     lats = df.loc["latitude"]
     lons = df.loc["longitude"]
