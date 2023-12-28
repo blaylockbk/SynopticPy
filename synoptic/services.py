@@ -4,15 +4,15 @@
 """Synoptic Services.
 
 Get mesonet data from the `Synoptic API services
-<https://developers.synopticdata.com/>`_ and return data as a
+<https://docs.synopticdata.com/services/>`_ and return data as a
 Pandas.DataFrame. Requires a `Synoptic API token
-<https://synopticlabs.org/api/guides/?getstarted>`_
+<https://synopticdata.com/>`_
 
 .. tip::
 
     Before you get started, please become familiar with the
     `Synoptic API developers documentation
-    <https://developers.synopticdata.com/mesonet/v2/>`_.
+    <https://docs.synopticdata.com/services/weather-data-api>`_.
 
 
 Station Selector Parameters
@@ -20,7 +20,7 @@ Station Selector Parameters
 The fundamental method for specifying the data you query is done with
 **station selector arguments**. Below are some of the more common
 paramaters. Read `Station Selectors
-<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
+<https://docs.synopticdata.com/services/station-selection-parameters>`__
 in the API documents for all options and capabilities.
 
     stid : str or list
@@ -38,7 +38,7 @@ in the API documents for all options and capabilities.
         Filter stations by the variables they report.
         i.e., ``['air_temp', 'wind_speed', 'wind_direction', etc.]``
         Look at the `docs for more variables
-        <https://developers.synopticdata.com/about/station-variables/>`_.
+        <https://demos.synopticdata.com/variables/index.html>`_.
     varsoperator : {'and', 'or'}
         Define how  ``vars`` is understood.
         Default ``'or'`` means any station with any variable is used.
@@ -46,7 +46,7 @@ in the API documents for all options and capabilities.
         to be listed.
     network - int
         Network ID number. See `network API service
-        <https://developers.synopticdata.com/about/station-providers/>`_
+        <https://demos.synopticdata.com/providers/index.html>`_
         for more information.
     limit : int
         Specify how many of the closest stations you want to receive.
@@ -58,7 +58,7 @@ Other Common Parameters
 -----------------------
     units : {'metric', 'english'}
         See `documentation
-        <https://developers.synopticdata.com/mesonet/v2/stations/latest/>`_
+        <https://docs.synopticdata.com/services/latest>`_
         for more details on custom units selection.
         An example of a custom unit is ``units='temp|F'`` to set just
         the temperature to degrees Fahrenheit.
