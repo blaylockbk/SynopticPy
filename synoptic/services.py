@@ -272,8 +272,14 @@ def _parse_latest_nearesttime(data, rename_value_1):
                     wdir = obs[i_dir]["value"]
                     u, v = spddir_to_uv(wspd, wdir)
                     this_set = "_".join(i_spd.split("_")[-2:])
-                    df[f"wind_u_{this_set}"] = [u, obs[i_spd]["date_time"]]
-                    df[f"wind_v_{this_set}"] = [v, obs[i_spd]["date_time"]]
+                    df[f"wind_u_{this_set}"] = [
+                        u,
+                        pd.to_datetime(obs[i_spd]["date_time"]),
+                    ]
+                    df[f"wind_v_{this_set}"] = [
+                        v,
+                        pd.to_datetime(obs[i_spd]["date_time"]),
+                    ]
 
         df = df.transpose().sort_index()
 
