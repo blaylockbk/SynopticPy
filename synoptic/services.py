@@ -81,16 +81,15 @@ Other Common Parameters
         df.index.tz_localize(None)
 
 """
-import sys
-import warnings
-from datetime import datetime, timedelta
-
-import requests
 import urllib
+import warnings
+
 import numpy as np
 import pandas as pd
+import requests
 
-from synoptic import config, TOKEN
+from synoptic import config
+from synoptic.utils import spddir_to_uv
 
 # Available API Services
 # https://developers.synopticdata.com/mesonet/v2/
@@ -118,39 +117,6 @@ _stn_selector = {
     "bbox",
     "fields",
 }
-
-
-def spddir_to_uv(wspd, wdir):
-    """
-    Calculate the u and v wind components from wind speed and direction.
-
-    Parameters
-    ----------
-    wspd, wdir : array_like
-        Arrays of wind speed and wind direction (in degrees)
-
-    Returns
-    -------
-    u and v wind components
-
-    """
-    if isinstance(wspd, list) or isinstance(wdir, list):
-        wspd = np.array(wspd, dtype=float)
-        wdir = np.array(wdir, dtype=float)
-
-    rad = 4.0 * np.arctan(1) / 180.0
-    u = -wspd * np.sin(rad * wdir)
-    v = -wspd * np.cos(rad * wdir)
-
-    # If the speed is zero, then u and v should be set to zero (not NaN)
-    if hasattr(u, "__len__"):
-        u[np.where(wspd == 0)] = 0
-        v[np.where(wspd == 0)] = 0
-    elif wspd == 0:
-        u = float(0)
-        v = float(0)
-
-    return np.round(u, 3), np.round(v, 3)
 
 
 # Rename "set_1" and "value_1" names is a convience I prefer.
@@ -278,6 +244,9 @@ def _parse_latest_nearesttime(data, rename_value_1):
         obs = i.pop("OBSERVATIONS")
         df = pd.DataFrame(obs)
 
+        # Convert date_time to datetime object
+        df.loc["date_time"] = pd.to_datetime(df.loc["date_time"])
+
         # Add other station info to the DataFrame (i.e., ELEVATION, latitude, etc.)
         for k, v in i.items():
             # Attempt to convert values to a float, if possible.
@@ -288,9 +257,9 @@ def _parse_latest_nearesttime(data, rename_value_1):
                 pass
             if k in ["LATITUDE", "LONGITUDE"]:
                 # lat/lon is lowercase for CF compliant variable name
-                df[k.lower()] = [None, v]
+                df[k.lower()] = [v, None]
             else:
-                df[k] = [None, v]
+                df[k] = [v, None]
 
         # Break wind into U and V components, if speed and direction are available
         senvars = i["SENSOR_VARIABLES"]
@@ -298,16 +267,13 @@ def _parse_latest_nearesttime(data, rename_value_1):
             for i_spd, i_dir in zip(
                 senvars["wind_speed"].keys(), senvars["wind_direction"].keys()
             ):
-                if obs[i_spd]["date_time"] == obs[i_spd]["date_time"]:
+                if obs[i_spd]["date_time"] == obs[i_dir]["date_time"]:
                     wspd = obs[i_spd]["value"]
                     wdir = obs[i_dir]["value"]
                     u, v = spddir_to_uv(wspd, wdir)
                     this_set = "_".join(i_spd.split("_")[-2:])
-                    df[f"wind_u_{this_set}"] = [obs[i_spd]["date_time"], u]
-                    df[f"wind_v_{this_set}"] = [obs[i_spd]["date_time"], v]
-
-        # Convert date_time to datetime object
-        df.loc["date_time"] = pd.to_datetime(df.loc["date_time"])
+                    df[f"wind_u_{this_set}"] = [u, obs[i_spd]["date_time"]]
+                    df[f"wind_v_{this_set}"] = [v, obs[i_spd]["date_time"]]
 
         df = df.transpose().sort_index()
 

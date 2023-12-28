@@ -1,3 +1,7 @@
+"""Miscellaneous utilities for SynopticPy."""
+
+import numpy as np
+
 class ANSI:
     """ANSI color and escape codes."""
 
@@ -36,3 +40,37 @@ class ANSI:
         >>> print(f"Color {ANSI.text('me', ANSI.GREEN)}.")
         """
         return f"{color}{text}{ANSI.RESET}"
+
+
+
+def spddir_to_uv(wspd, wdir):
+    """
+    Calculate the u and v wind components from wind speed and direction.
+
+    Parameters
+    ----------
+    wspd, wdir : array_like
+        Arrays of wind speed and wind direction (in degrees)
+
+    Returns
+    -------
+    u and v wind components
+
+    """
+    if isinstance(wspd, list) or isinstance(wdir, list):
+        wspd = np.array(wspd, dtype=float)
+        wdir = np.array(wdir, dtype=float)
+
+    rad = 4.0 * np.arctan(1) / 180.0
+    u = -wspd * np.sin(rad * wdir)
+    v = -wspd * np.cos(rad * wdir)
+
+    # If the speed is zero, then u and v should be set to zero (not NaN)
+    if hasattr(u, "__len__"):
+        u[np.where(wspd == 0)] = 0
+        v[np.where(wspd == 0)] = 0
+    elif wspd == 0:
+        u = float(0)
+        v = float(0)
+
+    return np.round(u, 3), np.round(v, 3)
