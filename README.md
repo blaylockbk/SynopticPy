@@ -25,9 +25,9 @@
 
 </div>
 
-The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations.
+The [Synoptic Weather API](https://synopticdata.com/weatherapi) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations.
 
-Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service) for open-access data. More data and enhances services are available through a [paid tier](https://synopticdata.com/pricing) (available through Synoptic, not me).
+Synoptic open-access data is [_free_](https://synopticdata.com/pricing/open-access-pricing/). More data and enhances services are available through a [commercial option](https://synopticdata.com/pricing) (available through Synoptic, not me).
 
 | <H2>📘 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)</H2>    | <h2>📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)</h2>   |
 | :---: | :---: |
@@ -40,7 +40,7 @@ I wrote these functions to conveniently access data from the Synoptic API and co
 
 > ### 🌐 Register for a free account at the Synoptic API Webpage
 >
-> > https://developers.synopticdata.com
+> > https://docs.synopticdata.com/account/
 >
 > You will need to obtain an API token before using this python package.
 
@@ -53,7 +53,7 @@ If you have stumbled across this package, I hope it is useful to you or at least
 - [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions)
 - [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
 
----
+<hr>
 
 <br><br><br>
 
