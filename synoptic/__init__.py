@@ -25,15 +25,18 @@ from synoptic.services import stations_timeseries
 ```
 """
 
-__author__ = "Brian Blaylock"
+__author__ = "Brian K. Blaylock"
 __email__ = "blaylockbk@gmail.com"
 __url__ = "https://github.com/blaylockbk/SynopticPy"
 
 
 try:
-    from ._version import __version__
+    ## TODO: Will the `_version.py` file *always* be present?
+    ## TODO: What if the person doesn't do "pip install"
+    from ._version import __version__, __version_tuple__
 except:
-    pass
+    __version__ = "unknown"
+    __version_tuple__ = (999, 999, 999)
 
 # Note to self: Synoptic's config file is created by the get_token.py script
 

@@ -1,0 +1,12 @@
+[
+    {
+        "version": "latest",
+        "url": "https://synopticpy.readthedocs.io/en/latest/",
+        "is_latest": true
+    },
+    {
+        "name": "stable",
+        "version": "stable",
+        "url": "https://synopticpy.readthedocs.io/en/stable/"
+    }
+]
