@@ -8,10 +8,10 @@
 Quick plots from the Synoptic API
 
 """
-import numpy as np
-import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+import matplotlib.pyplot as plt
+import numpy as np
 
 import synoptic.services as ss
 
@@ -94,7 +94,7 @@ def plot_timeseries(
         plt.legend()
 
 
-def plot_timeseries_wind(data=None, figsize=(10, 5), **params):
+def plot_timeseries_wind(data=None, figsize=(10, 5), verbose=False, **params):
     """
     3-panel plot showing wind timeseries (wind speed/gust, direction, quiver)
 
@@ -118,6 +118,7 @@ def plot_timeseries_wind(data=None, figsize=(10, 5), **params):
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=figsize)
 
     ax1.plot(df.index, df.wind_speed, color="k")
+
     if "wind_gust" in df:
         ax1.scatter(df.index, df.wind_gust, marker="+", color="tab:green")
     ax1.set_ylim(ymin=0)
@@ -126,27 +127,29 @@ def plot_timeseries_wind(data=None, figsize=(10, 5), **params):
         f"{df.attrs['STID']} : {df.attrs['NAME']}", loc="left", fontweight="bold"
     )
 
-    ax2.scatter(df.index, df.wind_direction, marker=".", color="tab:orange")
+    if "wind_direction" in df:
+        ax2.scatter(df.index, df.wind_direction, marker=".", color="tab:orange")
+        ax2.set_ylabel(f"Wind Direction ({df.attrs['UNITS']['wind_direction']})")
     ax2.set_yticks(range(0, 361, 45))
     ax2.set_ylim(0, 360)
-    ax2.set_ylabel(f"Wind Direction ({df.attrs['UNITS']['wind_direction']})")
 
     ax2b = ax2.twinx()
     ax2b.set_yticks(range(0, 361, 45))
     ax2b.set_yticklabels(["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"])
     ax2b.set_ylim(0, 360)
 
-    ax3.quiver(
-        df.index,
-        df.wind_speed,
-        df.wind_u,
-        df.wind_v,
-        df.wind_speed,
-        cmap="Blues",
-        edgecolors="k",
-        linewidths=0.3,
-        zorder=5,
-    )
+    if "wind_u" in df:
+        ax3.quiver(
+            df.index,
+            df.wind_speed,
+            df.wind_u,
+            df.wind_v,
+            df.wind_speed,
+            cmap="Blues",
+            edgecolors="k",
+            linewidths=0.3,
+            zorder=5,
+        )
 
 
 def map_timeseries(
