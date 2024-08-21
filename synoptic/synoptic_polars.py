@@ -1,4 +1,20 @@
-"""Synoptic Data to Polars DataFrame."""
+"""Synoptic Data to Polars DataFrame.
+
+GOAL
+
+```
+import synoptic
+
+synoptic.timeseries(params).df
+synoptic.metadata(params).df
+synoptic.nearest_time(params).df
+synoptic.latest(params).df
+synoptic.precipitation(params).df
+
+```
+Each of these functions are in the 'services.py' file.
+
+"""
 
 import requests
 import polars as pl
@@ -28,6 +44,8 @@ ServiceType = Literal[
 class SynopticAPI:
     """Request data from the Synoptic Data API.
 
+    More information can be found at <https://docs.synopticdata.com/services/weather-data-api>.
+
     Parameters
     ----------
     service : str
@@ -45,6 +63,8 @@ class SynopticAPI:
             self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
         else:
             self.endpoint = f"https://api.synopticdata.com/v2/{service}"
+
+        self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
 
         # ----------------
         # Parse parameters
@@ -88,7 +108,9 @@ class SynopticAPI:
 
         if self.code != 1:
             # TODO: create a custom exception to print this message
-            print("FATAL: Not a valid Synoptic API request.")
+            print(
+                f"FATAL: Not a valid Synoptic API request. See {self.help_url} for help."
+            )
             print(f"  ├─ message: {self.message}")
             print(f"  └─ url: {self.response.url}")
             raise ValueError()
