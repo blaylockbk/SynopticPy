@@ -1,25 +1,30 @@
 """Synoptic Data to Polars DataFrame.
 
-GOAL
+My goal...
 
 ```python
 import synoptic
 
-synoptic.timeseries(params)
-synoptic.metadata(params)
-synoptic.nearest_time(params)
-synoptic.latest(params)
-synoptic.precipitation(params)
+df = synoptic.timeseries(params)
+df = synoptic.metadata(params)
+df = synoptic.nearest_time(params)
+df = synoptic.latest(params)
+df = synoptic.precipitation(params)
+
+df.synoptic.pivot(...)
+df.synoptic.resample(...)
 ```
 
 Put each of these functions are in the 'services.py' file.
 
 The default DataFrame is in long format; one row for each unique observation
 
+TODO: Use token from 1) environment variable, 2) config.toml, 3) function argument
 TODO: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
 TODO: Provide helper function to do proper pivot
-TODO: Provide helper function to do proper rolling and resample windows
+TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
+TODO: Extensive testing.
 """
 
 import requests
