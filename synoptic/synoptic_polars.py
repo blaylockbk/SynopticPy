@@ -22,29 +22,51 @@ from datetime import datetime, timedelta
 from typing import Literal, Optional
 
 # Available API Services
-# https://developers.synopticdata.com/mesonet/v2/
-_stations = {"metadata", "timeseries", "precipitation", "nearesttime", "latest"}
-_other = {"auth", "networks", "networktypes", "variables", "qctypes"}
-_services = _stations | _other
-
-ServiceType = Literal[
-    "metadata",
+# https://docs.synopticdata.com/services/weather-data-api
+_services_stations = {
     "timeseries",
-    "precipitation",
-    "nearesttime",
     "latest",
-    "auth",
+    "nearesttime",
+    "precipitation",
+    "qcsegments",
+    "latency",
+    "metadata",
+}
+_services_metadata = {
+    "qctypes",
+    "variables",
     "networks",
     "networktypes",
-    "variables",
+    "auth",
+}
+_services = _services_stations | _services_metadata
+
+ServiceType = Literal[
+    "timeseries",
+    "latest",
+    "nearesttime",
+    "precipitation",
+    "qcsegments",
+    "latency",
+    "metadata",
     "qctypes",
+    "variables",
+    "networks",
+    "networktypes",
+    "auth",
 ]
+
+
+class SynopticAPIError(Exception):
+    """Custom exception for SynopticAPI errors."""
+
+    pass
 
 
 class SynopticAPI:
     """Request data from the Synoptic Data API.
 
-    More information can be found at <https://docs.synopticdata.com/services/weather-data-api>.
+    https://docs.synopticdata.com/services/weather-data-api
 
     Parameters
     ----------
@@ -59,7 +81,7 @@ class SynopticAPI:
     def __init__(self, service: ServiceType, **params):
         self.service = service
 
-        if self.service in _stations:
+        if self.service in _services_stations:
             self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
         else:
             self.endpoint = f"https://api.synopticdata.com/v2/{service}"
@@ -107,19 +129,150 @@ class SynopticAPI:
         self.message = self.json["SUMMARY"]["RESPONSE_MESSAGE"]
 
         if self.code != 1:
-            # TODO: create a custom exception to print this message
-            print(
-                f"FATAL: Not a valid Synoptic API request. See {self.help_url} for help."
+            raise SynopticAPIError(
+                f"FATAL: Not a valid Synoptic API request.\n"
+                f"  ├─ message: {self.message}\n"
+                f"  └─ url: {self.response.url}\n"
+                f"See {self.help_url} for help."
             )
-            print(f"  ├─ message: {self.message}")
-            print(f"  └─ url: {self.response.url}")
-            raise ValueError()
 
-    def df(self):
-        """Parse JSON data as Polars DataFrame."""
-        df = pl.DataFrame(self.json["STATION"][0]["OBSERVATIONS"])
-        # TODO: loop over each station
-        #  - cast datetime column
-        #  - attach metadata
-        #  - concat all dfs together
-        return df
+
+class TimeSeries(SynopticAPI):
+    """Get time series data.
+
+    https://docs.synopticdata.com/services/time-series
+    """
+
+    # TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
+    # TODO: What should I do about column names? I don't like the "_set_1" "set_1d" labels.
+    # TODO: Maybe don't join all metadata columns, only those really necessary.
+
+    def __init__(self, **params):
+        super().__init__("timeseries", **params)
+
+        self.summary = self.json["SUMMARY"]
+        self.qc_summary = self.json["QC_SUMMARY"]
+        self.units = self.json["UNITS"]
+
+        self.n_stations = len(self.json["STATION"])
+
+        dfs = []
+        sensor_variables = {}
+        for station in self.json["STATION"]:
+            stid = station["STID"]
+            observations = station.pop("OBSERVATIONS")
+            sensor_variables = station.pop("SENSOR_VARIABLES")
+            metadata = (
+                pl.DataFrame(station)
+                .with_columns(
+                    pl.struct(
+                        pl.col("PERIOD_OF_RECORD")
+                        .struct.field("start")
+                        .str.to_datetime()
+                        .alias("PERIOD_OF_RECORD_START"),
+                        pl.col("PERIOD_OF_RECORD")
+                        .struct.field("end")
+                        .str.to_datetime()
+                        .alias("PERIOD_OF_RECORD_END"),
+                    ).alias("PERIOD_OF_RECORD"),
+                    pl.col("STID").cast(pl.String),
+                    pl.col("ID", "MNET_ID").cast(pl.UInt32),
+                    pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(
+                        pl.Float64
+                    ),
+                )
+                .unnest("PERIOD_OF_RECORD")
+                .drop("UNITS")  # Unnecessary?
+            )
+            z = (
+                pl.DataFrame(observations)
+                .with_columns(pl.col("date_time").str.to_datetime())
+                .unpivot(index="date_time")
+                .with_columns(
+                    pl.col("variable").str.extract_groups(
+                        r"(?<variable>.+)_set_(?<sensor>\d)(?<derived>d?)"
+                    )
+                )
+                .unnest("variable")
+                .with_columns(
+                    pl.col("value").cast(
+                        pl.Float64, strict=False
+                    ),  # Values must be numbers
+                    pl.col("derived") == "d",
+                    pl.col("sensor").cast(pl.UInt32),
+                    pl.col("variable").replace(self.units).alias("units"),
+                )
+                .filter(pl.col("value").is_not_null())
+            ).join(metadata, how="cross")
+            dfs.append(z)
+            sensor_variables[stid] = sensor_variables
+        df = pl.concat(dfs, how="diagonal_relaxed")
+        df = df.rename({i: i.lower() for i in df.columns})
+        self.df = df
+
+
+class Latest(SynopticAPI):
+    def __init__(self, **params):
+        super().__init__("latest", **params)
+
+        self.summary = self.json["SUMMARY"]
+        self.qc_summary = self.json["QC_SUMMARY"]
+        self.units = self.json["UNITS"]
+
+        self.n_stations = len(self.json["STATION"])
+
+        dfs = []
+        sensor_variables = {}
+        for station in self.json["STATION"]:
+            stid = station["STID"]
+            observations = station.pop("OBSERVATIONS")
+            sensor_variables = station.pop("SENSOR_VARIABLES")
+            metadata = (
+                pl.DataFrame(station)
+                .with_columns(
+                    pl.struct(
+                        pl.col("PERIOD_OF_RECORD")
+                        .struct.field("start")
+                        .str.to_datetime()
+                        .alias("PERIOD_OF_RECORD_START"),
+                        pl.col("PERIOD_OF_RECORD")
+                        .struct.field("end")
+                        .str.to_datetime()
+                        .alias("PERIOD_OF_RECORD_END"),
+                    ).alias("PERIOD_OF_RECORD"),
+                    pl.col("STID").cast(pl.String),
+                    pl.col("ID", "MNET_ID").cast(pl.UInt32),
+                    pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(
+                        pl.Float64
+                    ),
+                )
+                .unnest("PERIOD_OF_RECORD")
+                .drop("UNITS")  # Unnecessary?
+            )
+            z = (
+                pl.DataFrame(observations)
+                .transpose(include_header=True, header_name="variable")
+                .unnest("column_0")
+                .with_columns(pl.col("date_time").str.to_datetime())
+                .select("date_time", "variable", "value")
+                .with_columns(
+                    pl.col("variable").str.extract_groups(
+                        r"(?<variable>.+)_value_(?<sensor>\d)(?<derived>d?)"
+                    )
+                )
+                .unnest("variable")
+                .with_columns(
+                    pl.col("value").cast(
+                        pl.Float64, strict=False
+                    ),  # Values must be numbers
+                    pl.col("derived") == "d",
+                    pl.col("sensor").cast(pl.UInt32),
+                    pl.col("variable").replace(self.units).alias("units"),
+                )
+                .filter(pl.col("value").is_not_null())
+            ).join(metadata, how="cross")
+            dfs.append(z)
+            sensor_variables[stid] = sensor_variables
+        df = pl.concat(dfs, how="diagonal_relaxed")
+        df = df.rename({i: i.lower() for i in df.columns})
+        self.df = df

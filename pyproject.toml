@@ -30,7 +30,10 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pandas",
+    "polars",
+    "pyarrow",
     "requests",
+    "seaborn",
     "toml",
 ]
 dynamic = ["version"]
