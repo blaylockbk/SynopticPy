@@ -2,23 +2,24 @@
 
 GOAL
 
-```
+```python
 import synoptic
 
-synoptic.timeseries(params).df
-synoptic.metadata(params).df
-synoptic.nearest_time(params).df
-synoptic.latest(params).df
-synoptic.precipitation(params).df
-
+synoptic.timeseries(params)
+synoptic.metadata(params)
+synoptic.nearest_time(params)
+synoptic.latest(params)
+synoptic.precipitation(params)
 ```
-Each of these functions are in the 'services.py' file.
 
+Put each of these functions are in the 'services.py' file.
 
-Notes
------
-Does not parse non-numeric values, like wind_cardinal_direction. (TODO: Are there any others?)
+The default DataFrame is in long format; one row for each unique observation
 
+TODO: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
+TODO: Provide helper function to do proper pivot
+TODO: Provide helper function to do proper rolling and resample windows
+TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
 """
 
 import requests
