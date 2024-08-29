@@ -25,6 +25,7 @@ TODO: Provide helper function to do proper pivot
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
 TODO: Extensive testing.
+TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
 """
 
 import requests
