@@ -21,17 +21,27 @@ The default DataFrame is in long format; one row for each unique observation
 
 TODO: Use token from 1) environment variable, 2) config.toml, 3) function argument
 TODO: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
+    These are what I found so far...'wind_cardinal_direction_set_1d', 'weather_condition_set_1d', 'weather_summary_set_1d'
 TODO: Provide helper function to do proper pivot
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
 TODO: Extensive testing.
 TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
+TODO: Special case for 'obrange'???
+TODO: Can polars parse duration strings like '1h' and '1h30m' to a duration?
+TODO: Maybe don't join *all* metadata columns, only those really necessary.    <-- Let the user decide to drop things.
+
+TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
 """
 
-import requests
-import polars as pl
+import os
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Literal, Optional
+
+import polars as pl
+import requests
+import toml
 
 # Available API Services
 # https://docs.synopticdata.com/services/weather-data-api
@@ -103,19 +113,29 @@ class SynopticAPIError(Exception):
 class SynopticAPI:
     """Request data from the Synoptic Data API.
 
-    https://docs.synopticdata.com/services/weather-data-api
-
     Parameters
     ----------
-    service : str
-        The Synoptic API service to use.
+    service : {'timeseries', 'latest', 'neartesttime', 'precipitation', etc.}
+        The Synoptic API service to use. Refer to the Synoptic Weather
+        Data API documentation for a full list of services:
+        https://docs.synopticdata.com/services/weather-data-api
+    token : str
+        A 32-character Synoptic account token. If None, tries to get
+        value from the following:
+        1. Environment variable `SYNOPTIC_TOKEN`,
+        2. `token="..."` value in `~/.config/SynopticPy/config.toml`.
     **parms
         Synoptic API request arguments.
-        Lists are converted to comma-separated strings.
-        Datetime and timedelta are converted to strings.
+        - Lists are converted to comma-separated strings.
+        - Datetime and timedelta are converted to strings.
+        - Datetime can a string in format `'YYYY-MM-DD HH:MM'`
+
+        Refer to the Synoptic Weather Data API documentation for valid
+        arguments for each service:
+        https://docs.synopticdata.com/services/weather-data-api
     """
 
-    def __init__(self, service: ServiceType, **params):
+    def __init__(self, service: ServiceType, *, token: Optional[str] = None, **params):
         self.service = service
 
         if self.service in _services_stations:
@@ -125,11 +145,40 @@ class SynopticAPI:
 
         self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
 
+        # ---------
+        # Get token
+        if token is None:
+            token = os.getenv("SYNOPTIC_TOKEN")
+            if token is None:
+                _config_path = os.getenv(
+                    "SYNOPTICPY_CONFIG_PATH", "~/.config/SynopticPy"
+                )
+                _config_path = Path(_config_path).expanduser()
+                _config_file = _config_path / "config.toml"
+                if _config_file.exists():
+                    try:
+                        # new token configuration
+                        token = toml.load(_config_file).get("token")
+                    except:
+                        # legacy token configuration
+                        token = toml.load(_config_file)["default"].get("token")
+                else:
+                    raise SynopticAPIError(
+                        "\n"
+                        " ╭─SynopticPy:FATAL────────────────────────────────────────────╮\n"
+                        " │ A valid Synoptic token is required. Do one of the following:│\n"
+                        " │  1) Specify `token='1234567889ABCDE...'` in your request.   │\n"
+                        " │  2) Set environment variable SYNOPTIC_TOKEN.                │\n"
+                        " │  3) Configure a token in ~/.config/SynopticPy/config.toml   │\n"
+                        " ╰─────────────────────────────────────────────────────────────╯\n"
+                    )
+
         # ----------------
         # Parse parameters
 
         # Force all param keys to be lower case.
         params = {k.lower(): v for k, v in params.items()}
+        params["token"] = token
 
         for key, value in params.items():
             # Convert lists to comma-separated string.
@@ -138,11 +187,22 @@ class SynopticAPI:
             if isinstance(value, list) and key not in ["obrange"]:
                 params[key] = ",".join([str(i) for i in value])
 
-            # TODO: Special case for 'obrange'
+            # TODO: Special case for 'obrange'???
 
-            # Convert datetime to string 'YYYYmmddHHMM'.
+            # Convert datetime or string datetime to 'YYYYMMDDHHMM'.
             elif key in {"start", "end", "expire", "attime"}:
-                if isinstance(value, datetime):
+                if isinstance(value, str) and "-" in value:
+                    try:
+                        # Try to parse the string as a datetime
+                        value = pl.Series([value]).str.to_datetime().item()
+                    except:
+                        raise SynopticAPIError(
+                            "\n"
+                            f"Wrong datetime format for {key}.\n"
+                            "Try using a datetime object or string like `YYYY-MM-DD HH:MM`."
+                        )
+
+                if hasattr(value, "minute"):
                     params[key] = f"{value:%Y%m%d%H%M}"
                 else:
                     params[key] = str(value)
@@ -161,27 +221,25 @@ class SynopticAPI:
         self.json = self.response.json()
 
         # -------------------
-        # Check returned data
-        self.code = self.json["SUMMARY"]["RESPONSE_CODE"]
-        self.message = self.json["SUMMARY"]["RESPONSE_MESSAGE"]
+        # Attach request data
+        self.SUMMARY = self.json["SUMMARY"]
 
-        if self.code != 1:
+        if "QC_SUMMARY" in self.json.keys():
+            self.QC_SUMMARY = self.json["QC_SUMMARY"]
+
+        if "UNITS" in self.json.keys():
+            self.UNITS = self.json["UNITS"]
+
+        # -------------------
+        # Check returned data
+        if self.SUMMARY["RESPONSE_CODE"] != 1:
             raise SynopticAPIError(
+                "\n"
                 f"FATAL: Not a valid Synoptic API request.\n"
-                f"  ├─ message: {self.message}\n"
+                f"  ├─ message: {self.SUMMARY['RESPONSE_MESSAGE']}\n"
                 f"  └─ url: {self.response.url}\n"
                 f"See {self.help_url} for help."
             )
-
-        # -----------
-        # Attach data
-        self.summary = self.json["SUMMARY"]
-        if "QC_SUMMARY" in self.json.keys():
-            self.qc_summary = self.json["QC_SUMMARY"]
-        if "UNITS" in self.json.keys():
-            self.units = self.json["UNITS"]
-        if "STATION" in self.json.keys():
-            self.n_stations = len(self.json["STATION"])
 
 
 class TimeSeries(SynopticAPI):
@@ -189,10 +247,6 @@ class TimeSeries(SynopticAPI):
 
     https://docs.synopticdata.com/services/time-series
     """
-
-    # TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
-    # TODO: What should I do about column names? I don't like the "_set_1" "set_1d" labels.
-    # TODO: Maybe don't join all metadata columns, only those really necessary.
 
     def __init__(self, **params):
         super().__init__("timeseries", **params)
@@ -221,7 +275,7 @@ class TimeSeries(SynopticAPI):
                     ),  # Values must be numbers
                     pl.col("derived") == "d",
                     pl.col("sensor").cast(pl.UInt32),
-                    pl.col("variable").replace(self.units).alias("units"),
+                    pl.col("variable").replace(self.UNITS).alias("units"),
                 )
                 .filter(pl.col("value").is_not_null())
             ).join(metadata, how="cross")
@@ -262,7 +316,7 @@ class Latest(SynopticAPI):
                     ),  # Values must be numbers
                     pl.col("derived") == "d",
                     pl.col("sensor").cast(pl.UInt32),
-                    pl.col("variable").replace(self.units).alias("units"),
+                    pl.col("variable").replace(self.UNITS).alias("units"),
                 )
                 .filter(pl.col("value").is_not_null())
             ).join(metadata, how="cross")
@@ -304,7 +358,7 @@ class NearestTime(SynopticAPI):
                     ),  # Values must be numbers
                     pl.col("derived") == "d",
                     pl.col("sensor").cast(pl.UInt32),
-                    pl.col("variable").replace(self.units).alias("units"),
+                    pl.col("variable").replace(self.UNITS).alias("units"),
                 )
                 .filter(pl.col("value").is_not_null())
             ).join(metadata, how="cross")
@@ -330,7 +384,7 @@ class Precipitation(SynopticAPI):
                 .with_columns(
                     pl.col("ob_start_time_1").str.to_datetime(),
                     pl.col("ob_end_time_1").str.to_datetime(),
-                    pl.lit(self.units["precipitation"]).alias("units"),
+                    pl.lit(self.UNITS["precipitation"]).alias("units"),
                 )
                 .rename(
                     {

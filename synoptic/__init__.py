@@ -40,10 +40,11 @@ except:
 
 # Note to self: Synoptic's config file is created by the get_token.py script
 
-try:
-    from synoptic.accessors import *
-except:
-    warnings.warn("Could not import synoptic.accessors")
-    pass
+if False:
+    try:
+        from synoptic.accessors import *
+    except:
+        warnings.warn("Could not import synoptic.accessors")
+        pass
 
 # 🙋🏻‍♂️ Thank you for using SynopticPy!")
