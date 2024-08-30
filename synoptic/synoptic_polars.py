@@ -19,9 +19,11 @@ Put each of these functions are in the 'services.py' file.
 
 The default DataFrame is in long format; one row for each unique observation
 
-TODO: Use token from 1) environment variable, 2) config.toml, 3) function argument
-TODO: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
+Note: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
     These are what I found so far...'wind_cardinal_direction_set_1d', 'weather_condition_set_1d', 'weather_summary_set_1d'
+TODO: Allow user to cast values column to float or string, then drop null rows
+
+
 TODO: Provide helper function to do proper pivot
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
@@ -29,8 +31,6 @@ TODO: Extensive testing.
 TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
 TODO: Special case for 'obrange'???
 TODO: Can polars parse duration strings like '1h' and '1h30m' to a duration?
-TODO: Maybe don't join *all* metadata columns, only those really necessary.    <-- Let the user decide to drop things.
-
 TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
 """
 
