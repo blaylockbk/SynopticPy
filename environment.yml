@@ -1,51 +1,46 @@
-name: synoptic
+name: synoptic2
 channels:
   - conda-forge
 dependencies:
-  - python=3.11
+  - python=3.12
   - pip
   - git
   - nodejs
 
   # Tools
   # -----
-  - cartopy
-  - geopandas
-  - h5py
+  - altair
+  #- cartopy
   - jupyter
-  - jupyterlab
   - matplotlib
-  - metpy
-  - netcdf4
+  #- metpy
   - numpy
-  - pandas
+  #- pandas
+  - polars
+  - pyarrow
   - requests
-  - scipy
+  - seaborn
   - toml
-  - windrose
-  - xarray
 
   # Formatter and Testing
   # ---------------------
   - ruff
-  - black
   - isort
-  - pylint
   - pytest
 
   # Documentation
   # -------------
-  - sphinx
-  - nbsphinx
-  - pydata-sphinx-theme # PyData Sphinx Theme (i.e, Numpy, Pandas, MetPy)
-  - sphinx-panels # Add bootstrap elements to Sphinx
-  - recommonmark
-  - sphinx-markdown-tables
-  - autodocsumm
-  - sphinx-autosummary-accessors # pandas and xarray accessor docs
-  - latexmk
-  - myst-parser
-  - linkify-it-py
+  #- sphinx
+  #- nbsphinx
+  #- pydata-sphinx-theme # PyData Sphinx Theme (i.e, Numpy, Pandas, MetPy)
+  #- sphinx-panels # Add bootstrap elements to Sphinx
+  #- recommonmark
+  #- sphinx-markdown-tables
+  #- autodocsumm
+  #- sphinx-autosummary-accessors # pandas and xarray accessor docs
+  #- latexmk
+  #- myst-parser
+  #- linkify-it-py
 
   #- pip:
     # Development Version from GitHub

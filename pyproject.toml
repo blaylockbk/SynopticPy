@@ -27,13 +27,14 @@ keywords = [
     "atmosphere",
 ]
 dependencies = [
-    "matplotlib",
+    "altair",      # Move to extras:plot
+    "matplotlib",  # Move to extras:plot
     "numpy",
-    "pandas",
+    "pandas",      # Not needed at all?
     "polars",
     "pyarrow",
     "requests",
-    "seaborn",
+    "seaborn",     # Move to extras:plot
     "toml",
 ]
 dynamic = ["version"]
