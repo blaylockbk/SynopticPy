@@ -44,8 +44,9 @@ def test_Latest():
         within="30m",
     )
 
+
 def test_NearestTime():
-    # This should produce a QC'ed air temperature
+    # This should produce a QCed air temperature
     s = sp.NearestTime(
         stid="kslc",
         attime="2024-08-17 17:55:00",
@@ -55,6 +56,7 @@ def test_NearestTime():
         qc_checks="all",
         qc_remove_data="off",
     )
+
 
 def test_Precipitation():
     s = sp.Precipitation(
@@ -79,3 +81,7 @@ def test_Precipitation3():
         pmode="last",
         accum_hours=["12,24,100"],
     ).df
+
+
+def test_Metadata():
+    s = sp.Metadata(radius="ukbkb,10").df

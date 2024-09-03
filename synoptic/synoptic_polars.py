@@ -92,38 +92,34 @@ class SynopticAPI:
 
     Parameters
     ----------
-    service : {'timeseries', 'latest', 'neartesttime', 'precipitation', etc.}
-        The Synoptic API service to use. Refer to the Synoptic Weather
-        Data API documentation for a full list of services:
-        https://docs.synopticdata.com/services/weather-data-api
+    service : {'timeseries', 'latest', 'nearesttime', 'precipitation', etc.}
+        The Synoptic API service to request data from.
+        Refer to the Synoptic Weather Data API documentation for a full
+        list of services: https://docs.synopticdata.com/services/weather-data-api
     token : str
-        A 32-character Synoptic account token. If None, tries to get
-        value from the following:
+        A 32-character Synoptic account token.
+        If None, tries to get value from the following:
         1. Environment variable `SYNOPTIC_TOKEN`,
-        2. `token="..."` value in `~/.config/SynopticPy/config.toml`.
-    **parms
-        Synoptic API request arguments.
-        - Lists are converted to comma-separated strings.
-        - Datetime and timedelta are converted to strings.
-        - Datetime can a string in format `'YYYY-MM-DD HH:MM'`
+        2. The `token="..."` value in `~/.config/SynopticPy/config.toml`.
+    **params
+        Synoptic API request arguments. Refer to the Synoptic Weather
+        Data API documentation for expected and valid arguments for
+        each service: https://docs.synopticdata.com/services/weather-data-api
 
-        Refer to the Synoptic Weather Data API documentation for valid
-        arguments for each service:
-        https://docs.synopticdata.com/services/weather-data-api
+        This Class can accept specific inputs:
+        - Any comma separated strings can be given as a list instead
+          (i.e., `stid=['wbb', 'ukbkb']`).
+        - Datetime arguments like `start` and `end` may be
+          a `datetime.datetime` or string in format `YYYY-MM-DD HH:MM`.
+        - Duration arguments like `recent` can be a `datetime.timedelta`
+          or a duration string like `1d12h` or `30m`.
     """
 
     def __init__(self, service: ServiceType, *, token: Optional[str] = None, **params):
-        self.service = service
-
-        if self.service in _services_stations:
-            self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
-        else:
-            self.endpoint = f"https://api.synopticdata.com/v2/{service}"
-
         self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
 
-        # ---------
-        # Get token
+        # -------------
+        # Get API token
         if token is None:
             token = os.getenv("SYNOPTIC_TOKEN")
             if token is None:
@@ -134,7 +130,6 @@ class SynopticAPI:
                 _config_file = _config_path / "config.toml"
                 if _config_file.exists():
                     try:
-                        # new token configuration
                         token = toml.load(_config_file).get("token")
                     except:
                         # legacy token configuration
@@ -147,6 +142,9 @@ class SynopticAPI:
                         " │  1) Specify `token='1234567889ABCDE...'` in your request.   │\n"
                         " │  2) Set environment variable SYNOPTIC_TOKEN.                │\n"
                         " │  3) Configure a token in ~/.config/SynopticPy/config.toml   │\n"
+                        " │                                                             │\n"
+                        " │ You can sign up for a free open-access acount at            │\n"
+                        " │ https://customer.synopticdata.com/signup/                   │\n"
                         " ╰─────────────────────────────────────────────────────────────╯\n"
                     )
 
@@ -175,8 +173,8 @@ class SynopticAPI:
                     except:
                         raise SynopticAPIError(
                             "\n"
-                            f"Wrong datetime format for {key}.\n"
-                            "Try using a datetime object or string like `YYYY-MM-DD HH:MM`."
+                            f"Wrong datetime format for {key}={value}. \n"
+                            "Try using a datetime object or string like 'YYYY-MM-DD HH:MM'."
                         )
 
                 if hasattr(value, "minute"):
@@ -194,8 +192,14 @@ class SynopticAPI:
 
         self.params = params
 
-        # ----------------
-        # Make API request
+        # --------------------------------
+        # Make API request (get JSON data)
+        self.service = service
+        if self.service in _services_stations:
+            self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
+        else:
+            self.endpoint = f"https://api.synopticdata.com/v2/{service}"
+
         self.response = requests.get(self.endpoint, params=params)
         self.url = self.response.url
         self.json = self.response.json()
@@ -228,10 +232,20 @@ class SynopticAPI:
             self.df = parse_stations_precipitation(self)
 
     def __repr__(self):
-        return f"SynopticAPI: \nservice={self.service}"
-
-    def __str__(self):
-        return "String Synoptic: TODO"
+        """Notebook representation."""
+        messages = [f"╭─ Synoptic {self.service} service ─────────╮"]
+        if hasattr(self, "STATION") and self.STATION is not None:
+            messages += [f"│ Stations : {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}"]
+        if hasattr(self, "df") and self.df is not None:
+            messages += [f"│ Total Obs: {len(self.df):,}"]
+        if hasattr(self, "QC_SUMMARY") and self.QC_SUMMARY is not None:
+            messages += [
+                f"│ QC Checks: {len(self.QC_SUMMARY.get("QC_CHECKS_APPLIED"))}"
+            ]
+        else:
+            messages += [f"│ QC Checks: None"]
+        messages += ["╰───────────────────────────────────────╯"]
+        return "\n".join(messages)
 
 
 class TimeSeries(SynopticAPI):
@@ -250,12 +264,32 @@ class TimeSeries(SynopticAPI):
 
 
 class Latest(SynopticAPI):
+    """Get the most recent data from a station or stations.
+
+    https://docs.synopticdata.com/services/latest
+
+    Parameters
+    ----------
+    **params
+        - `within` (optional)
+    """
+
     def __init__(self, **params):
         super().__init__("latest", **params)
 
 
 class NearestTime(SynopticAPI):
-    # NOTE: This code is identical to "Latest". Can it be simplified??
+    """Get data closest to the requested time for a station or stations.
+
+    https://docs.synopticdata.com/services/nearest-time
+
+    Parameters
+    ----------
+    **params
+        - `attime`
+        - `within` (optional)
+    """
+
     def __init__(self, **params):
         super().__init__("nearesttime", **params)
 
@@ -288,9 +322,35 @@ class Precipitation(SynopticAPI):
         super().__init__("precipitation", **params)
 
 
+class Metadata(SynopticAPI):
+    """Retrieve metadata for a station or stations."""
+
+    def __init__(self, **params):
+        super().__init__("metadata", **params)
+
+        dfs = []
+        for station in self.STATION:
+            dfs.append(station_metadata_to_dataframe(station))
+
+        self.df = pl.concat(dfs)
+
+
+class QCTypes(SynopticAPI):
+    """Get QC types and names."""
+
+    def __init__(self, **params):
+        super().__init__("qctypes", **params)
+
+        df = pl.DataFrame(self.json["QCTYPES"]).with_columns(
+            pl.col("ID", "SOURCE_ID").cast(pl.UInt32)
+        )
+        df = df.rename({i: i.lower() for i in df.columns})
+        self.df = df
+
+
 def string_to_timedelta(x: str) -> timedelta:
     """
-    Parse a string representing days, hours, minutes, seconds to a timedelta.
+    Parse a duration string to a timedelta.
 
     x : str
         String representation of duration. Can use ISO 8601 duration, in
@@ -310,22 +370,24 @@ def string_to_timedelta(x: str) -> timedelta:
 
 
 def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
-    """Convert station metadata to a DataFrame."""
-    # TODO: Check that we don't have "OBSERVATION" or "SENSOR_VARIABLES" keys
+    """Convert STATION metadata from JSON to a DataFrame."""
     metadata = metadata.copy()
     metadata.pop("OBSERVATIONS", None)
     metadata.pop("SENSOR_VARIABLES", None)
+    metadata.pop("QC", None)
     return (
         pl.DataFrame(metadata)
         .with_columns(
             pl.struct(
                 pl.col("PERIOD_OF_RECORD")
                 .struct.field("start")
-                .str.to_datetime()
+                .cast(pl.String)
+                .str.to_datetime(time_zone="UTC")
                 .alias("PERIOD_OF_RECORD_START"),
                 pl.col("PERIOD_OF_RECORD")
                 .struct.field("end")
-                .str.to_datetime()
+                .cast(pl.String)
+                .str.to_datetime(time_zone="UTC")
                 .alias("PERIOD_OF_RECORD_END"),
             ).alias("PERIOD_OF_RECORD"),
             pl.col("STID").cast(pl.String),
@@ -333,12 +395,12 @@ def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
             pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(pl.Float64),
         )
         .unnest("PERIOD_OF_RECORD")
-        .drop("UNITS")  # Not needed because is is also in json["UNITS"].
+        .drop("UNITS")  # not needed because is is also in json["UNITS"].
     )
 
 
 def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
-    """Parse STATIONS portion of JSON object of SynopticAPI instance for 'timeseries' service.
+    """Parse all STATION items for 'timeseries' service into long-format DataFrame.
 
     Parameters
     ----------
@@ -370,8 +432,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
             )
         )
 
-        # TODO: or is `if metadata["QC_FLAGGED"].item():` more appropriate here?
-        if "QC" in station.keys():
+        if metadata["QC_FLAGGED"].item():
             qc = (
                 pl.DataFrame(qc)
                 .with_columns(
@@ -389,6 +450,8 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
                     pl.col("sensor").cast(pl.UInt32),
                 )
             )
+
+            # Attach the QC information to the observations
             observed = observed.join(
                 qc,
                 on=["date_time", "variable", "sensor", "derived"],
@@ -396,18 +459,23 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
                 coalesce=True,
             )
 
+        # Attach the metadata to the observations
         observed = observed.join(metadata, how="cross")
 
         dfs.append(observed)
 
     df = pl.concat(dfs, how="diagonal_relaxed")
     df = df.rename({i: i.lower() for i in df.columns})
-
+    if "qc_flagged" in df.columns:
+        # Don't want to confuse the user with this column, so drop it.
+        # The user only needs to check for the `qc_flags` column to see if
+        # the observation was QCed.
+        df = df.drop("qc_flagged")
     return df
 
 
 def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
-    """Parse STATIONS portion of JSON object of SynopticAPI instance for 'latest' and 'nearesttime' service.
+    """Parse STATIONS items for 'latest' and 'nearesttime' service.
 
     Parameters
     ----------
@@ -445,9 +513,9 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
             qc_flags = {}
             for k, v in observations.items():
                 if "qc" in v.keys():
-                    qc_flags[k] = v["qc"].get("qc_flags")
+                    qc_flags[k] = [v["qc"].get("qc_flags")]
                 else:
-                    qc_flags[k] = None
+                    qc_flags[k] = [None]
             qc = (
                 pl.DataFrame(qc_flags)
                 .transpose(include_header=True, header_name="variable")
@@ -463,6 +531,8 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
                     pl.col("sensor").cast(pl.UInt32),
                 )
             )
+
+            # Attach the QC information to the observations
             observed = observed.join(
                 qc,
                 on=["variable", "sensor", "derived"],
@@ -470,10 +540,16 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
                 coalesce=True,
             )
 
+        # Attach the metadata to the observations
         observed = observed.join(metadata, how="cross")
         dfs.append(observed)
+
     df = pl.concat(dfs, how="diagonal_relaxed")
     df = df.rename({i: i.lower() for i in df.columns})
+    # Don't want to confuse the user with this column, so drop it.
+    # The user only needs to check for the `qc_flags` column to see if
+    # the observation was QCed.
+    df = df.drop("qc_flagged")
     return df
 
 
