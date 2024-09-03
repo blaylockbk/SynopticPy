@@ -240,7 +240,7 @@ class SynopticAPI:
             messages += [f"│ Total Obs: {len(self.df):,}"]
         if hasattr(self, "QC_SUMMARY") and self.QC_SUMMARY is not None:
             messages += [
-                f"│ QC Checks: {len(self.QC_SUMMARY.get("QC_CHECKS_APPLIED"))}"
+                f"│ QC Checks: {len(self.QC_SUMMARY.get('QC_CHECKS_APPLIED'))}"
             ]
         else:
             messages += [f"│ QC Checks: None"]
