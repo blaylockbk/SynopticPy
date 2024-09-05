@@ -23,10 +23,14 @@ QUESTION: Are derived variables flagged if the variable used to derive it is als
 
 Note: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
     These are what I found so far...'wind_cardinal_direction_set_1d', 'weather_condition_set_1d', 'weather_summary_set_1d'
+
 TODO: Allow user to cast values column to float or string, then drop null rows
 
-TODO: Need to handle the QC data column.
-TODO: Extensive testing.
+TODO: Latency: unest statistics column if present and cast to approriate datetime and duraiton types
+TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
+
+TODO: Extensive testing and examples. Tests for each service in their own files.
+
 TODO: Provide helper function to do proper pivot
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
 TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
@@ -88,7 +92,7 @@ class SynopticAPIError(Exception):
 
 
 class SynopticAPI:
-    """Request data from the Synoptic Data API.
+    """Request data from the Synoptic Data Weather API.
 
     Parameters
     ----------
@@ -204,15 +208,14 @@ class SynopticAPI:
         self.url = self.response.url
         self.json = self.response.json()
 
-        # -------------------
-        # Attach request data
-        self.SUMMARY = self.json.get("SUMMARY")
-        self.QC_SUMMARY = self.json.get("QC_SUMMARY")  # If None, then param `qc='off'`
-        self.UNITS = self.json.get("UNITS")
-        self.STATION = self.json.get("STATION")
+        # ----------------------------------------------------
+        # Attach each JSON key-value pair as a class attribute
+        for key, value in self.json.items():
+            setattr(self, key, value)
 
         # -------------------
         # Check returned data
+        # Note: SUMMARY is always returned in the JSON.
         if self.SUMMARY["RESPONSE_CODE"] != 1:
             raise SynopticAPIError(
                 "\n"
@@ -222,30 +225,21 @@ class SynopticAPI:
                 f"See {self.help_url} for help."
             )
 
-        # -----------------------------
-        # Parse STATIONS into DataFrame
-        if service == "timeseries":
-            self.df = parse_stations_timeseries(self)
-        elif service in ["nearesttime", "latest"]:
-            self.df = parse_stations_latest_nearesttime(self)
-        elif service == "precipitation":
-            self.df = parse_stations_precipitation(self)
-
     def __repr__(self):
         """Notebook representation."""
-        messages = [f"╭─ Synoptic {self.service} service ─────────╮"]
-        if hasattr(self, "STATION") and self.STATION is not None:
-            messages += [f"│ Stations : {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}"]
-        if hasattr(self, "df") and self.df is not None:
-            messages += [f"│ Total Obs: {len(self.df):,}"]
-        if hasattr(self, "QC_SUMMARY") and self.QC_SUMMARY is not None:
-            messages += [
-                f"│ QC Checks: {len(self.QC_SUMMARY.get("QC_CHECKS_APPLIED"))}"
-            ]
+        messages = f"╭─ Synoptic {self.service} service ─────────╮\n"
+        if hasattr(self, "STATION"):
+            messages += f"│ Stations : {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}\n"
+        if hasattr(self, "df"):
+            messages += f"│ Total Obs: {len(self.df):,}\n"
+        if hasattr(self, "QC_SUMMARY"):
+            messages += (
+                f"│ QC Checks: {len(self.QC_SUMMARY.get("QC_CHECKS_APPLIED"))}\n"
+            )
         else:
-            messages += [f"│ QC Checks: None"]
-        messages += ["╰───────────────────────────────────────╯"]
-        return "\n".join(messages)
+            messages += "│ QC Checks: None\n"
+        messages += "╰──────────────────────────────────────╯"
+        return messages
 
 
 class TimeSeries(SynopticAPI):
@@ -261,6 +255,7 @@ class TimeSeries(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("timeseries", **params)
+        self.df = parse_stations_timeseries(self)
 
 
 class Latest(SynopticAPI):
@@ -276,6 +271,7 @@ class Latest(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("latest", **params)
+        self.df = parse_stations_latest_nearesttime(self)
 
 
 class NearestTime(SynopticAPI):
@@ -292,6 +288,7 @@ class NearestTime(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("nearesttime", **params)
+        self.df = parse_stations_latest_nearesttime(self)
 
 
 class Precipitation(SynopticAPI):
@@ -320,6 +317,25 @@ class Precipitation(SynopticAPI):
         params.setdefault("pmode", "totals")
 
         super().__init__("precipitation", **params)
+        self.df = parse_stations_precipitation(self)
+
+
+class Latency(SynopticAPI):
+    """
+    Request station latency.
+
+    https://docs.synopticdata.com/services/latency
+
+    Parameters
+    ----------
+    **params
+        - Station selection parameters.
+        - `start` and `end` | `recent`
+    """
+
+    def __init__(self, **params):
+        super().__init__("latency", **params)
+        self.df = parse_stations_latency(self)
 
 
 class Metadata(SynopticAPI):
@@ -328,24 +344,134 @@ class Metadata(SynopticAPI):
     def __init__(self, **params):
         super().__init__("metadata", **params)
 
-        dfs = []
-        for station in self.STATION:
-            dfs.append(station_metadata_to_dataframe(station))
+        df = (
+            pl.concat([pl.DataFrame(i) for i in self.STATION], how="diagonal_relaxed")
+            .with_columns(
+                pl.struct(
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("start")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_START"),
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("end")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_END"),
+                ).alias("PERIOD_OF_RECORD"),
+                pl.col("STID").cast(pl.String),
+                pl.col("ID", "MNET_ID").cast(pl.UInt32),
+                pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(
+                    pl.Float64
+                ),
+            )
+            .unnest("PERIOD_OF_RECORD")
+            .drop("UNITS")  # not needed because is is also in json["UNITS"].
+        )
 
-        self.df = pl.concat(dfs)
+        df = df.rename({i: i.lower() for i in df.columns})
+        self.df = df
+
+
+class QCSegments(SynopticAPI):
+    """QC Segments. ???"""
+
+    def __init__(self, **params):
+        super().__init__("qcsegments", **params)
+        raise NotImplementedError()
 
 
 class QCTypes(SynopticAPI):
-    """Get QC types and names."""
+    """Get all QC types and names."""
 
     def __init__(self, **params):
         super().__init__("qctypes", **params)
 
-        df = pl.DataFrame(self.json["QCTYPES"]).with_columns(
+        df = pl.DataFrame(self.QCTYPES).with_columns(
             pl.col("ID", "SOURCE_ID").cast(pl.UInt32)
         )
         df = df.rename({i: i.lower() for i in df.columns})
         self.df = df
+
+
+class Variables(SynopticAPI):
+    """Get all available variables.
+
+    Provides variable name, variable index, long anme, and default unit.
+    """
+
+    def __init__(self, **params):
+        super().__init__("variables", **params)
+        df = pl.concat(
+            [
+                pl.DataFrame(i)
+                .transpose(header_name="variable", include_header=True)
+                .unnest("column_0")
+                for i in self.VARIABLES
+            ]
+        ).with_columns(pl.col("vid").cast(pl.UInt32))
+        self.df = df
+
+
+class Networks(SynopticAPI):
+    """Get all available networks."""
+
+    def __init__(self, **params):
+        super().__init__("networks", **params)
+        df = (
+            pl.concat([pl.DataFrame(i) for i in self.MNET], how="diagonal_relaxed")
+            .with_columns(
+                pl.col("ID", "CATEGORY").cast(pl.UInt32),
+                pl.col("LAST_OBSERVATION").str.to_datetime(),
+                pl.struct(
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("start")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_START"),
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("end")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_END"),
+                ).alias("PERIOD_OF_RECORD"),
+            )
+            .unnest("PERIOD_OF_RECORD")
+        )
+
+        df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnet_id"})
+        self.df = df
+
+
+class NetworkTypes(SynopticAPI):
+    """Get all available network types."""
+
+    def __init__(self, **params):
+        super().__init__("networktypes", **params)
+        df = (
+            pl.DataFrame(self.MNETCAT)
+            .with_columns(
+                pl.col("ID").cast(pl.UInt32),
+                pl.struct(
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("start")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_START"),
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("end")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_END"),
+                ).alias("PERIOD_OF_RECORD"),
+            )
+            .unnest("PERIOD_OF_RECORD")
+        )
+        df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnetcat_id"})
+        self.df = df
+
+
+# =============================================================================
 
 
 def string_to_timedelta(x: str) -> timedelta:
@@ -374,29 +500,30 @@ def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
     metadata = metadata.copy()
     metadata.pop("OBSERVATIONS", None)
     metadata.pop("SENSOR_VARIABLES", None)
+    metadata.pop("LATENCY", None)
     metadata.pop("QC", None)
-    return (
+    df = (
         pl.DataFrame(metadata)
         .with_columns(
-            pl.struct(
-                pl.col("PERIOD_OF_RECORD")
-                .struct.field("start")
-                .cast(pl.String)
-                .str.to_datetime(time_zone="UTC")
-                .alias("PERIOD_OF_RECORD_START"),
-                pl.col("PERIOD_OF_RECORD")
-                .struct.field("end")
-                .cast(pl.String)
-                .str.to_datetime(time_zone="UTC")
-                .alias("PERIOD_OF_RECORD_END"),
-            ).alias("PERIOD_OF_RECORD"),
             pl.col("STID").cast(pl.String),
             pl.col("ID", "MNET_ID").cast(pl.UInt32),
-            pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(pl.Float64),
+            pl.col("ELEVATION", "LATITUDE", "LONGITUDE").cast(pl.Float64),
         )
-        .unnest("PERIOD_OF_RECORD")
         .drop("UNITS")  # not needed because is is also in json["UNITS"].
     )
+
+    if "ELEV_DEM" in df.columns:
+        # This isn't in the Latency request
+        df.with_columns(pl.col("ELEV_DEM").cast(pl.Float64))
+
+    if len(df) > 1:
+        # When param `complete=1`, some stations have multiple providers
+        # and is given as a list of key-value pairs of provider name and
+        # url. But Polars loads this as individual rows.
+        # I'll just return the first.
+        df = df[0]
+
+    return df
 
 
 def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
@@ -432,7 +559,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
             )
         )
 
-        if metadata["QC_FLAGGED"].item():
+        if any(metadata["QC_FLAGGED"]):
             qc = (
                 pl.DataFrame(qc)
                 .with_columns(
@@ -465,12 +592,30 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
         dfs.append(observed)
 
     df = pl.concat(dfs, how="diagonal_relaxed")
+    # Parse PERIOD_OF_RECORD
+    df = df.with_columns(
+        pl.col("ID").cast(pl.UInt32),
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
+
     df = df.rename({i: i.lower() for i in df.columns})
     if "qc_flagged" in df.columns:
         # Don't want to confuse the user with this column, so drop it.
         # The user only needs to check for the `qc_flags` column to see if
         # the observation was QCed.
         df = df.drop("qc_flagged")
+
     return df
 
 
@@ -509,7 +654,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
             )
         )
 
-        if metadata["QC_FLAGGED"].item():
+        if any(metadata["QC_FLAGGED"]):
             qc_flags = {}
             for k, v in observations.items():
                 if "qc" in v.keys():
@@ -545,6 +690,23 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
         dfs.append(observed)
 
     df = pl.concat(dfs, how="diagonal_relaxed")
+    # Parse PERIOD_OF_RECORD
+    df = df.with_columns(
+        pl.col("ID").cast(pl.UInt32),
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
+
     df = df.rename({i: i.lower() for i in df.columns})
     # Don't want to confuse the user with this column, so drop it.
     # The user only needs to check for the `qc_flags` column to see if
@@ -574,5 +736,46 @@ def parse_stations_precipitation(S: SynopticAPI) -> pl.DataFrame:
         ).join(metadata, how="cross")
         dfs.append(z)
     df = pl.concat(dfs, how="diagonal_relaxed")
+    df = df.rename({i: i.lower() for i in df.columns})
+    return df
+
+
+def parse_stations_latency(S: SynopticAPI) -> pl.DataFrame:
+    """Parse STATION portion of JSON object for the 'latency' service."""
+    dfs = []
+    for station in S.STATION:
+        metadata = station_metadata_to_dataframe(station)
+
+        latency = (
+            pl.DataFrame(station["LATENCY"])
+            .with_columns(
+                pl.col("date_time").str.to_datetime(),
+                pl.duration(minutes="values").alias("latency"),
+            )
+            .drop("values")
+        )
+
+        # Attach the metadata to the observations
+        latency = latency.join(metadata, how="cross")
+        dfs.append(latency)
+
+    df = pl.concat(dfs, how="diagonal_relaxed")
+    # Parse PERIOD_OF_RECORD
+    df = df.with_columns(
+        pl.col("ID").cast(pl.UInt32),
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
+
     df = df.rename({i: i.lower() for i in df.columns})
     return df
