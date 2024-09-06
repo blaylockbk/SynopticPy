@@ -2,8 +2,5 @@
 
 
 def test_charity():
-    """The most simple test; 1 Corinthians 13:8.
-
-    Charity never faileth.
-    """
+    """Charity never faileth; 1 Corinthians 13:8."""
     assert 1 == 1

@@ -26,7 +26,7 @@ Note: Does not parse non-numeric values (document this fact), like wind_cardinal
 
 TODO: Allow user to cast values column to float or string, then drop null rows
 
-TODO: Latency: unest statistics column if present and cast to approriate datetime and duraiton types
+TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
 TODO: Extensive testing and examples. Tests for each service in their own files.
@@ -35,8 +35,9 @@ TODO: Provide helper function to do proper pivot
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
 TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
-TODO: Special case for 'obrange'???
+TODO: Metadata: need to handle 'obrange' param.
 TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
+TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
 """
 
 import os
@@ -159,11 +160,17 @@ class SynopticAPI:
         params = {k.lower(): v for k, v in params.items()}
         params["token"] = token
 
+        # Don't allow user to specify 'timeformat'
+        params.pop("timeformat", None)
+
+        # Don't allow user to specify `output`
+        params.pop("output", None)
+
         for key, value in params.items():
             # Convert lists to comma-separated string.
             #   stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
             #   radius=[40, -100, 10] --> radius='40,-100,10'
-            if isinstance(value, list) and key not in ["obrange"]:
+            if isinstance(value, (list, tuple)) and key not in ["obrange"]:
                 params[key] = ",".join([str(i) for i in value])
 
             # TODO: Special case for 'obrange'???
@@ -236,8 +243,6 @@ class SynopticAPI:
             messages += (
                 f"│ QC Checks: {len(self.QC_SUMMARY.get('QC_CHECKS_APPLIED'))}\n"
             )
-        else:
-            messages += "│ QC Checks: None\n"
         messages += "╰──────────────────────────────────────╯"
         return messages
 
