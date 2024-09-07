@@ -1,11 +1,11 @@
 """Tests for the TimeSeries Class."""
 
-import synoptic.synoptic_polars as sp
+import synoptic.services as ss
 from datetime import datetime
 
 
 def test_string_date_input():
-    s = sp.TimeSeries(
+    s = ss.TimeSeries(
         stid="UKBKB",
         start=datetime(2024, 1, 1),
         end="2024-1-1 06:00",
@@ -16,7 +16,7 @@ def test_string_date_input():
 
 
 def test_all_qc_on():
-    s = sp.TimeSeries(
+    s = ss.TimeSeries(
         stid="kslc",
         recent="6h",
         qc="on",
@@ -29,7 +29,7 @@ def test_all_qc_on():
 
 
 def test_radius_with_complete_metadata():
-    s = sp.TimeSeries(
+    s = ss.TimeSeries(
         radius=["kslc", 5],
         recent="6h",
         qc="on",

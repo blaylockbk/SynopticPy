@@ -1,1043 +1,813 @@
-## Brian Blaylock
-## August 13, 2020    COVID-19 Era
-
 """
-==================
-👨🏻‍💻 Services
-==================
-Get mesonet data from the `Synoptic API services
-<https://developers.synopticdata.com/>`_ and return data as a
-Pandas.DataFrame. Requires a `Synoptic API token
-<https://synopticlabs.org/api/guides/?getstarted>`_
+Synoptic Data to Polars DataFrame.
 
-.. tip::
+QUESTION: Are derived variables flagged if the variable used to derive it is also flagged?
 
-    Before you get started, please become familiar with the
-    `Synoptic API developers documentation
-    <https://developers.synopticdata.com/mesonet/v2/>`_.
+Note: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
+    These are what I found so far...'wind_cardinal_direction_set_1d', 'weather_condition_set_1d', 'weather_summary_set_1d'
 
+TODO: Allow user to cast values column to float or string, then drop null rows
 
-Station Selector Parameters
----------------------------
-The fundamental method for specifying the data you query is done with
-**station selector arguments**. Below are some of the more common
-paramaters. Read `Station Selectors
-<https://developers.synopticdata.com/mesonet/v2/station-selectors/>`__
-in the API documents for all options and capabilities.
+TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
+TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
-    stid : str or list
-        Specify which stations you want to get data for by Station ID.
-        May be a single ID or list of IDs.
-        ``['KSLC', 'UKBKB', 'KMRY']`` *or* ``'KSLC'``
-    state : str or list
-        String or list of abbreviated state strings,
-        i.e. ``['UT','CA']``
-    radius : str
-        Only return stations within a great-circle distance from a
-        specified lat/lon point or station (by STID). May be in form
-        ``"lat,lon,miles"`` *or* ``"stid,miles"``
-    vars : str or list
-        Filter stations by the variables they report.
-        i.e., ``['air_temp', 'wind_speed', 'wind_direction', etc.]``
-        Look at the `docs for more variables
-        <https://developers.synopticdata.com/about/station-variables/>`_.
-    varsoperator : {'and', 'or'}
-        Define how  ``vars`` is understood.
-        Default ``'or'`` means any station with any variable is used.
-        However, ``'and'`` means a station must report every variable
-        to be listed.
-    network - int
-        Network ID number. See `network API service
-        <https://developers.synopticdata.com/about/station-providers/>`_
-        for more information.
-    limit : int
-        Specify how many of the closest stations you want to receive.
-        ``limit=1`` will only return the nearest station.
-    bbox : [lonmin, latmin, lonmax, lonmin]
-        Get stations within a bounding box.
+TODO: Need to use to_timezone(timezone=...) if obtimezone='local'
 
-Other Common Parameters
------------------------
-    units : {'metric', 'english'}
-        See `documentation
-        <https://developers.synopticdata.com/mesonet/v2/stations/latest/>`_
-        for more details on custom units selection.
-        An example of a custom unit is ``units='temp|F'`` to set just
-        the temperature to degrees Fahrenheit.
-        For ``units='temp|K,pres|mb'``,temperatures to Kelvin and
-        pressures will be in hecto Pascals (mb, or hPa).
-    obtimezone : {'UTC', 'local'}
-        Specify the time to be UTC or the station's local time.
-    status : {'active', 'inactive'}
-        Specify if the statation is active or inactive.
+TODO: Extensive testing and examples. Tests for each service in their own files.
 
-.. note::
-    These Datetimes have timezone information. When plotting,
-    I haven't had issues with Pandas 1.1.0 and matplotlib 3.3.0,
-    but for earlier version, matplotlib doesn't like the DatetimeIndex
-    with timezone information. In that case, you can remove the datetime
-    information with something like this:
-
-    .. code-block:: python
-
-        df.index.tz_localize(None)
-
+TODO: Provide helper function to do proper pivot
+TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
+TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
+TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
+TODO: Metadata: need to handle 'obrange' param.
+TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
+TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
 """
-import sys
-import warnings
+
+import os
+import re
 from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Literal, Optional
 
+import polars as pl
 import requests
-import urllib
-import numpy as np
-import pandas as pd
-
-from synoptic.get_token import config
+import toml
 
 # Available API Services
-# https://developers.synopticdata.com/mesonet/v2/
-_service = {"auth", "networks", "networktypes", "variables", "qctypes"}
-_stations = {"metadata", "timeseries", "precipitation", "nearesttime", "latest"}
-_service.update(_stations)
-
-# Station Selector Parameters Set
-_stn_selector = {
-    "stid",
-    "country",
-    "state",
-    "country",
-    "status",
-    "nwszone",
-    "nwsfirezone",
-    "cwa",
-    "gacc",
-    "subgacc",
-    "vars",
-    "varsoperator",
-    "network",
-    "radius",
-    "limit",
-    "bbox",
-    "fields",
+# https://docs.synopticdata.com/services/weather-data-api
+_services_stations = {
+    "timeseries",
+    "latest",
+    "nearesttime",
+    "precipitation",
+    "qcsegments",
+    "latency",
+    "metadata",
 }
+_services_metadata = {
+    "qctypes",
+    "variables",
+    "networks",
+    "networktypes",
+    # "auth", # needs special handling and considerations
+}
+_services = _services_stations | _services_metadata
+
+ServiceType = Literal[
+    "timeseries",
+    "latest",
+    "nearesttime",
+    "precipitation",
+    "qcsegments",
+    "latency",
+    "metadata",
+    "qctypes",
+    "variables",
+    "networks",
+    "networktypes",
+    # "auth",
+]
 
 
-def spddir_to_uv(wspd, wdir):
-    """
-    Calculate the u and v wind components from wind speed and direction.
+class SynopticAPIError(Exception):
+    """Custom exception for SynopticAPI errors."""
 
-    Parameters
-    ----------
-    wspd, wdir : array_like
-        Arrays of wind speed and wind direction (in degrees)
-
-    Returns
-    -------
-    u and v wind components
-
-    """
-    if isinstance(wspd, list) or isinstance(wdir, list):
-        wspd = np.array(wspd, dtype=float)
-        wdir = np.array(wdir, dtype=float)
-
-    rad = 4.0 * np.arctan(1) / 180.0
-    u = -wspd * np.sin(rad * wdir)
-    v = -wspd * np.cos(rad * wdir)
-
-    # If the speed is zero, then u and v should be set to zero (not NaN)
-    if hasattr(u, "__len__"):
-        u[np.where(wspd == 0)] = 0
-        v[np.where(wspd == 0)] = 0
-    elif wspd == 0:
-        u = float(0)
-        v = float(0)
-
-    return np.round(u, 3), np.round(v, 3)
+    pass
 
 
-# Rename "set_1" and "value_1" names is a convience I prefer.
-## You can turn these off in your requests by setting `rename_set_1`
-## and `rename_value_1` to False in your function call where applicable.
-def _rename_set_1(df):
-    """
-    Rename Variable Columns Names
-
-    Remove the 'set_1' and 'set_1d' from column names
-    Sets 2+ will retain their full names.
-    The user should refer to SENSOR_VARIABLES to see which
-    variables are derived
-
-    """
-
-    ## Get list of current column names
-    dummy_columns = list(df.columns)
-
-    # Remove '_set_1' and '_set_1d' from column name
-    var_names = [
-        "_".join(v.split("_")[:-2]) if "_set_1" in v else v for v in dummy_columns
-    ]
-
-    # Number of observations in each column
-    obs_count = list(df.count())
-
-    # Sometimes, set_1 and set_1d are both returned. In that
-    # case, we need to determin which column has the most
-    # observations and use that as the main variable. The set
-    # with fewer data will retain the 'set_1' or 'set_1d' label.
-    renames = {}
-    for i, name in enumerate(var_names):
-        # Determine all indices this variable type is located
-        var_bool = [v.startswith(name + "_set_1") for v in dummy_columns]
-        var_idx = np.where(var_bool)[0]
-
-        if len(var_idx) == 1:
-            # This variable is only listed once. Rename with var_name
-            renames[dummy_columns[i]] = var_names[var_idx[0]]
-        elif len(var_idx) > 1:
-            # This variable is listed more than once.
-            # Determine which set has the most non-NaN data and
-            # rename that column as var_name.
-            max_idx = var_idx[np.argmax([obs_count[i] for i in var_idx])]
-            if max_idx == i:
-                # If the current iteration matches the var_idx with
-                # the most data, rename the column without set number.
-                renames[dummy_columns[i]] = var_names[max_idx]
-            else:
-                # If the current iteration does not match the var_idx
-                # with the most data, then retain the original column
-                # name with the set number.
-                renames[dummy_columns[i]] = dummy_columns[i]
-        else:
-            # This case should only occur during my testing.
-            renames[dummy_columns[i]] = dummy_columns[i]
-    df.rename(columns=renames, inplace=True)
-    df.attrs["RENAMED"] = renames
-    return df
-
-
-def _rename_value_1(df):
-    """
-    Rename Variable Row (index) Names
-
-    Remove the ``value_1`` and ``value_1d`` from column names.
-    Values 2+ will retain their full names. If both
-    ``value_1`` and ``value_1d`` are returned, the newest observation
-    will be used as the main index while the older will preserve the
-    ``_value`` label.
-
-    The user should refer to SENSOR_VARIABLES to see which
-    variables are derived.
-
-    """
-
-    ## Get list of current column names
-    dummy_rows = list(df.index)
-
-    # Remove '_set_1' and '_set_1d' from column name
-    var_names = [
-        "_".join(v.split("_")[:-2]) if "_value_1" in v else v for v in dummy_rows
-    ]
-
-    # Sometimes, value_1 and value_1d are both returned. In that
-    # case, we need to determine which is the *newest*
-    # observations and use that as the main variable. The older value
-    # will retain the 'value_1' or 'value_1d' label.
-
-    renames = {}
-    for i, name in enumerate(var_names):
-        # Determine all indices this variable type is located
-        var_bool = [v.startswith(name + "_value_1") for v in dummy_rows]
-        var_idx = np.where(var_bool)[0]
-
-        if len(var_idx) == 1:
-            # This variable is only listed once. Rename with var_name
-            renames[dummy_rows[i]] = var_names[var_idx[0]]
-        elif len(var_idx) > 1:
-            # This variable is listed more than once.
-            # Determine which observation is older and
-            # rename that row as var_name.
-            max_idx = var_idx[np.argmax([df.date_time.iloc[i] for i in var_idx])]
-            if max_idx == i:
-                # If the current iteration matches the var_idx with
-                # the most data, rename the column without set number.
-                renames[dummy_rows[i]] = var_names[max_idx]
-            else:
-                # If the current iteration does not match the var_idx
-                # with the most data, then retain the original column
-                # name with the set number.
-                renames[dummy_rows[i]] = dummy_rows[i]
-        else:
-            # This case for row names that don't have _value in them (i.e., ELEVATION).
-            renames[dummy_rows[i]] = dummy_rows[i]
-    df.rename(index=renames, inplace=True)
-    df.attrs["RENAMED"] = renames
-    return df
-
-
-def _parse_latest_nearesttime(data, rename_value_1):
-    """
-    Parsing JSON for ``latest`` and ``nearesttime`` is the same.
-
-    """
-    # Here's a dictionary to store all SENSOR_VARIABLES and RENAMED
-    # WARNING: Some of these could be overwritten
-    senvars = {}
-    renamed = {}
-
-    dfs = []
-    for i in data["STATION"]:
-        obs = i.pop("OBSERVATIONS")
-        df = pd.DataFrame(obs)
-
-        # Add other station info to the DataFrame (i.e., ELEVATION, latitude, etc.)
-        for k, v in i.items():
-            # Attempt to convert values to a float, if possible.
-            # (i.e, latitude, longitude, elevation, MNET_ID, etc.)
-            try:
-                v = float(v)
-            except:
-                pass
-            if k in ["LATITUDE", "LONGITUDE"]:
-                # lat/lon is lowercase for CF compliant variable name
-                df[k.lower()] = [None, v]
-            else:
-                df[k] = [None, v]
-
-        # Break wind into U and V components, if speed and direction are available
-        senvars = i["SENSOR_VARIABLES"]
-        if all([i in senvars for i in ["wind_speed", "wind_direction"]]):
-            for i_spd, i_dir in zip(
-                senvars["wind_speed"].keys(), senvars["wind_direction"].keys()
-            ):
-                if obs[i_spd]["date_time"] == obs[i_spd]["date_time"]:
-                    wspd = obs[i_spd]["value"]
-                    wdir = obs[i_dir]["value"]
-                    u, v = spddir_to_uv(wspd, wdir)
-                    this_set = "_".join(i_spd.split("_")[-2:])
-                    df[f"wind_u_{this_set}"] = [obs[i_spd]["date_time"], u]
-                    df[f"wind_v_{this_set}"] = [obs[i_spd]["date_time"], v]
-
-        # Convert date_time to datetime object
-        df.loc["date_time"] = pd.to_datetime(df.loc["date_time"])
-
-        df = df.transpose().sort_index()
-
-        if rename_value_1:
-            # Rename Index Rows (remove _value_1 label)
-            df = _rename_value_1(df)
-            renamed = {**renamed, **df.attrs["RENAMED"]}
-
-        rename = dict(date_time=f"{i['STID']}_date_time", value=i["STID"])
-        df.rename(columns=rename, inplace=True)
-        senvars = {**senvars, **i["SENSOR_VARIABLES"]}
-        dfs.append(df)
-
-    df = pd.concat(dfs, axis=1)
-
-    df.attrs["STATIONS"] = [i for i in df.columns if "date_time" not in i]
-    df.attrs["DATETIMES"] = [i for i in df.columns if "date_time" in i]
-    df.attrs["UNITS"] = data["UNITS"]
-    df.attrs["SUMMARY"] = data["SUMMARY"]
-    df.attrs["QC_SUMMARY"] = data["QC_SUMMARY"]
-    df.attrs["RENAMED"] = renamed
-    df.attrs["SENSOR_VARIABLES"] = senvars
-
-    return df
-
-
-# =======================================================================
-# =======================================================================
-
-
-def synoptic_api(
-    service,
-    verbose=config["default"].get("hide_token", True),
-    hide_token=config["default"].get("hide_token", False),
-    **params,
-):
-    """
-    Request data from the Synoptic API. Returns a **requests** object.
-
-    References
-    ----------
-    - https://developers.synopticdata.com/mesonet/v2/
-    - https://developers.synopticdata.com/mesonet/explorer/
+class SynopticAPI:
+    """Request data from the Synoptic Data Weather API.
 
     Parameters
     ----------
-    service : str
-        API service to use, including {'auth', 'latest', 'metadata',
-        'nearesttime', 'networks', 'networktypes', 'precipitation',
-        'qctypes', 'timeseries', 'variables'}
-    verbose : {True, False}
-        Print extra details to the screen.
-    hide_token : bool
-        If True, the token will be hidden when API URL is printed.
-    \*\*params : keyword arguments
-        API request parameters (arguments).
-        Lists will be converted to a comma-separated string.
-        Datetimes (datetime or pandas) will be parsed by f-string to
-        YYYYmmddHHMM.
+    service : {'timeseries', 'latest', 'nearesttime', 'precipitation', etc.}
+        The Synoptic API service to request data from.
+        Refer to the Synoptic Weather Data API documentation for a full
+        list of services: https://docs.synopticdata.com/services/weather-data-api
+    token : str
+        A 32-character Synoptic account token.
+        If None, tries to get value from the following:
+        1. Environment variable `SYNOPTIC_TOKEN`,
+        2. The `token="..."` value in `~/.config/SynopticPy/config.toml`.
+    verbose : bool
+        Print each step.
+    **params
+        Synoptic API request arguments. Refer to the Synoptic Weather
+        Data API documentation for expected and valid arguments for
+        each service: https://docs.synopticdata.com/services/weather-data-api
 
-    Returns
-    -------
-    A ``requests.models.Response`` object from ``requests.get(URL, params)``
-
-    Examples
-    --------
-    To read the json data for metadata for a station
-
-    .. code:: python
-
-        synoptic_api('metadata', stid='WBB').json()
-
-    .. code:: python
-
-        synoptic_api('metadata', stid=['WBB', 'KSLC']).json()
-
+        This Class can accept specific inputs:
+        - Any comma separated strings can be given as a list instead
+          (i.e., `stid=['wbb', 'ukbkb']`).
+        - Datetime arguments like `start` and `end` may be
+          a `datetime.datetime` or string in format `YYYY-MM-DD HH:MM`.
+        - Duration arguments like `recent` can be a `datetime.timedelta`
+          or a duration string like `1d12h` or `30m`.
     """
-    help_url = "https://developers.synopticdata.com/mesonet/v2/"
-    assert (
-        service in _service
-    ), f"`service` must be one of {_service}. See API documentation {help_url}"
 
-    ## Service URL
-    ##------------
-    root = "https://api.synopticdata.com/v2"
+    def __init__(
+        self,
+        service: ServiceType,
+        *,
+        token: Optional[str] = None,
+        verbose=True,
+        **params,
+    ):
+        self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
+        self.verbose = verbose
 
-    if service in _stations:
-        URL = f"{root}/stations/{service}"
-    else:
-        URL = f"{root}/{service}"
+        # -------------
+        # Get API token
+        if token is None:
+            token = os.getenv("SYNOPTIC_TOKEN")
+            if token is None:
+                _config_path = os.getenv(
+                    "SYNOPTICPY_CONFIG_PATH", "~/.config/SynopticPy"
+                )
+                _config_path = Path(_config_path).expanduser()
+                _config_file = _config_path / "config.toml"
+                if _config_file.exists():
+                    try:
+                        token = toml.load(_config_file).get("token")
+                    except:
+                        # legacy token configuration
+                        token = toml.load(_config_file)["default"].get("token")
+                else:
+                    raise SynopticAPIError(
+                        "\n"
+                        " ╭─SynopticPy:FATAL────────────────────────────────────────────╮\n"
+                        " │ A valid Synoptic token is required. Do one of the following:│\n"
+                        " │  1) Specify `token='1234567889ABCDE...'` in your request.   │\n"
+                        " │  2) Set environment variable SYNOPTIC_TOKEN.                │\n"
+                        " │  3) Configure a token in ~/.config/SynopticPy/config.toml   │\n"
+                        " │                                                             │\n"
+                        " │ You can sign up for a free open-access acount at            │\n"
+                        " │ https://customer.synopticdata.com/signup/                   │\n"
+                        " ╰─────────────────────────────────────────────────────────────╯\n"
+                    )
+                self.token_source = f"Config File: {_config_path}"
+            else:
+                self.token_source = "environment variable SYNOPTIC_TOKEN"
 
-    ## Set API token
-    ##--------------
-    ## Default token is set in the ~/.config/SyonpticPy/config.toml file,
-    ## But you may overwrite it by passing the keyward argument `token=`
-    params.setdefault("token", config["default"].get("token"))
+        else:
+            self.token_source = "class constructor argument `token='...'`"
 
-    ## Parse parameters
-    ##-----------------
-    # Change some keyword parameters to the appropriate request format
+        # ----------------
+        # Parse parameters
 
-    ## 1) Force all param keys to be lower case
-    params = {k.lower(): v for k, v in params.items()}
+        # Force all param keys to be lower case.
+        params = {k.lower(): v for k, v in params.items()}
+        params["token"] = token
 
-    ## 2) Join lists as comma separated strings.
-    ##    For example, stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
-    ##                 radius=[40, -100, 10] --> radius='40,-100,10'
-    for key, value in params.items():
-        if isinstance(value, list) and key not in ["obrange"]:
-            params[key] = ",".join([str(i) for i in value])
+        # Don't allow user to specify 'timeformat'
+        params.pop("timeformat", None)
 
-    ## 3) Datetimes should be converted to string: 'YYYYmmddHHMM' (obrange is 'YYYYmmdd')
-    for i in ["start", "end", "expire", "attime"]:
-        if i in params:
-            date = params[i]
-            if isinstance(date, str) and len(date) >= 8 and date.isnumeric():
-                # Put into a string that is recognized by Pandas
-                date = f"{date[:8]} {date[8:]}"  # formatted as "YYYYmmdd HH"
-            try:
-                # Try to convert input to a Pandas Datetime
-                params[i] = pd.to_datetime(date)
-            except:
-                warnings.warn(f"🐼 Pandas could not parse [{i}={date}] as a datetime.")
-            # Format the datetime as a Synoptic-recognized string.
-            params[i] = f"{params[i]:%Y%m%d%H%M}"
-    ## 4) Special case for 'obrange' parameter dates...
-    if "obrange" in params and not isinstance(params["obrange"], str):
-        # obrange could be one date or a list of two dates.
-        if not hasattr(params["obrange"], "__len__"):
-            params["obrange"] = [params["obrange"]]
-        params["obrange"] = ",".join([f"{i:%Y%m%d}" for i in params["obrange"]])
+        # Don't allow user to specify `output`
+        params.pop("output", None)
 
-    ## 5) Timedeltas should be converted to int in minutes...
-    for i in ["recent", "within"]:
-        if i in params:
-            dt = params[i]
-            if isinstance(dt, (int, float)):
-                dt = pd.to_timedelta(dt, unit="minutes")
-            try:
-                # Try to convert input to Pandas timedelta
-                params[i] = pd.to_timedelta(dt)
-            except:
-                warnings.warn(f"🐼 Pandas could not parse [{i}={dt}] as a timedelta.")
-            # Format the datetime as a Synoptic-recognized int of minutes
-            params[i] = int(params[i].ceil("min").total_seconds() / 60)
-            if verbose:
-                print(f"Checking for data {i}={params[i]} minutes.")
+        for key, value in params.items():
+            # Convert lists to comma-separated string.
+            #   stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
+            #   radius=[40, -100, 10] --> radius='40,-100,10'
+            if isinstance(value, (list, tuple)) and key not in ["obrange"]:
+                params[key] = ",".join([str(i) for i in value])
 
-    ########################
-    # Make the API request #
-    ########################
-    f = requests.get(URL, params)
+            # TODO: Special case for 'obrange'???
 
-    if service == "auth":
-        return f
+            # Convert datetime or string datetime to 'YYYYMMDDHHMM'.
+            elif key in {"start", "end", "expire", "attime"}:
+                if isinstance(value, str) and "-" in value:
+                    try:
+                        # Try to parse the string as a datetime
+                        value = pl.Series([value]).str.to_datetime().item()
+                    except:
+                        raise SynopticAPIError(
+                            "\n"
+                            f"Wrong datetime format for {key}={value}. \n"
+                            "Try using a datetime object or string like 'YYYY-MM-DD HH:MM'."
+                        )
 
-    # Check Returned Data
-    code = f.json()["SUMMARY"]["RESPONSE_CODE"]
-    msg = f.json()["SUMMARY"]["RESPONSE_MESSAGE"]
-    decode_url = urllib.parse.unquote(f.url)
+                if hasattr(value, "minute"):
+                    params[key] = f"{value:%Y%m%d%H%M}"
+                else:
+                    params[key] = str(value)
 
-    assert code == 1, f"🛑 There are errors in the API request {decode_url}. {msg}"
+            # Convert timedelta to int in minutes
+            elif key in {"recent", "within"}:
+                if isinstance(value, str) and not value.isnumeric():
+                    value = string_to_timedelta(value)
 
-    if verbose:
-        if hide_token:
-            token_idx = decode_url.find("token=")
-            decode_url = decode_url.replace(
-                decode_url[token_idx : token_idx + 6 + 32], "token=🙈HIDDEN"
+                if hasattr(value, "total_seconds"):
+                    params[key] = f"{value.total_seconds() / 60:.0f}"
+
+        self.params = params
+
+        # --------------------------------
+        # Make API request (get JSON data)
+        self.service = service
+        if self.service in _services_stations:
+            self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
+        else:
+            self.endpoint = f"https://api.synopticdata.com/v2/{service}"
+
+        if self.verbose:
+            print(f"🚚💨 Speedy delivery from Synoptic {service} service.")
+
+        self.response = requests.get(self.endpoint, params=params)
+        self.url = self.response.url
+        self.json = self.response.json()
+
+        # ----------------------------------------------------
+        # Attach each JSON key-value pair as a class attribute
+        for key, value in self.json.items():
+            setattr(self, key, value)
+
+        # -------------------
+        # Check returned data
+        # Note: SUMMARY is always returned in the JSON.
+        if self.SUMMARY["RESPONSE_CODE"] != 1:
+            raise SynopticAPIError(
+                "\n"
+                f"🛑 FATAL: Not a valid Synoptic API request.\n"
+                f"  ├─ message: {self.SUMMARY['RESPONSE_MESSAGE']}\n"
+                f"  └─ url: {self.response.url}\n"
+                f"See {self.help_url} for help."
             )
-        print(f"\n 🚚💨 Speedy Delivery from Synoptic API [{service}]: {decode_url}\n")
 
-    return f
+        if self.verbose:
+            print(
+                f"📦 Received data from {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,} stations."
+            )
+
+    def __repr__(self):
+        """Notebook representation."""
+        messages = f"╭─ Synoptic {self.service} service ─────\n"
+        if hasattr(self, "STATION"):
+            messages += f"│ Stations : {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}\n"
+        if hasattr(self, "df"):
+            messages += f"│ Total Obs: {len(self.df):,}\n"
+        if hasattr(self, "QC_SUMMARY"):
+            messages += (
+                f"│ QC Checks: {len(self.QC_SUMMARY.get('QC_CHECKS_APPLIED'))}\n"
+            )
+        messages += "╰──────────────────────────────────────╯"
+        return messages
 
 
-def stations_metadata(verbose=config["default"].get("verbose", True), **params):
-    """
-    Get station metadata for stations as a Pandas DataFrame.
+class TimeSeries(SynopticAPI):
+    """Get time series data for a station or stations.
 
-    https://developers.synopticdata.com/mesonet/v2/stations/metadata/
+    https://docs.synopticdata.com/services/time-series
 
     Parameters
     ----------
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        e.g., sensorvars, obrange, obtimezone, etc.
-
-    Others: STATION SELECTION PARAMETERS
-    https://developers.synopticdata.com/mesonet/v2/station-selectors/
-
+    with_latency : bool
+        If True, return data with latency column from the Latency service.
+    **params
+        - `start`, `end` | `recent`
     """
-    assert any(
-        [i in _stn_selector for i in params]
-    ), f"🤔 Please assign a station selector (i.e., {_stn_selector})"
 
-    # Get the data
-    web = synoptic_api("metadata", verbose=verbose, **params)
-    data = web.json()
+    def __init__(self, with_latency=False, **params):
+        super().__init__("timeseries", **params)
+        self.df = parse_stations_timeseries(self)
 
-    # Initialize a DataFrame
-    df = pd.DataFrame(data["STATION"], index=[i["STID"] for i in data["STATION"]])
+        if with_latency:
+            latency = Latency(**params).df
+            cols = [
+                "date_time",
+                "id",
+                "stid",
+                "name",
+                "elevation",
+                "latitude",
+                "longitude",
+            ]
+            self.df = self.df.join(
+                latency.select(cols + ["latency"]),
+                on=cols,
+                how="left",
+            )
 
-    # Convert data to numeric values (if possible)
-    df = df.apply(pd.to_numeric, errors="ignore")
 
-    # Deal with "Period Of Record" dictionary
-    df = pd.concat([df, df.PERIOD_OF_RECORD.apply(pd.Series)], axis=1)
-    df[["start", "end"]] = df[["start", "end"]].apply(pd.to_datetime)
+class Latest(SynopticAPI):
+    """Get the most recent data from a station or stations.
 
-    # Rename some fields.
-    # latitude and longitude are made lowercase to conform to CF standard
-    df.drop(columns=["PERIOD_OF_RECORD"], inplace=True)
-    df.rename(
-        columns=dict(
-            LATITUDE="latitude",
-            LONGITUDE="longitude",
-            start="RECORD_START",
-            end="RECORD_END",
-        ),
-        inplace=True,
+    https://docs.synopticdata.com/services/latest
+
+    Parameters
+    ----------
+    **params
+        - `within` (optional)
+    """
+
+    def __init__(self, **params):
+        super().__init__("latest", **params)
+        self.df = parse_stations_latest_nearesttime(self)
+
+
+class NearestTime(SynopticAPI):
+    """Get data closest to the requested time for a station or stations.
+
+    https://docs.synopticdata.com/services/nearest-time
+
+    Parameters
+    ----------
+    **params
+        - `attime`
+        - `within` (optional)
+    """
+
+    def __init__(self, **params):
+        super().__init__("nearesttime", **params)
+        self.df = parse_stations_latest_nearesttime(self)
+
+
+class Precipitation(SynopticAPI):
+    """
+    Request derived precipitation total or intervals.
+
+    https://docs.synopticdata.com/services/precipitation
+
+    Parameters
+    ----------
+    **params
+        - Station selection parameters.
+        - `start` and `end` | `recent`
+
+    Optional Parameters
+    -------------------
+    pmode : {'totals', 'intervals', 'last'}
+        Default is totals.
+    interval : int | {'hour', 'day', 'week', 'month', 'year'}
+        Integer hours, or string interval.
+        Default is "day" if not set.
+    """
+
+    def __init__(self, **params):
+        # Don't allow legacy precip service with pmode omitted.
+        params.setdefault("pmode", "totals")
+
+        super().__init__("precipitation", **params)
+        self.df = parse_stations_precipitation(self)
+
+
+class Latency(SynopticAPI):
+    """
+    Request station latency.
+
+    https://docs.synopticdata.com/services/latency
+
+    Parameters
+    ----------
+    **params
+        - Station selection parameters.
+        - `start` and `end` | `recent`
+    """
+
+    def __init__(self, **params):
+        super().__init__("latency", **params)
+        self.df = parse_stations_latency(self)
+
+
+class Metadata(SynopticAPI):
+    """Retrieve metadata for a station or stations."""
+
+    def __init__(self, **params):
+        super().__init__("metadata", **params)
+
+        df = (
+            pl.concat([pl.DataFrame(i) for i in self.STATION], how="diagonal_relaxed")
+            .with_columns(
+                pl.struct(
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("start")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_START"),
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("end")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_END"),
+                ).alias("PERIOD_OF_RECORD"),
+                pl.col("STID").cast(pl.String),
+                pl.col("ID", "MNET_ID").cast(pl.UInt32),
+                pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(
+                    pl.Float64
+                ),
+            )
+            .unnest("PERIOD_OF_RECORD")
+            .drop("UNITS")  # not needed because is is also in json["UNITS"].
+        )
+
+        df = df.rename({i: i.lower() for i in df.columns})
+        self.df = df
+
+
+class QCSegments(SynopticAPI):
+    """QC Segments. ???"""
+
+    def __init__(self, **params):
+        super().__init__("qcsegments", **params)
+        raise NotImplementedError()
+
+
+class QCTypes(SynopticAPI):
+    """Get all QC types and names."""
+
+    def __init__(self, **params):
+        super().__init__("qctypes", **params)
+
+        df = pl.DataFrame(self.QCTYPES).with_columns(
+            pl.col("ID", "SOURCE_ID").cast(pl.UInt32)
+        )
+        df = df.rename({i: i.lower() for i in df.columns})
+        self.df = df
+
+
+class Variables(SynopticAPI):
+    """Get all available variables.
+
+    Provides variable name, variable index, long anme, and default unit.
+    """
+
+    def __init__(self, **params):
+        super().__init__("variables", **params)
+        df = pl.concat(
+            [
+                pl.DataFrame(i)
+                .transpose(header_name="variable", include_header=True)
+                .unnest("column_0")
+                for i in self.VARIABLES
+            ]
+        ).with_columns(pl.col("vid").cast(pl.UInt32))
+        self.df = df
+
+
+class Networks(SynopticAPI):
+    """Get all available networks."""
+
+    def __init__(self, **params):
+        super().__init__("networks", **params)
+        df = (
+            pl.concat([pl.DataFrame(i) for i in self.MNET], how="diagonal_relaxed")
+            .with_columns(
+                pl.col("ID", "CATEGORY").cast(pl.UInt32),
+                pl.col("LAST_OBSERVATION").str.to_datetime(),
+                pl.struct(
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("start")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_START"),
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("end")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_END"),
+                ).alias("PERIOD_OF_RECORD"),
+            )
+            .unnest("PERIOD_OF_RECORD")
+        )
+
+        df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnet_id"})
+        self.df = df
+
+
+class NetworkTypes(SynopticAPI):
+    """Get all available network types."""
+
+    def __init__(self, **params):
+        super().__init__("networktypes", **params)
+        df = (
+            pl.DataFrame(self.MNETCAT)
+            .with_columns(
+                pl.col("ID").cast(pl.UInt32),
+                pl.struct(
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("start")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_START"),
+                    pl.col("PERIOD_OF_RECORD")
+                    .struct.field("end")
+                    .cast(pl.String)
+                    .str.to_datetime(time_zone="UTC")
+                    .alias("PERIOD_OF_RECORD_END"),
+                ).alias("PERIOD_OF_RECORD"),
+            )
+            .unnest("PERIOD_OF_RECORD")
+        )
+        df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnetcat_id"})
+        self.df = df
+
+
+# =============================================================================
+
+
+def string_to_timedelta(x: str) -> timedelta:
+    """
+    Parse a duration string to a timedelta.
+
+    x : str
+        String representation of duration. Can use ISO 8601 duration, in
+        a limited fashion, or a Polars-style period string.
+        - `'PT30M'` = 30 minutes
+        - `'P1DT6H'` = 1 day, 6 hours
+        - `'30m'` = 30 minutes
+        - `'3d6h30m10s'` = 3 days, 6 hours, 30 minutes, 10 seconds
+    """
+    x = x.lower()
+    x = x.replace("p", "").replace("t", "")
+    pattern = r"(?:(?P<days>\d+)d)?(?:(?P<hours>\d+)h)?(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?"
+
+    groups = re.match(pattern, x).groupdict()
+    kwargs = {k: int(v) for k, v in groups.items() if v is not None}
+    return timedelta(**kwargs)
+
+
+def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
+    """Convert STATION metadata from JSON to a DataFrame."""
+    metadata = metadata.copy()
+    metadata.pop("OBSERVATIONS", None)
+    metadata.pop("SENSOR_VARIABLES", None)
+    metadata.pop("LATENCY", None)
+    metadata.pop("QC", None)
+    df = (
+        pl.DataFrame(metadata)
+        .with_columns(
+            pl.col("STID").cast(pl.String),
+            pl.col("ID", "MNET_ID").cast(pl.UInt32),
+            pl.col("ELEVATION", "LATITUDE", "LONGITUDE").cast(pl.Float64),
+        )
+        .drop("UNITS")  # not needed because is is also in json["UNITS"].
     )
 
-    df.attrs["URL"] = urllib.parse.unquote(web.url)
-    df.attrs["UNITS"] = {"ELEVATION": "ft"}
-    df.attrs["SUMMARY"] = data["SUMMARY"]
-    df.attrs["params"] = params
-    df.attrs["service"] = "stations_metadata"
-    return df.transpose().sort_index()
+    if "ELEV_DEM" in df.columns:
+        # This isn't in the Latency request
+        df.with_columns(pl.col("ELEV_DEM").cast(pl.Float64))
 
+    if len(df) > 1:
+        # When param `complete=1`, some stations have multiple providers
+        # and is given as a list of key-value pairs of provider name and
+        # url. But Polars loads this as individual rows.
+        # I'll just return the first.
+        df = df[0]
 
-def stations_timeseries(
-    verbose=config["default"].get("verbose", True),
-    rename_set_1=config["default"].get("rename_set_1", True),
-    **params,
-):
-    """
-    Get station data for time series.
-
-    https://developers.synopticdata.com/mesonet/v2/stations/timeseries/
-
-    Parameters
-    ----------
-    rename_set_1 : bool
-
-        - True: Rename the DataFrame columns to not include the set_1
-          or set_1d in the name. I prefer these names to more easily
-          key in on the variables I want.
-          Where there are both set_1 and set_1d for a variable, only the
-          column with the most non-NaN values will be renamed.
-        - False: Perserve the original column names.
-
-        .. note::
-            Observations returned from the Synoptic API are returned
-            with set numbers ("air_temp_set_1", "air_temp_set_2",
-            "dew_point_temperature_set_1d", etc.). The set number refers
-            to a different observing method (maybe a station has two
-            temperature sensors or two heights). The 'd' means the
-            variable was derived from other data.
-
-            In my general use, I don't usually care which variables
-            are derived, and just want the variable that provides the
-            most data. Almost always, I want to use set_1.
-
-        .. note::
-            The DataFrame attribute 'RENAMED' is provided to
-            show how the columns were renamed.
-            You may also look at the 'SENSOR_VARIABLES' attribute for
-            more specific information, like how each set is derived.
-
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        **Must include** ``start`` and ``end`` argument *or* ``recent``.
-    start, end : datetime, pandas Timestamp, or pandas.to_datetime-parsable str
-        Start and end of time series
-    recent : int, timedelta, or Pandas Timedelta
-        If int, given as minutes for recent observations.
-        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`
-        and ``recent=pd.to_timedelta('1D')``.
-        Or, give a pandas-recognized timedelta-string, like '1W' for one
-        week, '1h' for one hour, etc. ``recent='1D'`` for one day.
-        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html
-        for additional units.
-
-    Other params include ``obtimezone``, ``units``, and any Station
-    Selector parameter.
-
-    Examples
-    --------
-
-    .. code:: python
-
-        stations_timeseries(stid='WBB', recent=100)
-        stations_timeseries(radius='UKBKB,10', vars='air_temp', recent=100)
-        stations_timeseries(stid='KMRY', recent=60, vars='air_temp', obtimezone='Local', units='temp|F')
-
-    .. code:: python
-
-        import matplotlib.pyplot as plt
-        from matplotlib.dates import DateFormatter
-        df = stations_timeseries(stid='WBB', recent=300)
-        plt.plot(df['air_temp'])
-        plt.plot(df['dew_point_temperature'])
-        plt.gca().xaxis.set_major_formatter(DateFormatter('%b %d %H:%M'))
-        plt.legend()
-
-    """
-    check1 = "start" in params and "end" in params
-    check2 = "recent" in params
-    assert check1 or check2, "🤔 `start` and `end` *or* `recent` is required"
-    assert any(
-        [i in _stn_selector for i in params]
-    ), f"🤔 Please assign a station selector (i.e., {_stn_selector})"
-
-    # Get the data
-    web = synoptic_api("timeseries", verbose=verbose, **params)
-    data = web.json()
-
-    # Build a separate pandas.DataFrame for each station.
-    Z = []
-    for stn in data["STATION"]:
-        obs = stn.pop("OBSERVATIONS")
-        senvars = stn.pop("SENSOR_VARIABLES")
-
-        # Turn Data into a DataFrame
-        df = pd.DataFrame(obs).set_index("date_time")
-
-        # Remaining data in dict will be returned as attribute
-        df.attrs = stn
-
-        # Convert datetime index string to datetime
-        df.index = pd.to_datetime(df.index)
-
-        # Sort Column order alphabetically
-        df = df.reindex(columns=df.columns.sort_values())
-
-        # Break wind into U and V components, if speed and direction are available
-        if all(["wind_speed" in senvars, "wind_direction" in senvars]):
-            for i_spd, i_dir in zip(
-                senvars["wind_speed"].keys(), senvars["wind_direction"].keys()
-            ):
-                u, v = spddir_to_uv(obs[i_spd], obs[i_dir])
-                this_set = "_".join(i_spd.split("_")[-2:])
-                df[f"wind_u_{this_set}"] = u
-                df[f"wind_v_{this_set}"] = v
-                data["UNITS"]["wind_u"] = data["UNITS"]["wind_speed"]
-                data["UNITS"]["wind_v"] = data["UNITS"]["wind_speed"]
-
-        if rename_set_1:
-            df = _rename_set_1(df)
-
-        # Drop Row if all data is NaN/None
-        df.dropna(how="all", inplace=True)
-
-        # In the DataFrame attributes, Convert some strings to float/int
-        # (i.e., ELEVATION, latitude, longitude) BUT NOT STID!
-        for k, v in df.attrs.items():
-            if isinstance(v, str) and k not in ["STID"]:
-                try:
-                    n = float(v)
-                    if n.is_integer():
-                        df.attrs[k] = int(n)
-                    else:
-                        df.attrs[k] = n
-                except:
-                    pass
-
-        if len(df.columns) != len(set(df.columns)):
-            warnings.warn("🤹🏼‍♂️ DataFrame contains duplicate column names.")
-
-        # Rename lat/lon to lowercase to match CF convenctions
-        df.attrs["latitude"] = df.attrs.pop("LATITUDE")
-        df.attrs["longitude"] = df.attrs.pop("LONGITUDE")
-
-        # Include other info
-        for i in data.keys():
-            if i != "STATION":
-                df.attrs[i] = data[i]
-        df.attrs["SENSOR_VARIABLES"] = senvars
-        df.attrs["params"] = params
-        df.attrs["service"] = "stations_timeseries"
-
-        Z.append(df)
-
-    if len(Z) == 1:
-        return Z[0]
-    else:
-        if verbose:
-            print(f'Returned [{len(Z)}] stations. {[i.attrs["STID"] for i in Z]}')
-        return Z
-
-
-def stations_nearesttime(
-    verbose=config["default"].get("verbose", True),
-    rename_value_1=config["default"].get("rename_value_1", True),
-    **params,
-):
-    """
-    Get station data nearest a datetime. (Very similar to the latest service.)
-
-    https://developers.synopticdata.com/mesonet/v2/stations/nearesttime/
-
-    Parameters
-    ----------
-    rename_value_1 : bool
-
-        - True: Rename the DataFrame index to not include the value_1
-          or value_1d in the name. I prefer these names to more easily
-          key in on the variables I want.
-          Where there are both value_1 and value_1d for a variable, only
-          the most recent value will be renamed.
-        - False: Perserve the original index names.
-
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        **Must include** ``attime`` and ``within``
-    attime : datetime, pandas Timestamp, or pandas.to_datetime-parsable str
-        Datetime you want to the the nearest observations for.
-    within : int, timedelta, or Pandas Timedelta
-        How long ago is the oldest observation you want to receive?
-        If int, given as minutes for recent observations.
-        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`
-        and ``recent=pd.to_timedelta('1D')``.
-        Or, give a pandas-recognized timedelta-string, like '1W' for one
-        week, '1h' for one hour, etc. ``recent='1D'`` for one day.
-        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html
-        for additional units.
-
-    Other params include ``obtimezone``, ``units``, and any Station
-    Selector parameter.
-
-    Examples
-    --------
-    .. code:: python
-
-        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
-
-    """
-    assert "attime" in params, "🤔 `attime` is a required parameter (datetime)."
-    assert any(
-        [i in _stn_selector for i in params]
-    ), f"🤔 Please assign a station selector (i.e., {_stn_selector})"
-
-    params.setdefault("within", 60)
-
-    # Get the data
-    web = synoptic_api("nearesttime", verbose=verbose, **params)
-    data = web.json()
-
-    df = _parse_latest_nearesttime(data, rename_value_1)
-    df.attrs["params"] = params
-    df.attrs["service"] = "stations_nearesttime"
     return df
 
 
-def stations_latest(
-    verbose=config["default"].get("verbose", True),
-    rename_value_1=config["default"].get("rename_value_1", True),
-    **params,
-):
-    """
-    Get the latest station data. (Very similar to the nearesttime service.)
-
-    https://developers.synopticdata.com/mesonet/v2/stations/latest/
+def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
+    """Parse all STATION items for 'timeseries' service into long-format DataFrame.
 
     Parameters
     ----------
-    rename_value_1 : bool
-        Option to rename the DataFrame index to not include the
-        ``value_1`` or ``value_1d`` in the name. I prefer that the
-        column names strips this part of the string to more easily key
-        in on the variables I want. For situations where there are both
-        ``value_1`` and ``value_1d`` for a variable, only the most
-        recent value will be renamed.
-
-        - True: Strip ``value_1`` from the column variable names.
-        - False: Perserve the original index names.
-
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        **Must include** ``within``.
-    within : int, timedelta, or Pandas Timedelta
-        If int, given as minutes for recent observations.
-        Or, give a timedelta or pandas timedelta ``recent=timedelta(day=2)`
-        and ``recent=pd.to_timedelta('1D')``.
-        Or, give a pandas-recognized timedelta-string, like '1W' for one
-        week, '1h' for one hour, etc. ``recent='1D'`` for one day.
-        See https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_timedelta.html
-        for additional units.
-
-    Other params include ``obtimezone``, ``units``, and any Station
-    Selector parameter.
-
-    Examples
-    --------
-
-    .. code:: python
-
-        stations_nearesttime(attime=datetime(2020,1,1), within=60, stid='WBB')
-
+    s : SynopticAPI instance
     """
-    assert any(
-        [i in _stn_selector for i in params]
-    ), f"🤔 Please assign a station selector (i.e., {_stn_selector})"
+    dfs = []
+    for station in S.STATION:
+        observations = station["OBSERVATIONS"]
+        qc = station.get("QC")  # Use 'get' because it is not always provided.
+        metadata = station_metadata_to_dataframe(station)
 
-    params.setdefault("within", 60)
+        observed = (
+            pl.DataFrame(observations)
+            .with_columns(pl.col("date_time").str.to_datetime())
+            .unpivot(index="date_time")
+            .with_columns(
+                pl.col("variable").str.extract_groups(
+                    r"(?<variable>.+)_set_(?<sensor>\d)(?<derived>d?)"
+                )
+            )
+            .unnest("variable")
+            .with_columns(
+                pl.col("value").cast(
+                    pl.Float64, strict=False
+                ),  # Values must be numbers
+                pl.col("derived") == "d",
+                pl.col("sensor").cast(pl.UInt32),
+                pl.col("variable").replace(S.UNITS).alias("units"),
+            )
+        )
 
-    # Get the data
-    web = synoptic_api("latest", verbose=verbose, **params)
-    data = web.json()
+        if any(metadata["QC_FLAGGED"]):
+            qc = (
+                pl.DataFrame(qc)
+                .with_columns(
+                    date_time=pl.Series(observations["date_time"]).str.to_datetime()
+                )
+                .unpivot(index="date_time", value_name="qc_flags")
+                .with_columns(
+                    pl.col("variable").str.extract_groups(
+                        r"(?<variable>.+)_set_(?<sensor>\d)(?<derived>d?)"
+                    )
+                )
+                .unnest("variable")
+                .with_columns(
+                    pl.col("derived") == "d",
+                    pl.col("sensor").cast(pl.UInt32),
+                )
+            )
 
-    df = _parse_latest_nearesttime(data, rename_value_1)
-    df.attrs["params"] = params
-    df.attrs["service"] = "stations_latest"
+            # Attach the QC information to the observations
+            observed = observed.join(
+                qc,
+                on=["date_time", "variable", "sensor", "derived"],
+                how="full",
+                coalesce=True,
+            )
+
+        # Attach the metadata to the observations
+        observed = observed.join(metadata, how="cross")
+
+        dfs.append(observed)
+
+    df = pl.concat(dfs, how="diagonal_relaxed")
+    # Parse PERIOD_OF_RECORD
+    df = df.with_columns(
+        pl.col("ID").cast(pl.UInt32),
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
+
+    df = df.rename({i: i.lower() for i in df.columns})
+    if "qc_flagged" in df.columns:
+        # Don't want to confuse the user with this column, so drop it.
+        # The user only needs to check for the `qc_flags` column to see if
+        # the observation was QCed.
+        df = df.drop("qc_flagged")
+
     return df
 
 
-def stations_precipitation(verbose=config["default"].get("verbose", True), **params):
-    """
-    Get the precipitation data.
-
-    https://developers.synopticdata.com/mesonet/v2/stations/precipitation/
+def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
+    """Parse STATIONS items for 'latest' and 'nearesttime' service.
 
     Parameters
     ----------
-    \*\*params : keyword arguments
-        Synoptic API arguments used to specify the data request.
-        Requires `start` and `end` *or* `recent`.
-
-    Other params include ``obtimezone``, ``units``, and any Station
-    Selector parameter.
-
+    s : SynopticAPI instance
     """
-    print("🙋🏼‍♂️ HI! THIS FUNCTION IS NOT COMPLETED YET. WILL JUST RETURN JSON.")
+    # The JSON structure for the latest and nearest time services are identical.
+    dfs = []
+    for station in S.STATION:
+        observations = station["OBSERVATIONS"]
+        metadata = station_metadata_to_dataframe(station)
 
-    check1 = "start" in params and "end" in params
-    check2 = "recent" in params
-    assert check1 or check2, "🤔 `start` and `end` *or* `recent` is required"
-    assert any(
-        [i in _stn_selector for i in params]
-    ), f"🤔 Please assign a station selector (i.e., {_stn_selector})"
+        observed = (
+            pl.DataFrame(observations)
+            .transpose(include_header=True, header_name="variable")
+            .unnest("column_0")
+            .with_columns(pl.col("date_time").str.to_datetime())
+            .select("date_time", "variable", "value")
+            .with_columns(
+                pl.col("variable").str.extract_groups(
+                    r"(?<variable>.+)_value_(?<sensor>\d)(?<derived>d?)"
+                )
+            )
+            .unnest("variable")
+            .with_columns(
+                pl.col("value").cast(
+                    pl.Float64, strict=False
+                ),  # Values must be numbers
+                pl.col("derived") == "d",
+                pl.col("sensor").cast(pl.UInt32),
+                pl.col("variable").replace(S.UNITS).alias("units"),
+            )
+        )
 
-    # Get the data
-    web = synoptic_api("precipitation", verbose=verbose, **params)
-    data = web.json()
+        if any(metadata["QC_FLAGGED"]):
+            qc_flags = {}
+            for k, v in observations.items():
+                if "qc" in v.keys():
+                    qc_flags[k] = [v["qc"].get("qc_flags")]
+                else:
+                    qc_flags[k] = [None]
+            qc = (
+                pl.DataFrame(qc_flags)
+                .transpose(include_header=True, header_name="variable")
+                .rename({"column_0": "qc_flags"})
+                .with_columns(
+                    pl.col("variable").str.extract_groups(
+                        r"(?<variable>.+)_value_(?<sensor>\d)(?<derived>d?)"
+                    )
+                )
+                .unnest("variable")
+                .with_columns(
+                    pl.col("derived") == "d",
+                    pl.col("sensor").cast(pl.UInt32),
+                )
+            )
 
-    return data
+            # Attach the QC information to the observations
+            observed = observed.join(
+                qc,
+                on=["variable", "sensor", "derived"],
+                how="full",
+                coalesce=True,
+            )
 
+        # Attach the metadata to the observations
+        observed = observed.join(metadata, how="cross")
+        dfs.append(observed)
 
-def networks(verbose=config["default"].get("verbose", True), **params):
-    """
-    Return a DataFrame of available Networks and their metadata
+    df = pl.concat(dfs, how="diagonal_relaxed")
+    # Parse PERIOD_OF_RECORD
+    df = df.with_columns(
+        pl.col("ID").cast(pl.UInt32),
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
 
-    https://developers.synopticdata.com/mesonet/v2/networks/
-    https://developers.synopticdata.com/about/station-network-type/
-
-    Parameters
-    ----------
-    **param : keyword arguments
-    id : int or list of int
-        Filter by network number.
-    shortname : str or list of str
-        Network shortname, i.e. 'NWS/FAA', 'RAWS', 'UTAH DOT',
-
-    """
-    # Get the data
-    web = synoptic_api("networks", verbose=verbose, **params)
-    data = web.json()
-
-    df = pd.DataFrame(data["MNET"])
-    df["ID"] = df["ID"].astype(int)
-    df["CATEGORY"] = df["CATEGORY"].astype(int)
-    df["REPORTING_STATIONS"] = df["REPORTING_STATIONS"].astype(int)
-    df.set_index("ID", inplace=True)
-    df["LAST_OBSERVATION"] = pd.to_datetime(df.LAST_OBSERVATION)
-    df.attrs["SUMMARY"] = data["SUMMARY"]
-    df.attrs["params"] = params
-    df.attrs["service"] = "networks"
+    df = df.rename({i: i.lower() for i in df.columns})
+    # Don't want to confuse the user with this column, so drop it.
+    # The user only needs to check for the `qc_flags` column to see if
+    # the observation was QCed.
+    df = df.drop("qc_flagged")
     return df
 
 
-def networktypes(verbose=config["default"].get("verbose", True), **params):
-    """
-    Get a DataFrame of network types
-
-    https://developers.synopticdata.com/mesonet/v2/networktypes/
-    https://developers.synopticdata.com/about/station-network-type/
+def parse_stations_precipitation(S: SynopticAPI) -> pl.DataFrame:
+    """Parse STATIONS portion of JSON object of SynopticAPI instance for 'precipitation' service.
 
     Parameters
     ----------
-    \*\*params : keyword arguments
-    id : int
-        Select just the network type you want
-
+    s : SynopticAPI instance
     """
+    dfs = []
+    for station in S.STATION:
+        observations = station["OBSERVATIONS"]
+        metadata = station_metadata_to_dataframe(station)
 
-    # Get the data
-    web = synoptic_api("networktypes", verbose=verbose, **params)
-    data = web.json()
-
-    df = pd.DataFrame(data["MNETCAT"])
-    df.set_index("ID", inplace=True)
-    df.attrs["SUMMARY"] = data["SUMMARY"]
-    df.attrs["params"] = params
-    df.attrs["service"] = "networktypes"
+        z = (
+            pl.DataFrame(observations["precipitation"]).with_columns(
+                pl.col("first_report").str.to_datetime(),
+                pl.col("last_report").str.to_datetime(),
+                pl.lit(S.UNITS["precipitation"]).alias("units"),
+            )
+        ).join(metadata, how="cross")
+        dfs.append(z)
+    df = pl.concat(dfs, how="diagonal_relaxed")
+    df = df.rename({i: i.lower() for i in df.columns})
     return df
 
 
-def variables(verbose=config["default"].get("verbose", True), **params):
-    """
-    Return a DataFrame of available station variables
+def parse_stations_latency(S: SynopticAPI) -> pl.DataFrame:
+    """Parse STATION portion of JSON object for the 'latency' service."""
+    dfs = []
+    for station in S.STATION:
+        metadata = station_metadata_to_dataframe(station)
 
-    https://developers.synopticdata.com/mesonet/v2/variables/
-    https://developers.synopticdata.com/mesonet/v2/api-variables/
+        latency = (
+            pl.DataFrame(station["LATENCY"])
+            .with_columns(
+                pl.col("date_time").str.to_datetime(),
+                pl.duration(minutes="values").alias("latency"),
+            )
+            .drop("values")
+        )
 
-    Parameters
-    ----------
-    **param : keyword arguments
-        There are none for the 'variables' service.
+        # Attach the metadata to the observations
+        latency = latency.join(metadata, how="cross")
+        dfs.append(latency)
 
-    """
-    # Get the data
-    web = synoptic_api("variables", verbose=verbose, **params)
-    data = web.json()
+    df = pl.concat(dfs, how="diagonal_relaxed")
+    # Parse PERIOD_OF_RECORD
+    df = df.with_columns(
+        pl.col("ID").cast(pl.UInt32),
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
 
-    df = pd.concat([pd.DataFrame(i) for i in data["VARIABLES"]], axis=1).transpose()
-    # df.set_index('vid', inplace=True)
-    df.attrs["SUMMARY"] = data["SUMMARY"]
-    df.attrs["params"] = params
-    df.attrs["service"] = "variables"
+    df = df.rename({i: i.lower() for i in df.columns})
     return df
-
-
-def qctypes(verbose=config["default"].get("verbose", True), **params):
-    """
-    Return a DataFrame of available quality control (QC) types
-
-    https://developers.synopticdata.com/mesonet/v2/qctypes/
-    https://developers.synopticdata.com/about/qc/
-
-    Parameters
-    ----------
-    **param : keyword arguments
-        Available parameters include ``id`` and ``shortname``
-
-    """
-    # Get the data
-    web = synoptic_api("qctypes", verbose=verbose, **params)
-    data = web.json()
-
-    df = pd.DataFrame(data["QCTYPES"])
-    df = df.apply(pd.to_numeric, errors="ignore")
-    df.set_index("ID", inplace=True)
-    df.sort_index(inplace=True)
-    df.attrs["SUMMARY"] = data["SUMMARY"]
-    df.attrs["params"] = params
-    df.attrs["service"] = "qctypes"
-    return df
-
-
-def auth(helpme=True, verbose=config["default"].get("verbose", True), **params):
-    """
-    Return a DataFrame of authentication controls.
-
-    https://developers.synopticdata.com/mesonet/v2/auth/
-    https://developers.synopticdata.com/settings/
-
-    Parameters
-    ----------
-    helpme : bool
-        True - It might be easier to deal with generating new tokens
-        and listing tokens on the web settings, so just return the
-        URL to help you make these changes via web.
-        False - Access the ``auth`` API service.
-    **param : keyword arguments
-
-    Some include the following
-
-    disableToken : str
-    list : {1, 0}
-    expire : datetime
-
-    Examples
-    --------
-    List all tokens
-
-    .. code:: python
-
-        auth(helpme=False, apikey='YOUR_API_KEY', list=1)
-
-    Create new token (tokens are disabled after 10 years)
-
-    .. code:: python
-
-        auth(helpme=False, apikey='YOUR_API_KEY')
-
-    Create new token with expiration date
-
-    .. code:: python
-
-        auth(helpme=False, apikey='YOUR_API_KEY', expire=datetime(2021,1,1))
-
-    Disable a token (not sure why this doesn't do anything)
-
-    .. code:: python
-
-        auth(helpme=False, apikey='YOUR_API_KEY', disable='TOKEN')
-
-    """
-    if helpme:
-        web = "https://developers.synopticdata.com/settings/"
-        print(f"It's easier to manage these via the web settings: {web}")
-    else:
-        assert "apikey" in params, f"🛑 `apikey` is a required argument. {web}"
-        web = synoptic_api("auth", verbose=verbose, **params)
-        data = web.json()
-        return data
-
-
-# Other Services
-# ---------------
-# stations_precipitation : *NOT FINISHED
-# stations_latency : *NOT CURRENTLY AVAILABLE
-# stations_qcsegments : ???

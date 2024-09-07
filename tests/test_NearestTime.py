@@ -1,12 +1,12 @@
 """Tests for the NearestTime Class."""
 
-import synoptic.synoptic_polars as sp
+import synoptic.services as ss
 from datetime import datetime
 
 
 def test_qced_air_temp():
     # This produces a QCed air temperature
-    s = sp.NearestTime(
+    s = ss.NearestTime(
         stid="kslc",
         attime="2024-08-17 17:55:00",
         vars="air_temp",

@@ -1,35 +1,35 @@
 """Tests for metadata table classes."""
 
-import synoptic.synoptic_polars as sp
+import synoptic.services as ss
 
 
 def test_QCTypes():
-    s = sp.QCTypes()
+    s = ss.QCTypes()
     assert len(s.df)
 
-    s = sp.QCTypes(id=1)
+    s = ss.QCTypes(id=1)
     assert len(s.df)
 
 
 def test_Variables():
-    s = sp.Variables()
+    s = ss.Variables()
     assert len(s.df)
 
 
 def test_Networks():
-    s = sp.Networks()
+    s = ss.Networks()
     assert len(s.df)
 
-    s = sp.Networks(id=1)
+    s = ss.Networks(id=1)
     assert len(s.df) == 1
 
-    s = sp.Networks(id=[1, 2, 3])
+    s = ss.Networks(id=[1, 2, 3])
     assert len(s.df) == 3
 
-    s = sp.Networks(shortname="uunet,raws")
+    s = ss.Networks(shortname="uunet,raws")
     assert len(s.df) == 2
 
 
 def test_NetworkTypes():
-    s = sp.NetworkTypes()
+    s = ss.NetworkTypes()
     assert len(s.df)

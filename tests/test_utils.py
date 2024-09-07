@@ -1,6 +1,6 @@
 """Tests for some needed utilities."""
 
-from synoptic.synoptic_polars import string_to_timedelta
+from synoptic.services import string_to_timedelta
 from datetime import timedelta
 import pytest
 

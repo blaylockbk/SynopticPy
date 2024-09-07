@@ -1,11 +1,11 @@
 """Tests for the Precipitation Class."""
 
-import synoptic.synoptic_polars as sp
+import synoptic.services as ss
 from datetime import datetime, timedelta
 
 
 def test_defaults():
-    s = sp.Precipitation(
+    s = ss.Precipitation(
         stid="WBB",
         start="2024-06-01",
         end="2024-06-06",
@@ -14,7 +14,7 @@ def test_defaults():
 
 
 def test_recent():
-    s = sp.Precipitation(
+    s = ss.Precipitation(
         stid="WBB",
         recent=timedelta(days=20),
     )
@@ -22,7 +22,7 @@ def test_recent():
 
 
 def test_pmode_last_accum():
-    s = sp.Precipitation(
+    s = ss.Precipitation(
         stid="WBB,UKBKB",
         start="2024-06-01",
         end="2024-06-06",

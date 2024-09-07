@@ -1,5 +1,15 @@
 # Notes
 
+```Python
+import synoptic
+
+df = synoptic.TimeSeries(...).df
+df.synoptic.pivot()
+```
+
+The default DataFrame is in long format; one row for each unique observation
+
+
 ## Elevation and Position units
 
 - Station elevation has units of _feet_.
