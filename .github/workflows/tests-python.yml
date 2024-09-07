@@ -33,6 +33,7 @@ jobs:
     env:
       OS: ${{ matrix.os }}
       PYTHON: ${{ matrix.python-version }}
+      SYNOPTIC_TOKEN: ${{ secrets.SYNOPTIC_TOKEN }}
 
     defaults:
       run:
