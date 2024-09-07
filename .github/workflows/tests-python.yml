@@ -76,4 +76,5 @@ jobs:
           TMPDIR: ${{ runner.temp }}
           SYNOPTIC_TOKEN: ${{ secrets.SYNOPTIC_TOKEN }}
         run: |
+          env
           pytest
