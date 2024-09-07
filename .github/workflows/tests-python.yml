@@ -71,11 +71,6 @@ jobs:
           pip3 install --requirement=requirements-test.txt
           pip3 install --editable='.[extras]'
 
-      - name: Install project
-        run: |
-          pip3 install --requirement=requirements-test.txt
-          pip3 install --editable=.
-
       - name: Run tests
         env:
           TMPDIR: ${{ runner.temp }}
