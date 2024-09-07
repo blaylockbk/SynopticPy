@@ -27,14 +27,10 @@ keywords = [
     "atmosphere",
 ]
 dependencies = [
-    "altair",      # Move to extras:plot
-    "matplotlib",  # Move to extras:plot
     "numpy",
-    "pandas",      # Not needed at all?
     "polars",
     "pyarrow",
     "requests",
-    "seaborn",     # Move to extras:plot
     "toml",
 ]
 dynamic = ["version"]
@@ -47,6 +43,13 @@ dynamic = ["version"]
 "Bug Tracker" = "https://github.com/blaylockbk/SynopticPy/issues"
 
 [project.optional-dependencies]
+extras = [
+    "altair", # Plotting
+    "matplotlib", # Plotting
+    "pyarrow", # Write to Parquet with pyarrow
+    "seaborn", # Plotting
+]
+
 docs = [
     "autodocsumm",
     "linkify-it-py",
