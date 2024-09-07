@@ -29,6 +29,8 @@ TODO: Allow user to cast values column to float or string, then drop null rows
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
+TODO: Need to use to_timezone(timezone=...) if obtimezone='local'
+
 TODO: Extensive testing and examples. Tests for each service in their own files.
 
 TODO: Provide helper function to do proper pivot
@@ -106,6 +108,8 @@ class SynopticAPI:
         If None, tries to get value from the following:
         1. Environment variable `SYNOPTIC_TOKEN`,
         2. The `token="..."` value in `~/.config/SynopticPy/config.toml`.
+    verbose : bool
+        Print each step.
     **params
         Synoptic API request arguments. Refer to the Synoptic Weather
         Data API documentation for expected and valid arguments for
@@ -120,8 +124,16 @@ class SynopticAPI:
           or a duration string like `1d12h` or `30m`.
     """
 
-    def __init__(self, service: ServiceType, *, token: Optional[str] = None, **params):
+    def __init__(
+        self,
+        service: ServiceType,
+        *,
+        token: Optional[str] = None,
+        verbose=True,
+        **params,
+    ):
         self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
+        self.verbose = verbose
 
         # -------------
         # Get API token
@@ -211,6 +223,9 @@ class SynopticAPI:
         else:
             self.endpoint = f"https://api.synopticdata.com/v2/{service}"
 
+        if self.verbose:
+            print(f"🚚💨 Speedy delivery from Synoptic {service} service.")
+
         self.response = requests.get(self.endpoint, params=params)
         self.url = self.response.url
         self.json = self.response.json()
@@ -226,15 +241,20 @@ class SynopticAPI:
         if self.SUMMARY["RESPONSE_CODE"] != 1:
             raise SynopticAPIError(
                 "\n"
-                f"FATAL: Not a valid Synoptic API request.\n"
+                f"🛑 FATAL: Not a valid Synoptic API request.\n"
                 f"  ├─ message: {self.SUMMARY['RESPONSE_MESSAGE']}\n"
                 f"  └─ url: {self.response.url}\n"
                 f"See {self.help_url} for help."
             )
 
+        if self.verbose:
+            print(
+                f"📦 Received data from {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,} stations."
+            )
+
     def __repr__(self):
         """Notebook representation."""
-        messages = f"╭─ Synoptic {self.service} service ─────────╮\n"
+        messages = f"╭─ Synoptic {self.service} service ─────\n"
         if hasattr(self, "STATION"):
             messages += f"│ Stations : {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}\n"
         if hasattr(self, "df"):
@@ -254,13 +274,32 @@ class TimeSeries(SynopticAPI):
 
     Parameters
     ----------
+    with_latency : bool
+        If True, return data with latency column from the Latency service.
     **params
         - `start`, `end` | `recent`
     """
 
-    def __init__(self, **params):
+    def __init__(self, with_latency=False, **params):
         super().__init__("timeseries", **params)
         self.df = parse_stations_timeseries(self)
+
+        if with_latency:
+            latency = Latency(**params).df
+            cols = [
+                "date_time",
+                "id",
+                "stid",
+                "name",
+                "elevation",
+                "latitude",
+                "longitude",
+            ]
+            self.df = self.df.join(
+                latency.select(cols + ["latency"]),
+                on=cols,
+                how="left",
+            )
 
 
 class Latest(SynopticAPI):
