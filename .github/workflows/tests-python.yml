@@ -41,6 +41,10 @@ jobs:
 
     name: Python ${{ matrix.python-version }} on OS ${{ matrix.os }}
     steps:
+      - name: what is token
+        run: |
+          echo $SYNOPTIC_TOKEN
+
       - name: Acquire sources
         uses: actions/checkout@v4
         with:
