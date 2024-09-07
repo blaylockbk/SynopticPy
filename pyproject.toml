@@ -28,8 +28,7 @@ keywords = [
 ]
 dependencies = [
     "numpy",
-    "polars",
-    "pyarrow",
+    "polars>=1.6.0",
     "requests",
     "toml",
 ]
