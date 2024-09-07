@@ -33,7 +33,6 @@ jobs:
     env:
       OS: ${{ matrix.os }}
       PYTHON: ${{ matrix.python-version }}
-      SYNOPTIC_TOKEN: ${{ secrets.SYNOPTIC_TOKEN }}
 
     defaults:
       run:
@@ -41,10 +40,6 @@ jobs:
 
     name: Python ${{ matrix.python-version }} on OS ${{ matrix.os }}
     steps:
-      - name: what is token
-        run: |
-          echo $SYNOPTIC_TOKEN
-
       - name: Acquire sources
         uses: actions/checkout@v4
         with:
@@ -76,7 +71,6 @@ jobs:
           pip3 install --requirement=requirements-test.txt
           pip3 install --editable='.[extras]'
 
-
       - name: Install project
         run: |
           pip3 install --requirement=requirements-test.txt
@@ -85,5 +79,6 @@ jobs:
       - name: Run tests
         env:
           TMPDIR: ${{ runner.temp }}
+          SYNOPTIC_TOKEN: ${{ secrets.SYNOPTIC_TOKEN }}
         run: |
           pytest
