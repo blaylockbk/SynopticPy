@@ -10,6 +10,11 @@ df.synoptic.pivot()
 The default DataFrame is in long format; one row for each unique observation
 
 
+## Timezone
+Requesting a `obtimezone='local'` still returns column of dataframe in UTC time. This is because Polars datetime type is timezone aware, so you can't have multiple timezones in the same column.
+
+If you need all data in their local timezone, then use `df.partition_by('stid')`
+
 ## Elevation and Position units
 
 - Station elevation has units of _feet_.
