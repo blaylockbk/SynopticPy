@@ -29,3 +29,14 @@ def test_within_as_duration_string():
         within="30m",
     )
     assert len(s.df)
+
+
+def test_all_stats():
+    s = ss.Latency(
+        radius="UKBKB,10",
+        vars="air_temp",
+        start=datetime(2024, 1, 1),
+        end=datetime(2024, 1, 2),
+        stats="all",
+    )
+    assert len(s.df)

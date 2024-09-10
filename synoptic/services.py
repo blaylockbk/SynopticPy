@@ -8,6 +8,8 @@ Note: Does not parse non-numeric values (document this fact), like wind_cardinal
 
 TODO: Allow user to cast values column to float or string, then drop null rows
 
+TODO: Metadata: Parse the obrange parameter from tuple or list of datetimes.
+
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
@@ -266,6 +268,7 @@ class TimeSeries(SynopticAPI):
         If True, return data with latency column from the Latency service.
     **params
         - `start`, `end` | `recent`
+        https://docs.synopticdata.com/services/timeseries
     """
 
     def __init__(self, with_latency=False, **params):
@@ -371,14 +374,33 @@ class Latency(SynopticAPI):
 
 
 class Metadata(SynopticAPI):
-    """Retrieve metadata for a station or stations."""
+    """Retrieve metadata for a station or stations.
+
+    Parameters
+    ----------
+    complete : {0,1}
+    sensorvars : {0,1}
+        If 1, returns a struct for sensor_variables.
+    **params
+        https://docs.synopticdata.com/services/metadata
+    """
 
     def __init__(self, **params):
         super().__init__("metadata", **params)
 
+        df = pl.DataFrame(
+            self.STATION,
+            schema_overrides={
+                "STID": pl.String,
+                "STATUS": pl.String,
+                "ID": pl.UInt32,
+                "MNET_ID": pl.UInt32,
+                "WIMS_ID": pl.UInt32,
+            },
+        )
+
         df = (
-            pl.concat([pl.DataFrame(i) for i in self.STATION], how="diagonal_relaxed")
-            .with_columns(
+            df.with_columns(
                 pl.struct(
                     pl.col("PERIOD_OF_RECORD")
                     .struct.field("start")
@@ -391,14 +413,17 @@ class Metadata(SynopticAPI):
                     .str.to_datetime(time_zone="UTC")
                     .alias("PERIOD_OF_RECORD_END"),
                 ).alias("PERIOD_OF_RECORD"),
-                pl.col("STID").cast(pl.String),
-                pl.col("ID", "MNET_ID").cast(pl.UInt32),
-                pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM").cast(
-                    pl.Float64
-                ),
+                pl.col("ELEVATION", "LATITUDE", "LONGITUDE", "ELEV_DEM")
+                .cast(pl.String)
+                .str.strip_chars()
+                .cast(pl.Float64),
+                is_active=pl.when(pl.col("STATUS") == "ACTIVE")
+                .then(True)
+                .otherwise(pl.when(pl.col("STATUS") == "INACTIVE").then(False)),
             )
             .unnest("PERIOD_OF_RECORD")
-            .drop("UNITS")  # not needed because is is also in json["UNITS"].
+            .drop("UNITS", "STATUS")
+            .rename({"RESTRICTED": "is_restricted"})
         )
 
         df = df.rename({i: i.lower() for i in df.columns})
@@ -406,7 +431,7 @@ class Metadata(SynopticAPI):
 
 
 class QCSegments(SynopticAPI):
-    """QC Segments. ???"""
+    """Get quality control segments."""
 
     def __init__(self, **params):
         super().__init__("qcsegments", **params)
@@ -429,7 +454,7 @@ class QCTypes(SynopticAPI):
 class Variables(SynopticAPI):
     """Get all available variables.
 
-    Provides variable name, variable index, long anme, and default unit.
+    Provides variable name, variable index, long name, and default unit.
     """
 
     def __init__(self, **params):
@@ -540,13 +565,18 @@ def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
             pl.col("STID").cast(pl.String),
             pl.col("ID", "MNET_ID").cast(pl.UInt32),
             pl.col("ELEVATION", "LATITUDE", "LONGITUDE").cast(pl.Float64),
+            is_active=pl.when(pl.col("STATUS") == "ACTIVE")
+            .then(True)
+            .otherwise(pl.when(pl.col("STATUS") == "INACTIVE").then(False)),
         )
-        .drop("UNITS")  # not needed because is is also in json["UNITS"].
+        .drop("UNITS", "STATUS")
     )
+    if "RESTRICTED" in df.columns:
+        df = df.rename({"RESTRICTED": "is_restricted"})
 
     if "ELEV_DEM" in df.columns:
         # This isn't in the Latency request
-        df.with_columns(pl.col("ELEV_DEM").cast(pl.Float64))
+        df = df.with_columns(pl.col("ELEV_DEM").cast(pl.Float64))
 
     if len(df) > 1:
         # When param `complete=1`, some stations have multiple providers
