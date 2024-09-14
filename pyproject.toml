@@ -28,7 +28,7 @@ keywords = [
 ]
 dependencies = [
     "numpy",
-    "polars>=1.6.0",
+    "polars>=1.7.1",
     "requests",
     "toml",
 ]
@@ -47,6 +47,9 @@ extras = [
     "matplotlib", # Plotting
     "pyarrow", # Write to Parquet with pyarrow
     "seaborn", # Plotting
+    "cartopy", # Plotting
+    "herbie-data", # Need the Cartopy plotting EasyMap
+    "metpy",
 ]
 
 docs = [

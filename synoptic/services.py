@@ -172,10 +172,11 @@ class SynopticAPI:
             # Convert lists to comma-separated string.
             #   stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
             #   radius=[40, -100, 10] --> radius='40,-100,10'
-            if isinstance(value, (list, tuple)) and key not in ["obrange"]:
-                params[key] = ",".join([str(i) for i in value])
+            if key == "obrange":
+                params[key] = parse_obrange(value)
 
-            # TODO: Special case for 'obrange'???
+            elif isinstance(value, (list, tuple)):
+                params[key] = ",".join([str(i) for i in value])
 
             # Convert datetime or string datetime to 'YYYYMMDDHHMM'.
             elif key in {"start", "end", "expire", "attime"}:
@@ -529,6 +530,40 @@ class NetworkTypes(SynopticAPI):
 
 
 # =============================================================================
+
+
+def parse_obrange(x: str | datetime | tuple[datetime, datetime]):
+    """Parse obrange argument.
+
+    Parameters
+    ----------
+    x
+        obrange may be given as the following:
+        - Start date as string `'YYYYMMDDHHMM'` (end date is current time)
+        - Start date as `datetime` (end date is current time)
+        - Start and end date as string `['YYYYMMDDHHMM','YYYYMMDDHHMM']`
+        - Start and end date as datetime `(datetime,datetime)`
+    """
+    if hasattr(x, "hour"):
+        return f"{x:%Y%m%d%H%M}"
+    elif (
+        isinstance(x, (list, tuple))
+        and all(hasattr(i, "hour") for i in x)
+        and len(x) == 2
+    ):
+        return f"{x[0]:%Y%m%d%H%M},{x[1]:%Y%m%d%H%M}"
+    elif (
+        isinstance(x, (list, tuple))
+        and all(isinstance(i, str) for i in x)
+        and len(x) == 2
+    ):
+        return ",".join(x)  # type: ignore
+    elif isinstance(x, str) and bool(re.fullmatch(r"\d{8,12}(,\d{8,12})?", x)):
+        return x
+    else:
+        raise ValueError(
+            "Trouble parsing `obrange`; try using a single `datetime` or tuple of datetimes like `(start, end)`."
+        )
 
 
 def string_to_timedelta(x: str) -> timedelta:
