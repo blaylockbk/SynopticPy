@@ -646,7 +646,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
             .unpivot(index="date_time")
             .with_columns(
                 pl.col("variable").str.extract_groups(
-                    r"(?<variable>.+)_set_(?<sensor>\d)(?<derived>d?)"
+                    r"(?<variable>.+)_set_(?<sensor>\d)(?<is_derived>d?)"
                 )
             )
             .unnest("variable")
@@ -654,7 +654,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
                 pl.col("value").cast(
                     pl.Float64, strict=False
                 ),  # Values must be numbers
-                pl.col("derived") == "d",
+                pl.col("is_derived") == "d",
                 pl.col("sensor").cast(pl.UInt32),
                 pl.col("variable").replace(S.UNITS).alias("units"),
             )
@@ -669,12 +669,12 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
                 .unpivot(index="date_time", value_name="qc_flags")
                 .with_columns(
                     pl.col("variable").str.extract_groups(
-                        r"(?<variable>.+)_set_(?<sensor>\d)(?<derived>d?)"
+                        r"(?<variable>.+)_set_(?<sensor>\d)(?<is_derived>d?)"
                     )
                 )
                 .unnest("variable")
                 .with_columns(
-                    pl.col("derived") == "d",
+                    pl.col("is_derived") == "d",
                     pl.col("sensor").cast(pl.UInt32),
                 )
             )
@@ -682,7 +682,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
             # Attach the QC information to the observations
             observed = observed.join(
                 qc,
-                on=["date_time", "variable", "sensor", "derived"],
+                on=["date_time", "variable", "sensor", "is_derived"],
                 how="full",
                 coalesce=True,
             )
@@ -741,7 +741,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
             .select("date_time", "variable", "value")
             .with_columns(
                 pl.col("variable").str.extract_groups(
-                    r"(?<variable>.+)_value_(?<sensor>\d)(?<derived>d?)"
+                    r"(?<variable>.+)_value_(?<sensor>\d)(?<is_derived>d?)"
                 )
             )
             .unnest("variable")
@@ -749,7 +749,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
                 pl.col("value").cast(
                     pl.Float64, strict=False
                 ),  # Values must be numbers
-                pl.col("derived") == "d",
+                pl.col("is_derived") == "d",
                 pl.col("sensor").cast(pl.UInt32),
                 pl.col("variable").replace(S.UNITS).alias("units"),
             )
@@ -768,12 +768,12 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
                 .rename({"column_0": "qc_flags"})
                 .with_columns(
                     pl.col("variable").str.extract_groups(
-                        r"(?<variable>.+)_value_(?<sensor>\d)(?<derived>d?)"
+                        r"(?<variable>.+)_value_(?<sensor>\d)(?<is_derived>d?)"
                     )
                 )
                 .unnest("variable")
                 .with_columns(
-                    pl.col("derived") == "d",
+                    pl.col("is_derived") == "d",
                     pl.col("sensor").cast(pl.UInt32),
                 )
             )
@@ -781,7 +781,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
             # Attach the QC information to the observations
             observed = observed.join(
                 qc,
-                on=["variable", "sensor", "derived"],
+                on=["variable", "sensor", "is_derived"],
                 how="full",
                 coalesce=True,
             )
