@@ -8,7 +8,8 @@ Note: Does not parse non-numeric values (document this fact), like wind_cardinal
 
 TODO: Allow user to cast values column to float or string, then drop null rows
 
-TODO: Metadata: Parse the obrange parameter from tuple or list of datetimes.
+TODO: Change column 'derived' to 'is_derived'
+TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
 
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
@@ -386,7 +387,7 @@ class Metadata(SynopticAPI):
         https://docs.synopticdata.com/services/metadata
     """
 
-    def __init__(self, **params):
+    def __init__(self, include_network_name=False, **params):
         super().__init__("metadata", **params)
 
         df = pl.DataFrame(
@@ -429,6 +430,9 @@ class Metadata(SynopticAPI):
 
         df = df.rename({i: i.lower() for i in df.columns})
         self.df = df
+
+        if include_network_name:
+            self.df = self.df.pipe(with_network_name)
 
 
 class QCSegments(SynopticAPI):
@@ -876,3 +880,22 @@ def parse_stations_latency(S: SynopticAPI) -> pl.DataFrame:
 
     df = df.rename({i: i.lower() for i in df.columns})
     return df
+
+
+def with_network_name(df: pl.DataFrame, which: Literal["short", "long"] = "short"):
+    """Provide DataFrame with a new column `network_name`.
+
+    Parameters
+    ----------
+    which : {'short', 'long'}
+        Specify if the network shortname or longname is joined.
+    """
+    if "mnet_id" not in df.columns:
+        raise ValueError("Column 'mnet_id' is not in the DataFrame.")
+
+    return df.join(
+        Networks(id=df["mnet_id"].unique().to_list(), verbose=False)
+        .df.select("mnet_id", f"{which}name")
+        .rename({f"{which}name": "network_name"}),
+        on="mnet_id",
+    )
