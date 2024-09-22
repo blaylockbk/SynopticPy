@@ -31,6 +31,12 @@ def test_within_as_duration_string():
     assert len(s.df)
 
 
+def test_stid_with_string_ob_values():
+    df = ss.Latest(stid="kslc").df
+    assert "value" in df.columns
+    assert "value_string" in df.columns
+
+
 def test_all_stats():
     s = ss.Latency(
         radius="UKBKB,10",

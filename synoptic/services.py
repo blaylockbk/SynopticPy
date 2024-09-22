@@ -8,7 +8,6 @@ Note: Does not parse non-numeric values (document this fact), like wind_cardinal
 
 TODO: Allow user to cast values column to float or string, then drop null rows
 
-TODO: Change column 'derived' to 'is_derived'
 TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
 
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
@@ -34,6 +33,7 @@ from pathlib import Path
 from typing import Literal, Optional
 
 import polars as pl
+import polars.selectors as cs
 import requests
 import toml
 
@@ -387,7 +387,7 @@ class Metadata(SynopticAPI):
         https://docs.synopticdata.com/services/metadata
     """
 
-    def __init__(self, include_network_name=False, **params):
+    def __init__(self, **params):
         super().__init__("metadata", **params)
 
         df = pl.DataFrame(
@@ -430,9 +430,6 @@ class Metadata(SynopticAPI):
 
         df = df.rename({i: i.lower() for i in df.columns})
         self.df = df
-
-        if include_network_name:
-            self.df = self.df.pipe(with_network_name)
 
 
 class QCSegments(SynopticAPI):
@@ -646,7 +643,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
             .unpivot(index="date_time")
             .with_columns(
                 pl.col("variable").str.extract_groups(
-                    r"(?<variable>.+)_set_(?<sensor>\d)(?<is_derived>d?)"
+                    r"(?<variable>.+)_set_(?<sensor_index>\d)(?<is_derived>d?)"
                 )
             )
             .unnest("variable")
@@ -655,7 +652,7 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
                     pl.Float64, strict=False
                 ),  # Values must be numbers
                 pl.col("is_derived") == "d",
-                pl.col("sensor").cast(pl.UInt32),
+                pl.col("sensor_index").cast(pl.UInt32),
                 pl.col("variable").replace(S.UNITS).alias("units"),
             )
         )
@@ -669,20 +666,20 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
                 .unpivot(index="date_time", value_name="qc_flags")
                 .with_columns(
                     pl.col("variable").str.extract_groups(
-                        r"(?<variable>.+)_set_(?<sensor>\d)(?<is_derived>d?)"
+                        r"(?<variable>.+)_set_(?<sensor_index>\d)(?<is_derived>d?)"
                     )
                 )
                 .unnest("variable")
                 .with_columns(
                     pl.col("is_derived") == "d",
-                    pl.col("sensor").cast(pl.UInt32),
+                    pl.col("sensor_index").cast(pl.UInt32),
                 )
             )
 
             # Attach the QC information to the observations
             observed = observed.join(
                 qc,
-                on=["date_time", "variable", "sensor", "is_derived"],
+                on=["date_time", "variable", "sensor_index", "is_derived"],
                 how="full",
                 coalesce=True,
             )
@@ -733,24 +730,70 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
         observations = station["OBSERVATIONS"]
         metadata = station_metadata_to_dataframe(station)
 
+        # Tip: It's informative to look at the unique schema for all observaitons with
+        # `{dtype for col, dtype in pl.DataFrame(observations).schema.items()}`
+
+        # TODO: Someday Polars might let you select nested column by wildcard
+        # TODO: https://github.com/pola-rs/polars/issues/11067
+
+        df = pl.DataFrame(observations)
+
+        col_has_float_value = []
+        col_has_string_value = []
+        col_has_struct_value = []
+        for col, struct in df.schema.items():
+            if pl.Field("value", pl.Float64) in struct.fields:
+                col_has_float_value.append(col)
+            elif pl.Field("value", pl.String) in struct.fields:
+                col_has_string_value.append(col)
+            elif pl.Field("value", pl.Struct) in struct.fields:
+                col_has_struct_value.append(col)
+            else:
+                print(f"WARNING: Unknown struct for {col=} {struct=}")
+
+        # TODO: If qc exists in the struct, I need to specify the schema
+        # TODO: so it doesn't set everything to null
+
+        # Parse all observations with Float64 values. (column 'value')
+        observed_float = df.select(col_has_float_value)
+        if len(observed_float):
+            observed_float = observed_float.transpose(
+                include_header=True, header_name="variable"
+            ).unnest("column_0")
+
+        # Parse all observations with String values. (Column 'value_string')
+        observed_string = df.select(col_has_string_value)
+        if len(observed_string):
+            observed_string = (
+                observed_string.transpose(include_header=True, header_name="variable")
+                .unnest("column_0")
+                .rename({"value": "value_string"})
+            )
+
+        # TODO: Need to handle the special nested data structure
+        if col_has_struct_value:
+            print(
+                f'WARNING: There are {len(col_has_struct_value)} columns in {metadata['STID'].item()} that are not parsed because of nested data structure.'
+            )
+
+        # Join float and string observations
+        observed = pl.concat(
+            [i for i in (observed_float, observed_string) if len(i)],
+            how="diagonal_relaxed",
+        )
+        col_order = ["date_time", "variable"]
         observed = (
-            pl.DataFrame(observations)
-            .transpose(include_header=True, header_name="variable")
-            .unnest("column_0")
-            .with_columns(pl.col("date_time").str.to_datetime())
-            .select("date_time", "variable", "value")
+            observed.with_columns(pl.col("date_time").str.to_datetime())
+            .select(col_order + [pl.exclude(col_order)])
             .with_columns(
                 pl.col("variable").str.extract_groups(
-                    r"(?<variable>.+)_value_(?<sensor>\d)(?<is_derived>d?)"
+                    r"(?<variable>.+)_value_(?<sensor_index>\d)(?<is_derived>d?)"
                 )
             )
             .unnest("variable")
             .with_columns(
-                pl.col("value").cast(
-                    pl.Float64, strict=False
-                ),  # Values must be numbers
                 pl.col("is_derived") == "d",
-                pl.col("sensor").cast(pl.UInt32),
+                pl.col("sensor_index").cast(pl.UInt32),
                 pl.col("variable").replace(S.UNITS).alias("units"),
             )
         )
@@ -768,20 +811,20 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
                 .rename({"column_0": "qc_flags"})
                 .with_columns(
                     pl.col("variable").str.extract_groups(
-                        r"(?<variable>.+)_value_(?<sensor>\d)(?<is_derived>d?)"
+                        r"(?<variable>.+)_value_(?<sensor_index>\d)(?<is_derived>d?)"
                     )
                 )
                 .unnest("variable")
                 .with_columns(
                     pl.col("is_derived") == "d",
-                    pl.col("sensor").cast(pl.UInt32),
+                    pl.col("sensor_index").cast(pl.UInt32),
                 )
             )
 
             # Attach the QC information to the observations
             observed = observed.join(
                 qc,
-                on=["variable", "sensor", "is_derived"],
+                on=["variable", "sensor_index", "is_derived"],
                 how="full",
                 coalesce=True,
             )
@@ -791,6 +834,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
         dfs.append(observed)
 
     df = pl.concat(dfs, how="diagonal_relaxed")
+
     # Parse PERIOD_OF_RECORD
     df = df.with_columns(
         pl.col("ID").cast(pl.UInt32),
