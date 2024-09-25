@@ -2,7 +2,7 @@
 name = "SynopticPy"
 description = "Load mesonet weather and environmental data from the Synoptic API into a Pandas Dataframe."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { file = "LICENSE" }
 authors = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
 maintainers = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
