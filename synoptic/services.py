@@ -69,7 +69,6 @@ ServiceType = Literal[
     "variables",
     "networks",
     "networktypes",
-    # "auth",
 ]
 
 
@@ -588,6 +587,24 @@ def string_to_timedelta(x: str) -> timedelta:
     return timedelta(**kwargs)
 
 
+def unnest_period_of_record(df: pl.DataFrame) -> pl.DataFrame:
+    """Un-nest the PERIOD_OF_RECORD column struct."""
+    return df.with_columns(
+        pl.struct(
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("start")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_START"),
+            pl.col("PERIOD_OF_RECORD")
+            .struct.field("end")
+            .cast(pl.String)
+            .str.to_datetime(time_zone="UTC")
+            .alias("PERIOD_OF_RECORD_END"),
+        ).alias("PERIOD_OF_RECORD"),
+    ).unnest("PERIOD_OF_RECORD")
+
+
 def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
     """Convert STATION metadata from JSON to a DataFrame."""
     metadata = metadata.copy()
@@ -637,10 +654,26 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
         qc = station.get("QC")  # Use 'get' because it is not always provided.
         metadata = station_metadata_to_dataframe(station)
 
-        observed = (
-            pl.DataFrame(observations)
-            .with_columns(pl.col("date_time").str.to_datetime())
+        df = pl.DataFrame(observations)
+
+        observed_float = df.select(pl.col("date_time"), pl.col(pl.Float64)).unpivot(
+            index="date_time"
+        )
+        observed_string = (
+            df.select(pl.col("date_time"), pl.col(pl.String).exclude("date_time"))
             .unpivot(index="date_time")
+            .rename({"value": "value_string"})
+        )
+
+        observed = pl.concat(
+            [i for i in (observed_float, observed_string) if len(i)],
+            how="diagonal_relaxed",
+        )
+
+        col_order = ["date_time", "variable"]
+        observed = (
+            observed.with_columns(pl.col("date_time").str.to_datetime())
+            .select(col_order + [pl.exclude(col_order)])
             .with_columns(
                 pl.col("variable").str.extract_groups(
                     r"(?<variable>.+)_set_(?<sensor_index>\d)(?<is_derived>d?)"
@@ -648,9 +681,6 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
             )
             .unnest("variable")
             .with_columns(
-                pl.col("value").cast(
-                    pl.Float64, strict=False
-                ),  # Values must be numbers
                 pl.col("is_derived") == "d",
                 pl.col("sensor_index").cast(pl.UInt32),
                 pl.col("variable").replace(S.UNITS).alias("units"),
@@ -690,24 +720,11 @@ def parse_stations_timeseries(S: SynopticAPI) -> pl.DataFrame:
         dfs.append(observed)
 
     df = pl.concat(dfs, how="diagonal_relaxed")
-    # Parse PERIOD_OF_RECORD
-    df = df.with_columns(
-        pl.col("ID").cast(pl.UInt32),
-        pl.struct(
-            pl.col("PERIOD_OF_RECORD")
-            .struct.field("start")
-            .cast(pl.String)
-            .str.to_datetime(time_zone="UTC")
-            .alias("PERIOD_OF_RECORD_START"),
-            pl.col("PERIOD_OF_RECORD")
-            .struct.field("end")
-            .cast(pl.String)
-            .str.to_datetime(time_zone="UTC")
-            .alias("PERIOD_OF_RECORD_END"),
-        ).alias("PERIOD_OF_RECORD"),
-    ).unnest("PERIOD_OF_RECORD")
 
+    # Clean up
+    df = df.pipe(unnest_period_of_record)
     df = df.rename({i: i.lower() for i in df.columns})
+
     if "qc_flagged" in df.columns:
         # Don't want to confuse the user with this column, so drop it.
         # The user only needs to check for the `qc_flags` column to see if
@@ -752,7 +769,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
                 print(f"WARNING: Unknown struct for {col=} {struct=}")
 
         # TODO: If qc exists in the struct, I need to specify the schema
-        # TODO: so it doesn't set everything to null
+        # TODO: so it doesn't set all the qc values to null
 
         # Parse all observations with Float64 values. (column 'value')
         observed_float = df.select(col_has_float_value)
@@ -773,7 +790,9 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
         # TODO: Need to handle the special nested data structure
         if col_has_struct_value:
             print(
-                f'WARNING: There are {len(col_has_struct_value)} columns in {metadata['STID'].item()} that are not parsed because of nested data structure.'
+                f"WARNING: There are {len(col_has_struct_value)} columns"
+                f" in {metadata['STID'].item()} that are not parsed because"
+                " of nested data structure."
             )
 
         # Join float and string observations
@@ -781,6 +800,7 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
             [i for i in (observed_float, observed_string) if len(i)],
             how="diagonal_relaxed",
         )
+
         col_order = ["date_time", "variable"]
         observed = (
             observed.with_columns(pl.col("date_time").str.to_datetime())
@@ -835,24 +855,10 @@ def parse_stations_latest_nearesttime(S: SynopticAPI) -> pl.DataFrame:
 
     df = pl.concat(dfs, how="diagonal_relaxed")
 
-    # Parse PERIOD_OF_RECORD
-    df = df.with_columns(
-        pl.col("ID").cast(pl.UInt32),
-        pl.struct(
-            pl.col("PERIOD_OF_RECORD")
-            .struct.field("start")
-            .cast(pl.String)
-            .str.to_datetime(time_zone="UTC")
-            .alias("PERIOD_OF_RECORD_START"),
-            pl.col("PERIOD_OF_RECORD")
-            .struct.field("end")
-            .cast(pl.String)
-            .str.to_datetime(time_zone="UTC")
-            .alias("PERIOD_OF_RECORD_END"),
-        ).alias("PERIOD_OF_RECORD"),
-    ).unnest("PERIOD_OF_RECORD")
-
+    # Clean up
+    df = df.pipe(unnest_period_of_record)
     df = df.rename({i: i.lower() for i in df.columns})
+
     # Don't want to confuse the user with this column, so drop it.
     # The user only needs to check for the `qc_flags` column to see if
     # the observation was QCed.
@@ -905,24 +911,11 @@ def parse_stations_latency(S: SynopticAPI) -> pl.DataFrame:
         dfs.append(latency)
 
     df = pl.concat(dfs, how="diagonal_relaxed")
-    # Parse PERIOD_OF_RECORD
-    df = df.with_columns(
-        pl.col("ID").cast(pl.UInt32),
-        pl.struct(
-            pl.col("PERIOD_OF_RECORD")
-            .struct.field("start")
-            .cast(pl.String)
-            .str.to_datetime(time_zone="UTC")
-            .alias("PERIOD_OF_RECORD_START"),
-            pl.col("PERIOD_OF_RECORD")
-            .struct.field("end")
-            .cast(pl.String)
-            .str.to_datetime(time_zone="UTC")
-            .alias("PERIOD_OF_RECORD_END"),
-        ).alias("PERIOD_OF_RECORD"),
-    ).unnest("PERIOD_OF_RECORD")
 
+    # Clean up
+    df = df.pipe(unnest_period_of_record)
     df = df.rename({i: i.lower() for i in df.columns})
+
     return df
 
 
