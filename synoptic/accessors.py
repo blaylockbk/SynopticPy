@@ -1,12 +1,10 @@
 """Polars custom accessors."""
 
-from synoptic.services import Networks
-
+from typing import Literal
 
 import polars as pl
 
-
-from typing import Literal
+from synoptic.services import Networks
 
 
 def with_network_name(df: pl.DataFrame, which: Literal["short", "long"] = "short"):

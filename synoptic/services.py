@@ -26,11 +26,11 @@ TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
 TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
 """
 
-from datetime import timedelta
 import os
+import re
+from datetime import timedelta
 from pathlib import Path
 from typing import Literal
-import re
 
 import polars as pl
 import requests
