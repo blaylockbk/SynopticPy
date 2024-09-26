@@ -29,11 +29,10 @@ TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvar
 from datetime import timedelta
 import os
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal
 import re
 
 import polars as pl
-import polars.selectors as cs
 import requests
 import toml
 
@@ -141,7 +140,7 @@ class SynopticAPI:
         self,
         service: ServiceType,
         *,
-        token: Optional[str] = None,
+        token: str | None = None,
         verbose=True,
         **params,
     ):
