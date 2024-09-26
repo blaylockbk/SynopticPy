@@ -2,21 +2,21 @@
 
 from datetime import datetime
 
-import synoptic
+from synoptic.services import Metadata
 
 
 def test_all_stations():
-    s = synoptic.Metadata()
+    s = Metadata()
     assert len(s.df)
 
 
 def test_all_stations_complete():
-    s = synoptic.Metadata(complete=1)
+    s = Metadata(complete=1)
     assert len(s.df)
 
 
 def test_all_stations_obrange():
-    s = synoptic.Metadata(
+    s = Metadata(
         state="UT",
         obrange=(
             datetime(2000, 1, 1),
@@ -27,27 +27,27 @@ def test_all_stations_obrange():
 
 
 def test_radius():
-    s = synoptic.Metadata(radius="ukbkb,10")
+    s = Metadata(radius="ukbkb,10")
     assert len(s.df)
 
 
 def test_one_station():
-    s = synoptic.Metadata(stid="ukbkb")
+    s = Metadata(stid="ukbkb")
     assert len(s.df) == 1
 
 
 def test_complete():
-    s = synoptic.Metadata(radius="ukbkb,10", complete=1)
+    s = Metadata(radius="ukbkb,10", complete=1)
     assert len(s.df)
 
 
 def test_sensorvars():
-    s = synoptic.Metadata(radius="ukbkb,10", sensorvars=1)
+    s = Metadata(radius="ukbkb,10", sensorvars=1)
     assert len(s.df)
 
 
 def test_column_names():
-    df = synoptic.Metadata(radius="wbb,10").df
+    df = Metadata(radius="wbb,10").df
 
     # I rename column `STATUS` to `is_active` and cast as bool
     assert "is_active" in df.columns
@@ -59,5 +59,5 @@ def test_column_names():
 
 
 def test_single_station_with_null_in_staus_column():
-    s = synoptic.Metadata(stid="KU10")
+    s = Metadata(stid="KU10")
     assert len(s.df) == 1

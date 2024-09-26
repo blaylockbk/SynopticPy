@@ -1,6 +1,4 @@
 import synoptic.services as ss
-from datetime import datetime, timedelta
-import polars as pl
 
 
 def test_SynopticAPI():

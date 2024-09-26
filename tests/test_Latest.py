@@ -1,11 +1,11 @@
 """Tests for the Latest Class."""
 
-import synoptic.services as ss
-from datetime import datetime, timedelta
+from synoptic.services import Latest
+from datetime import timedelta
 
 
 def test_within_as_int():
-    s = ss.Latest(
+    s = Latest(
         stid="ukbkb,wbb,naa",
         vars="air_temp,wind_speed",
         within=30,
@@ -14,7 +14,7 @@ def test_within_as_int():
 
 
 def test_within_as_timedelta():
-    s = ss.Latest(
+    s = Latest(
         stid="ukbkb,wbb,naa",
         vars="air_temp,wind_speed",
         within=timedelta(hours=2),
@@ -23,7 +23,7 @@ def test_within_as_timedelta():
 
 
 def test_within_as_duration_string():
-    s = ss.Latest(
+    s = Latest(
         stid="kslc",
         vars="air_temp,wind_speed",
         within="30m",
@@ -32,17 +32,6 @@ def test_within_as_duration_string():
 
 
 def test_stid_with_string_ob_values():
-    df = ss.Latest(stid="kslc").df
+    df = Latest(stid="kslc").df
     assert "value" in df.columns
     assert "value_string" in df.columns
-
-
-def test_all_stats():
-    s = ss.Latency(
-        radius="UKBKB,10",
-        vars="air_temp",
-        start=datetime(2024, 1, 1),
-        end=datetime(2024, 1, 2),
-        stats="all",
-    )
-    assert len(s.df)

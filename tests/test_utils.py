@@ -1,7 +1,9 @@
 """Tests for some needed utilities."""
 
 import synoptic
-from synoptic.services import parse_obrange, string_to_timedelta
+import synoptic.accessors
+from synoptic.json_parsers import parse_obrange
+from synoptic.services import string_to_timedelta, Latest
 from datetime import datetime, timedelta
 import pytest
 
@@ -53,6 +55,8 @@ def test_string_to_timedelta(duration, expected):
 
 
 def test_with_network_name():
-    df = synoptic.Latest(radius="ukbkb,10").df.pipe(synoptic.with_network_name)
+    df = Latest(radius="ukbkb,10").df.pipe(
+        synoptic.accessors.with_network_name
+    )
     assert "network_name" in df.columns
     assert len(df)

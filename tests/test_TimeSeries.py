@@ -1,11 +1,11 @@
 """Tests for the TimeSeries Class."""
 
-import synoptic
+from synoptic.services import TimeSeries
 from datetime import datetime
 
 
 def test_string_date_input():
-    s = synoptic.TimeSeries(
+    s = TimeSeries(
         stid="UKBKB",
         start=datetime(2024, 1, 1),
         end="2024-1-1 06:00",
@@ -16,7 +16,7 @@ def test_string_date_input():
 
 
 def test_all_qc_on():
-    s = synoptic.TimeSeries(
+    s = TimeSeries(
         stid="kslc",
         recent="6h",
         qc="on",
@@ -29,7 +29,7 @@ def test_all_qc_on():
 
 
 def test_radius_with_complete_metadata():
-    s = synoptic.TimeSeries(
+    s = TimeSeries(
         radius=["kslc", 5],
         recent="6h",
         qc="on",
@@ -43,7 +43,7 @@ def test_radius_with_complete_metadata():
 
 
 def test_column_names():
-    df = synoptic.TimeSeries(stid="wbb,ukbkb", recent=30).df
+    df = TimeSeries(stid="wbb,ukbkb", recent=30).df
 
     # Column `STATUS` is renamed `is_active` and cast as bool
     assert "is_active" in df.columns
