@@ -3,6 +3,7 @@
 import synoptic.services as ss
 from datetime import datetime
 
+
 def test_qced_air_temp():
     # This produces a QCed air temperature
     s = ss.NearestTime(
