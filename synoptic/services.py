@@ -28,7 +28,7 @@ TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvar
 
 import os
 import re
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Literal
 
@@ -37,7 +37,6 @@ import requests
 import toml
 
 from synoptic.json_parsers import (
-    parse_obrange,
     parse_stations_latency,
     parse_stations_latest_nearesttime,
     parse_stations_precipitation,
@@ -104,6 +103,40 @@ def string_to_timedelta(x: str) -> timedelta:
     groups = re.match(pattern, x).groupdict()
     kwargs = {k: int(v) for k, v in groups.items() if v is not None}
     return timedelta(**kwargs)
+
+
+def parse_obrange(x: str | datetime | tuple[datetime, datetime]):
+    """Parse obrange argument.
+
+    Parameters
+    ----------
+    x
+        obrange may be given as the following:
+        - Start date as string `'YYYYMMDDHHMM'` (end date is current time)
+        - Start date as `datetime` (end date is current time)
+        - Start and end date as string `['YYYYMMDDHHMM','YYYYMMDDHHMM']`
+        - Start and end date as datetime `(datetime,datetime)`
+    """
+    if hasattr(x, "hour"):
+        return f"{x:%Y%m%d%H%M}"
+    elif (
+        isinstance(x, list | tuple)
+        and all(hasattr(i, "hour") for i in x)
+        and len(x) == 2
+    ):
+        return f"{x[0]:%Y%m%d%H%M},{x[1]:%Y%m%d%H%M}"
+    elif (
+        isinstance(x, list | tuple)
+        and all(isinstance(i, str) for i in x)
+        and len(x) == 2
+    ):
+        return ",".join(x)  # type: ignore
+    elif isinstance(x, str) and bool(re.fullmatch(r"\d{8,12}(,\d{8,12})?", x)):
+        return x
+    else:
+        raise ValueError(
+            "Trouble parsing `obrange`; try using a single `datetime` or tuple of datetimes like `(start, end)`."
+        )
 
 
 class SynopticAPI:
