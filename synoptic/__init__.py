@@ -19,3 +19,5 @@ try:
 except:
     __version__ = "unknown"
     __version_tuple__ = (999, 999, 999)
+
+from synoptic.services import *

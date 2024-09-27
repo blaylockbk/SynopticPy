@@ -4,6 +4,7 @@ import synoptic.services as ss
 
 
 def test_QCTypes():
+    """Get DataFrame of all quality control types."""
     s = ss.QCTypes()
     assert len(s.df)
 
@@ -12,11 +13,13 @@ def test_QCTypes():
 
 
 def test_Variables():
+    """Get DataFrame of all variables."""
     s = ss.Variables()
     assert len(s.df)
 
 
 def test_Networks():
+    """Get DataFrame of all networks."""
     s = ss.Networks()
     assert len(s.df)
 
@@ -31,5 +34,6 @@ def test_Networks():
 
 
 def test_NetworkTypes():
+    """Get DataFrame of all network types."""
     s = ss.NetworkTypes()
     assert len(s.df)

@@ -1,12 +1,15 @@
 """Test SynopticAPI class."""
 
-import pytest
 from datetime import datetime, timedelta
+
+import pytest
+
 import synoptic.services as ss
 from synoptic.services import parse_obrange, string_to_timedelta
 
 
 def test_SynopticAPI():
+    """Simple test that the SynopticAPI class doesn't fail."""
     s = ss.SynopticAPI(
         "timeseries",
         start="2024-06-01",
@@ -48,6 +51,7 @@ def test_string_to_timedelta(duration, expected):
     ],
 )
 def test_parse_obrange(obrange, expected):
+    """Test parse_obrange utility functions as expected."""
     assert parse_obrange(obrange) == expected
 
 

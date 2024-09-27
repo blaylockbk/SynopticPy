@@ -1,10 +1,12 @@
 """Tests for the TimeSeries Class."""
 
-from synoptic.services import TimeSeries
 from datetime import datetime
+
+from synoptic.services import TimeSeries
 
 
 def test_string_date_input():
+    """Get time series data using mixed types of datetime input."""
     s = TimeSeries(
         stid="UKBKB",
         start=datetime(2024, 1, 1),
@@ -16,6 +18,7 @@ def test_string_date_input():
 
 
 def test_all_qc_on():
+    """Get quality controlled time series data for recent 6 hours."""
     s = TimeSeries(
         stid="kslc",
         recent="6h",
@@ -29,6 +32,7 @@ def test_all_qc_on():
 
 
 def test_radius_with_complete_metadata():
+    """Get quality controlled time series data with complete station metadata."""
     s = TimeSeries(
         radius=["kslc", 5],
         recent="6h",
@@ -43,6 +47,7 @@ def test_radius_with_complete_metadata():
 
 
 def test_column_names():
+    """Get time series data and check for expected column names."""
     df = TimeSeries(stid="wbb,ukbkb", recent=30).df
 
     # Column `STATUS` is renamed `is_active` and cast as bool

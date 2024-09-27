@@ -7,6 +7,7 @@ User Guide
 
    install
    setup
+   concepts
    examples
    contribute
 

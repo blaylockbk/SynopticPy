@@ -1,4 +1,4 @@
-# Notes
+# Dev Notes
 
 ```Python
 import synoptic
@@ -32,13 +32,7 @@ The QC column is always provided, but does not mean QC checks were performed.
 
 - Data is provided in long format; one unique observation per row.
 
-- Only float values are parse. The following variables are dropped because they cannot be floats:
-
-  - wind_cardinal_direction
-  - weather_condition
-  - weather_summary
-  - cloud_layer
-  - metar
+- Only float values are parse in the `value` column. Variables that return string values are in the `value_string` column. Some values are complex structs, and I haven't implemented those yet.
 
 - All column names are changed to **lower case**.
 

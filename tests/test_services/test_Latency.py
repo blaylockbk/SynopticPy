@@ -3,6 +3,7 @@ from synoptic.services import Latency
 
 
 def test_all_stats():
+    """Get all statistics in a Latency request."""
     s = Latency(
         radius="UKBKB,10",
         vars="air_temp",
