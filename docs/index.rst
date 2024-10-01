@@ -1,4 +1,4 @@
-.. image:: _static/SynopticPy_blue.png
+.. image:: _static/SynopticPy_blue.svg
 
 ===========================================
 The Synoptic API for Python (unofficial)
