@@ -2,9 +2,13 @@
     align='center'
 >
 
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/SynopticPy_logo.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/blaylockbk/SynopticPy/refs/heads/56-rewrite-using-polars/docs/_static/SynopticPy_white.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/blaylockbk/SynopticPy/refs/heads/56-rewrite-using-polars/docs/_static/SynopticPy_blue.svg">
+  <img alt="Shows a black logo in light color mode and a white one in dark color mode." src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/refs/heads/56-rewrite-using-polars/docs/_static/SynopticPy_blue.svg" width=300>
+</picture>
 
-# ☁ Synoptic API for Python (_unofficial_)
+## ☁ Synoptic API for Python (_unofficial_)
 
 <!-- Badges -->
 
@@ -25,154 +29,36 @@
 
 </div>
 
-The [Synoptic Mesonet API](https://synopticdata.com/mesonet-api) (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations.
+Synoptic's [Weather API](https://synopticdata.com/weatherapi/) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic's [open access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services are also available.
 
-Synoptic data access is [_free_](https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service) for open-access data. More data and enhances services are available through a [paid tier](https://synopticdata.com/pricing) (available through Synoptic, not me).
-
-| <H2>📘 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)</H2>    | <h2>📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)</h2>   |
-| :---: | :---: |
-| SynopticPy is a Python package that helps you get mesonet data from the Synoptic API and load the data into Pandas Dataframes.    |  The SynopticPy web app lets you plot station data from Synoptic in your browser powered by pyscript!    |
+I wrote these functions to conveniently request data from [Synoptic's Weather API](https://docs.synopticdata.com/services/weather-data-api) and convert the JSON data to a **[Polars DataFrame](https://docs.pola.rs/user-guide/getting-started/)**. I'm sharing this as an open source project because I think these might be helpful to others who are getting started using the Synoptic API with Python. I also wrote this package to get more experimence using Polars DataFrames.
 
 
-# SynopticPy
-
-I wrote these functions to conveniently access data from the Synoptic API and convert the JSON data to a **[Pandas DataFrame](https://pandas.pydata.org/docs/)**. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete [MesoPy](https://github.com/mesowx/MesoPy) python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more _ready-to-use_.
-
-> ### 🌐 Register for a free account at the Synoptic API Webpage
->
-> > https://developers.synopticdata.com
->
-> You will need to obtain an API token before using this python package.
+> ### 🎟️ You will need an API token before using SynopticPy: [Register for a free Synoptic account](https://customer.synopticdata.com/).
 
 If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.
 
 **Best of Luck 🍀**  
 -Brian
 
-- [👨🏻‍🏭 Contributing Guidelines and Disclaimer](https://synopticpy.readthedocs.io/en/latest/user_guide/contribute.html)
-- [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions)
-- [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
+<div align=center>
 
----
+# 📘 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)
 
-<br><br><br>
+## [👨🏻‍🏭 Contributing](https://synopticpy.readthedocs.io/en/latest/user_guide/contribute.html) | [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions) | [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
 
-# 🐍 Installation
+</div>
 
-## Install with conda
 
-If conda environments are new to you, I suggest you become familiar with [managing conda environments](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html).
+# 🐍 Install
 
 ```bash
-conda install -c conda-forge synopticpy
-```
-
-## Install with pip
-
-Install the last published version from PyPI.
-
-```bash
-# Install latest release
 pip install SynopticPy
 ```
 
 ```bash
-# Install latest main branch
-pip install git+https://github.com/blaylockbk/SynopticPy.git
+conda install -c conda-forge SynopticPy
 ```
-
-```bash
-# Install latest main branch, editable (for development)
-git clone https://github.com/blaylockbk/SynopticPy.git
-cd SynopticPy
-pip install -e .
-```
-
-## Optional Dependencies
-
-It's optional, but you will likely want `cartopy` too. You may also want https://github.com/blaylockbk/carpenter_workshop.git
-
-# 🔨 Setup
-
-After following the setup instructions in the [documentation](https://synopticpy.readthedocs.io/en/latest/user_guide/setup.html), you should either have an environmental variable named `SYNOPTIC_TOKEN` or a file at `~/.config/SynopticPy/config.toml` that looks something like this:
-
-```toml
-[default]
-verbose = true
-hide_token = true
-rename_value_1 = true
-rename_set_1 = true
-token = "1234567890abcdefghijklmnopqrstuvwxyz"
-```
-
-If you don't do this step, don't worry. When you import `synoptic.services`,
-a quick check will make sure the token in the config file is valid. If not,
-you will be prompted to update the token in the config file.
-
-# Quick Examples
-
-- [User Guide Examples](https://synopticpy.readthedocs.io/en/latest/user_guide/examples.html)
-- [Reference Guide](https://synopticpy.readthedocs.io/en/latest/reference_guide/index.html)
-- [Jupyter Notebooks](https://github.com/blaylockbk/SynopticPy/tree/main/notebooks)
-
-> TODO: Move these notebooks to the docs.
-
-```python
-# Import all functions
-import synoptic.services as ss
-```
-
-or
-
-```python
-# Import a single function (prefered)
-from synoptic.services import stations_timeseries
-```
-
-Get a timeseries of air temperature and wind speed at the station WBB for the last 10 hours:
-
-```python
-from datetime import timedelta
-from synoptic.services import stations_timeseries
-
-df = stations_timeseries(
-    stid='WBB',
-    vars=['air_temp', 'wind_speed'],
-    recent=timedelta(hours=10)
-)
-```
-
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/timeseries_df.png)
-
-Get the latest air temperature and wind speed data for WBB (University of Utah) and KRMY (Monterey, CA airport) within one hour (with `windin` given as an interger in minutes, this may also be a timedelta object instead).
-
-```python
-from synoptic.services import stations_latest
-
-df = stations_latest(
-    stid=['WBB', 'KMRY'],
-    vars=['air_temp', 'wind_speed'],
-    within=60
-)
-```
-
-![](./images/latest_df.png)
-
-Get the air temperature and wind speed for WBB and KMRY nearest 00:00 UTC Jan 1, 2020 within one hour...
-
-```python
-from datetime import datetime
-from synoptic.services import stations_nearesttime
-
-df = stations_latest(
-    stid=['WBB', 'KMRY'],
-    vars=['air_temp', 'wind_speed'],
-    attime=datetime(2020,1,1),
-    within=60
-)
-```
-
-![](https://raw.githubusercontent.com/blaylockbk/SynopticPy/main/images/nearesttime_df.png)
 
 # How to Cite and Acknowledge
 
@@ -180,8 +66,13 @@ If SynopticPy played an important role in your work, please [tell me about it](h
 
 **_Suggested Citation_**
 
-> Blaylock, B. K. (2023). SynopticPy: Synoptic API for Python (Version 2023.3.0) [Computer software]. https://github.com/blaylockbk/SynopticPy
+> Blaylock, B. K. (2024). SynopticPy: Synoptic API for Python (Version 2024.10.0) [Computer software]. https://github.com/blaylockbk/SynopticPy
 
 **_Suggested Acknowledgment_**
 
 > A portion of this work used code generously provided by Brian Blaylock's SynopticPy python package (https://github.com/blaylockbk/SynopticPy)
+
+
+|                           <H2>📘 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)</H2>                           |              <h2>📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)</h2>               |
+| :----------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
+| SynopticPy is a Python package that helps you get mesonet data from the Synoptic API and load the data into Pandas Dataframes. | The SynopticPy web app lets you plot station data from Synoptic in your browser powered by pyscript! |
