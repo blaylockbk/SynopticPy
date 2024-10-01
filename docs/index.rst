@@ -1,4 +1,4 @@
-.. image:: _static/SynopticPy_logo.png
+.. image:: _static/SynopticPy_blue.png
 
 ===========================================
 The Synoptic API for Python (unofficial)
@@ -16,9 +16,6 @@ The `Synoptic Weather API <https://docs.synopticdata.com/services/weather-data-a
 .. note::
    🌐 Before using SynopticPy, you will need a Synoptic API token. Register for a free open-access account at the `Synoptic API Webpage
    <https://customer.synopticdata.com/signup-targeted/?signup=open-access>`_.
-
-   .. figure:: _static/synoptic_logo.png
-      :width: 300
 
 .. note::
    You can create timeseries of observations from weather stations using the `Station Timeseries Web App <https://blaylockbk.github.io/SynopticPy/timeseries>`_. This is a quick way to use SynopticPy without writing any code yourself.

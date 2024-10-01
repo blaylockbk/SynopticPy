@@ -100,7 +100,7 @@ exclude_patterns = [
 # a list of builtin themes.
 #
 html_theme = "pydata_sphinx_theme"
-html_favicon = "_static/wxicon.png"
+html_favicon = "_static/logo_SynopticPy_blue.svg"
 
 html_theme_options = {
     "external_links": [
@@ -132,8 +132,8 @@ html_theme_options = {
         },
     ],
     "logo": {
-        "image_light": "_static/SynopticPy_logo.png",
-        "image_dark": "_static/SynopticPy_logo.png",
+        "image_light": "_static/logo_SynopticPy_blue.svg",
+        "image_dark": "_static/logo_SynopticPy_white.svg",
     },
     "use_edit_page_button": True,
     "show_toc_level": 1,
@@ -177,13 +177,11 @@ autodoc_default_options = {
 }
 
 autodoc_mock_imports = [
-    "xesmf",
     "numpy",
     "matplotlib",
     "pandas",
+    "polars",
     "xarray",
     "cartopy",
     "cfgrib",
-    "imageio",
-    "siphon",
 ]
