@@ -9,6 +9,7 @@ User Guide
    setup
    concepts
    contribute
+   style_guide
 
 .. toctree::
    :maxdepth: 1
