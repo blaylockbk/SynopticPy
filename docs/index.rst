@@ -1,10 +1,14 @@
 .. raw :: html
 
-   <img src="_static/SynopticPy_blue.svg" style="background-color:transparent;">
+   <img src="_static/SynopticPy_white.svg" style="background-color:transparent;" class='only-dark'>
 
-===========================================
-The Synoptic API for Python (unofficial)
-===========================================
+.. raw :: html
+
+   <img src="_static/SynopticPy_blue.svg" style="background-color:transparent;" class='only-light'>
+
+============================================
+Synoptic Weather API for Python (unofficial)
+============================================
 
 .. toctree::
    :maxdepth: 3
