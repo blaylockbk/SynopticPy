@@ -8,7 +8,7 @@
   <img alt="Shows a black logo in light color mode and a white one in dark color mode." src="https://raw.githubusercontent.com/blaylockbk/SynopticPy/refs/heads/56-rewrite-using-polars/docs/_static/SynopticPy_blue.svg" width=300>
 </picture>
 
-## ☁ Synoptic API for Python (_unofficial_)
+## Synoptic API for Python (_unofficial_)
 
 <!-- Badges -->
 
@@ -27,27 +27,23 @@
 
 <!-- (Badges) -->
 
+## 📘 [Documentation](https://synopticpy.readthedocs.io/) | [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions) | [🚑 Issues](https://github.com/blaylockbk/SynopticPy/issues)
+
+
 </div>
 
-Synoptic's [Weather API](https://synopticdata.com/weatherapi/) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic's [open access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services are also available.
+Synoptic's [Weather API](https://synopticdata.com/weatherapi/) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic's [open access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services may be purchased (from Synoptic, not me).
 
-I wrote these functions to conveniently request data from [Synoptic's Weather API](https://docs.synopticdata.com/services/weather-data-api) and convert the JSON data to a **[Polars DataFrame](https://docs.pola.rs/user-guide/getting-started/)**. I'm sharing this as an open source project because I think these might be helpful to others who are getting started using the Synoptic API with Python. I also wrote this package to get more experimence using Polars DataFrames.
+I'm a Synoptic user. I wrote these functions to conveniently request data from Synoptic and convert its returned JSON to a **[Polars DataFrame](https://docs.pola.rs/user-guide/getting-started/)**. I'm sharing this as an open source project because I think these might be helpful to others who are getting started using the Synoptic API with Python. I also wrote this package to get more experience using Polars DataFrames.
 
+![alt text](docs/_static/json_to_polars.png)
 
 > ### 🎟️ You will need an API token before using SynopticPy: [Register for a free Synoptic account](https://customer.synopticdata.com/).
 
-If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.
+If you stumbled across this package, I hope you find it useful.
 
 **Best of Luck 🍀**  
 -Brian
-
-<div align=center>
-
-# 📘 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)
-
-## [👨🏻‍🏭 Contributing](https://synopticpy.readthedocs.io/en/latest/user_guide/contribute.html) | [💬 Discussions](https://github.com/blaylockbk/SynopticPy/discussions) | [🐛 Issues](https://github.com/blaylockbk/SynopticPy/issues)
-
-</div>
 
 
 # 🐍 Install
@@ -72,7 +68,6 @@ If SynopticPy played an important role in your work, please [tell me about it](h
 
 > A portion of this work used code generously provided by Brian Blaylock's SynopticPy python package (https://github.com/blaylockbk/SynopticPy)
 
+<hr>
 
-|                           <H2>📘 [SynopticPy Documentation](https://synopticpy.readthedocs.io/)</H2>                           |              <h2>📈 [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy)</h2>               |
-| :----------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------: |
-| SynopticPy is a Python package that helps you get mesonet data from the Synoptic API and load the data into Pandas Dataframes. | The SynopticPy web app lets you plot station data from Synoptic in your browser powered by pyscript! |
+### 📈 See also my [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy), which lets you plot station data from Synoptic in your browser powered by pyscript!
