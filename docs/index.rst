@@ -1,10 +1,10 @@
 .. raw :: html
 
-   <img src="_static/SynopticPy_white.svg" style="background-color:transparent; max-width:300;" class='only-dark' />
+   <img src="_static/SynopticPy_white.svg" style="background-color:transparent; width:250;" class='only-dark' />
 
 .. raw :: html
 
-   <img src="_static/SynopticPy_blue.svg" style="background-color:transparent; max-width:300;" class='only-light' />
+   <img src="_static/SynopticPy_blue.svg" style="background-color:transparent; width:250;" class='only-light' />
 
 ================================================
 The (unofficial) Synoptic Weather API for Python
