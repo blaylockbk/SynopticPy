@@ -1,4 +1,4 @@
-# 🐍 Installation and Conda Environment
+# 🐍 Install
 
 Install with conda:
 

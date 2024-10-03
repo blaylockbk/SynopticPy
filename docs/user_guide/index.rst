@@ -12,17 +12,17 @@ User Guide
    style_guide
 
 .. toctree::
+   :glob:
    :maxdepth: 1
    :caption: Examples
-   :glob:
 
-   demo*.ipynb
+   ./demo*.ipynb
 
 .. toctree::
+   :glob:
    :maxdepth: 1
    :caption: Gallery
-   :glob:
 
-   gallery/*.ipynb
+   ./gallery/*.ipynb
 
 

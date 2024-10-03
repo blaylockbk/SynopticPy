@@ -1,6 +1,6 @@
 # 🔨 Setup
 
-You need a Synoptic account and API token to request data.
+You will need a Synoptic account and API token to request data.
 
 1. Visit the [Welcome](https://docs.synopticdata.com/services/welcome-to-synoptic-data-s-web-services) page to register for an account.
 2. Navigate to your [Synoptic Data Credentials](https://customer.synopticdata.com/credentials/) and find your public tokens. You can generate a new token under the "Manage Tokens" tab, if needed.
