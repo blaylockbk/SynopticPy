@@ -1,4 +1,6 @@
-.. image:: _static/SynopticPy_blue.svg
+.. raw :: html
+
+   <img src="_static/SynopticPy_blue.svg" style="background-color:transparent;">
 
 ===========================================
 The Synoptic API for Python (unofficial)
