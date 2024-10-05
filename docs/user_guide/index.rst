@@ -8,23 +8,27 @@ User Guide
    install
    setup
    concepts
-   contribute
-   style_guide
+   how-to-pivot.ipynb
+   FAQ.ipynb
 
 .. toctree::
    :maxdepth: 1
-   :caption: Examples
+   :caption: Services
 
-   demo_Metadata.ipynb
-   demo_Precipitation.ipynb
-   demo_TimeSeries.ipynb
-   how-to-pivot.ipynb
+   services/demo_Metadata.ipynb
+   services/demo_Precipitation.ipynb
+   services/demo_TimeSeries.ipynb
 
 .. toctree::
    :glob:
    :maxdepth: 1
    :caption: Gallery
 
-   ./gallery/*.ipynb
+   gallery/*
 
+.. toctree::
+   :maxdepth: 1
+   :caption: Housekeeping
 
+   style_guide
+   contribute
