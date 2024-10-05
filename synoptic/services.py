@@ -10,6 +10,8 @@ TODO: Allow user to cast values column to float or string, then drop null rows
 
 TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
 
+TODO: Let user use Boolean input (True/False) for params like `qc_remvoe_data` amd others that have 0/1 input
+
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
@@ -24,6 +26,7 @@ TODO: Document how to write to Parquet so user doesn't have to make API call to 
 TODO: Metadata: need to handle 'obrange' param.
 TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
 TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
+
 """
 
 import os

@@ -2,13 +2,13 @@
 
 from datetime import datetime
 
-import synoptic.services as ss
+from  synoptic import NearestTime
 
 
 def test_qced_air_temp():
     """Get quality controlled temperature at a time there is a flagged observation."""
     # This produces a QCed air temperature
-    s = ss.NearestTime(
+    s = NearestTime(
         stid="kslc",
         attime="2024-08-17 17:55:00",
         vars="air_temp",
