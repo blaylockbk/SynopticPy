@@ -1,6 +1,6 @@
 # 🎨 Style Guide
 
-The SynopticPy logo and colors is a blend between Synoptic and Polars. The columns represent a dataframe and make an "S" shape.
+The SynopticPy logo and colors are inspired by a blend between Synoptic and Polars. The columns represent a DataFrame and make an "S" shape.
 
 Thanks to [Nathan Blaylock](https://nathanblaylock.com/) for improving the logo design!
 
@@ -23,17 +23,28 @@ Thanks to [Nathan Blaylock](https://nathanblaylock.com/) for improving the logo 
 ## Samples
 
 <img src="../_static/SynopticPy_blue.svg" width=200 style='background-color:transparent;'>
+
 <br>
+<br>
+
 <img src="../_static/SynopticPy_light-blue.svg" width=200 style='background-color:transparent;'>
 
 <br>
+<br>
+
 <img src="../_static/SynopticPy_white.svg" width=200 style='background-color:transparent;'>
 
 <br>
+<br>
+
 <img src="../_static/logo_SynopticPy_blue.svg" width=200 style='background-color:transparent;'>
 
 <br>
+<br>
+
 <img src="../_static/logo_SynopticPy_light-blue.svg" width=200 style='background-color:transparent;'>
 
 <br>
+<br>
+
 <img src="../_static/logo_SynopticPy_white.svg" width=200 style='background-color:transparent;'>

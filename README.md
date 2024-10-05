@@ -32,11 +32,21 @@
 
 </div>
 
-Synoptic's [Weather API](https://synopticdata.com/weatherapi/) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic's [open access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services may be purchased (from Synoptic, not me).
+Synoptic's [Weather API](https://synopticdata.com/weatherapi/) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic's [open-access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services may be purchased (from Synoptic, not me).
 
-I'm a Synoptic user. I wrote these functions to conveniently request data from Synoptic and convert its returned JSON to a **[Polars DataFrame](https://docs.pola.rs/user-guide/getting-started/)**. I'm sharing this as an open source project because I think these might be helpful to others who are getting started using the Synoptic API with Python. I also wrote this package to get more experience using Polars DataFrames.
+I'm a Synoptic user. I wrote this package to conveniently request data from Synoptic and convert its returned JSON to a **[Polars DataFrame](https://docs.pola.rs/user-guide/getting-started/)**. I'm sharing this package because (1) I want experience building and managing an open source package, (2) I want to get better at using Polars, and (3) I think this will be helpful to others using the Synoptic API with Python.
 
 ![alt text](docs/_static/json_to_polars.png)
+
+```python
+from datetime import timedelta
+from synoptic import TimeSeries
+
+df = TimeSeries(
+    stid="wbb",
+    recent=timedelta(minutes=30)
+).df
+```
 
 > ### 🎟️ You will need an API token before using SynopticPy: [Register for a free Synoptic account](https://customer.synopticdata.com/).
 
@@ -53,7 +63,7 @@ pip install SynopticPy
 ```
 
 ```bash
-conda install -c conda-forge SynopticPy
+conda install -c conda-forge synopticpy
 ```
 
 # How to Cite and Acknowledge
@@ -62,12 +72,13 @@ If SynopticPy played an important role in your work, please [tell me about it](h
 
 **_Suggested Citation_**
 
-> Blaylock, B. K. (2024). SynopticPy: Synoptic API for Python (Version 2024.10.0) [Computer software]. https://github.com/blaylockbk/SynopticPy
+> Blaylock, B. K. (YEAR). SynopticPy: Synoptic API for Python (Version 20??.?.?) [Computer software]. https://github.com/blaylockbk/SynopticPy
 
 **_Suggested Acknowledgment_**
 
-> A portion of this work used code generously provided by Brian Blaylock's SynopticPy python package (https://github.com/blaylockbk/SynopticPy)
+> A portion of this work used code generously provided by Brian Blaylock's SynopticPy Python package (https://github.com/blaylockbk/SynopticPy)
 
+<br>
 <hr>
 
-### 📈 See also my [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy), which lets you plot station data from Synoptic in your browser powered by pyscript!
+### 📈 See also my [SynopticPy Web App](https://blaylockbk.github.io/SynopticPy) which lets you plot station data from Synoptic in your browser powered by [pyscript](https://pyscript.net/)!

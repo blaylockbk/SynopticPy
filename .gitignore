@@ -9,6 +9,8 @@ env_pypi.yml
 sandbox/
 sandbox.ipynb
 
+.coverage
+
 dist/*
 build/*
 *.egg-info

@@ -1,6 +1,6 @@
 [project]
 name = "SynopticPy"
-description = "Load mesonet weather and environmental data from the Synoptic API into a Pandas Dataframe."
+description = "Load weather and environmental data from the Synoptic Weather API into Polars DataFrames."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
@@ -9,7 +9,6 @@ maintainers = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -20,18 +19,8 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Atmospheric Science",
 ]
-keywords = [
-    "weather",
-    "meteorology",
-    "mesonet",
-    "atmosphere",
-]
-dependencies = [
-    "numpy",
-    "polars>=1.7.1",
-    "requests",
-    "toml",
-]
+keywords = ["weather", "meteorology", "mesonet", "atmosphere"]
+dependencies = ["numpy", "polars>=1.7.1", "requests"]
 dynamic = ["version"]
 
 [project.urls]
@@ -43,17 +32,18 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 extras = [
-    "altair", # Plotting
-    "matplotlib", # Plotting
-    "pyarrow", # Write to Parquet with pyarrow
-    "seaborn", # Plotting
-    "cartopy", # Plotting
+    "altair",      # Plotting
+    "cartopy",     # Plotting
     "herbie-data", # Need the Cartopy plotting EasyMap
-    "metpy",
+    "matplotlib",  # Plotting
+    "metpy",       
+    "pyarrow",     # Write to Parquet with pyarrow
+    "seaborn",     # Plotting
 ]
 
 docs = [
     "autodocsumm",
+    "esbonio",
     "linkify-it-py",
     "myst-parser",
     "nbconvert",
@@ -67,7 +57,7 @@ docs = [
     "sphinx-markdown-tables",
     "sphinxcontrib-mermaid",
 ]
-test = ["pytest", "ruff"]
+test = ["pytest", "pytest-cov", "ruff"]
 
 [build-system]
 requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
@@ -87,7 +77,7 @@ extend-include = ["*.ipynb"]
 [tool.ruff.lint]
 extend-select = [
     "UP", # pyupgrade
-    "D", # pydocstyle
+    "D",  # pydocstyle
 
 ]
 
@@ -96,7 +86,7 @@ convention = "numpy"
 
 [tool.pytest.ini_options]
 minversion = "2.0"
-addopts = "-rsfEX -p pytester --strict-markers --verbosity=3"
+addopts = "-rsfEX -p pytester --strict-markers --verbosity=3 --cov=synoptic"
 log_level = "DEBUG"
 testpaths = ["tests"]
 xfail_strict = true

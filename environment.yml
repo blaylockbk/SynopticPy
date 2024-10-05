@@ -27,9 +27,11 @@ dependencies:
   - ruff
   - isort
   - pytest
+  - pytest-cov
 
   # Documentation
   # -------------
+  #- esbonio
   #- sphinx
   #- nbsphinx
   #- pydata-sphinx-theme # PyData Sphinx Theme (i.e, Numpy, Pandas, MetPy)
