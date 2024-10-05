@@ -36,7 +36,7 @@ extras = [
     "cartopy",     # Plotting
     "herbie-data", # Need the Cartopy plotting EasyMap
     "matplotlib",  # Plotting
-    "metpy",       
+    "metpy",
     "pyarrow",     # Write to Parquet with pyarrow
     "seaborn",     # Plotting
 ]
@@ -44,6 +44,7 @@ extras = [
 docs = [
     "autodocsumm",
     "esbonio",
+    "ipython",
     "linkify-it-py",
     "myst-parser",
     "nbconvert",
