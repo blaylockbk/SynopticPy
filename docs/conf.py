@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
 import os
 import sys
-from datetime import datetime
 
 import pydata_sphinx_theme
 
@@ -29,11 +29,11 @@ version = ".".join([str(i) for i in synoptic.__version_tuple__])
 
 # -- Project information -----------------------------------------------------
 # ---- Project information -----------------------------------------------------
-utc_now = datetime.utcnow().strftime("%H:%M UTC %d %b %Y")
+utc_now = datetime.datetime.now(datetime.UTC).strftime("%H:%M UTC %d %b %Y")
 
 project = "SynopticPy"
-copyright = f"{datetime.utcnow():%Y}, Brian K. Blaylock.    ♻ Updated: {utc_now}"
-author = f"Brian K. Blaylock"
+author = "Brian K. Blaylock"
+copyright = f"{datetime.datetime.now(datetime.UTC).strftime('%Y')}, {author}.    ♻ Updated: {utc_now}"
 
 # -- General configuration ---------------------------------------------------
 
@@ -67,12 +67,10 @@ myst_enable_extensions = [
 # Set up mapping for other projects' docs
 intersphinx_mapping = {
     "metpy": ("https://unidata.github.io/MetPy/latest/", None),
-    "pint": ("https://pint.readthedocs.io/en/stable/", None),
     "matplotlib": ("https://matplotlib.org/", None),
     "python": ("https://docs.python.org/3/", None),
+    "polars": ("https://docs.pola.rs/api/python/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
-    "xarray": ("https://xarray.pydata.org/en/stable/", None),
 }
 
 source_suffix = {
@@ -115,11 +113,6 @@ html_theme_options = {
     ],
     "header_links_before_dropdown": 4,
     "icon_links": [
-        {
-            "name": "Twitter",
-            "url": "https://twitter.com/blaylockbk",
-            "icon": "fa-brands fa-twitter",
-        },
         {
             "name": "GitHub",
             "url": "https://github.com/blaylockbk/SynopticPy",
@@ -179,9 +172,6 @@ autodoc_default_options = {
 autodoc_mock_imports = [
     "numpy",
     "matplotlib",
-    "pandas",
     "polars",
-    "xarray",
     "cartopy",
-    "cfgrib",
 ]

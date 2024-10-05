@@ -12,11 +12,13 @@ User Guide
    style_guide
 
 .. toctree::
-   :glob:
    :maxdepth: 1
    :caption: Examples
 
-   ./demo*.ipynb
+   demo_Metadata.ipynb
+   demo_Precipitation.ipynb
+   demo_TimeSeries.ipynb
+   how-to-pivot.ipynb
 
 .. toctree::
    :glob:
