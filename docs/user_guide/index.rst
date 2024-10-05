@@ -13,11 +13,11 @@ User Guide
 
 .. toctree::
    :maxdepth: 1
-   :caption: Services
+   :caption: Services Tutorials
 
-   services/demo_Metadata.ipynb
-   services/demo_Precipitation.ipynb
-   services/demo_TimeSeries.ipynb
+   services_tutorial/Metadata.ipynb
+   services_tutorial/Precipitation.ipynb
+   services_tutorial/TimeSeries.ipynb
 
 .. toctree::
    :glob:

@@ -1,6 +1,6 @@
 # 🌳 Concepts
 
-## Import and Basic Usage
+## Prefured Import
 
 You can import SynopticPy either by importing the entire `synoptic` module or by importing individual services. You can then retrieve data as a DataFrame using the `.df` attribute. For example:
 
@@ -25,6 +25,7 @@ Function arguments are stitched together to create a web query. The parameters y
 If the Synoptic API is new to you, I recommend you become familiar with the [Station Selector arguments](https://developers.synopticdata.com/mesonet/v2/station-selectors/) first. These parameters key in on specific stations or a set of stations within an area of interest (`stid`, `radius`, `vars`, `state`, etc.).
 
 Some things you should know when specifying a parameter:
+
 1. All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Both inputs are accepted by the functions.
 1. Any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API. For example, `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made. Both inputs are accepted by the functions.
 1. For services that requires the `within` or `recent` arguments, the API required these given in **minutes**. You may give integers for those arguments, but converting time to minutes is done automatically by the function if you input a `datetime.timedelta` or a `pandas timedelta`. For example, if you set `within=timedelta(hours=1)` or `recent=pd.to_timedelta('1d')`, the function will convert the value to minutes for you.
@@ -37,6 +38,7 @@ Some things you should know when specifying a parameter:
 TODO: Convert wind speed and directionto U and V components.
 
 ## ⏲ Timezone
+
 Timezone is _always_ returned in UTC, even if you set `obtimezone=local`.
 
 TODO: Example
@@ -49,6 +51,14 @@ The primary goal of SynopticPy is to unpack Synoptic's JSON data into a DataFram
 
 > If you prefer working with Pandas, you can easily convert a Polars DataFrame to a Pandas DataFrame using `df.to_pandas()`.
 
-
 The [seaborn](https://seaborn.pydata.org/tutorial/data_structure.html) plotting library works really well for plotting long-format DataFrames, and you'll see me use seaborn to plot some of the examples in these docs.
 
+## Plotting
+
+Throughout these docs, I use many different plotting tools.
+
+- Matplotlib
+- Seaborn
+- Cartopy
+
+When I use Cartopy, and I typically use my shortcut `EasyMap` tool included in [Herbie](https://github.com/blaylockbk/Herbie) to create those cartopy maps.
