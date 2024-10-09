@@ -14,6 +14,16 @@ def test_within_as_int():
     assert len(s.df)
 
 
+def test_param_as_bool():
+    """Get latest temperature and wind within 30 minutes (parameter as int)."""
+    s = Latest(
+        stid="ukbkb,wbb,naa",
+        vars="air_temp,wind_speed",
+        showemptyvars=True,
+    )
+    assert len(s.df)
+
+
 def test_within_as_timedelta():
     """Get latest temperature and wind within 2 hours (parameter as timedelta)."""
     s = Latest(

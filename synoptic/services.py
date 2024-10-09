@@ -170,6 +170,8 @@ class SynopticAPI:
           a `datetime.datetime` or string in format `YYYY-MM-DD HH:MM`.
         - Duration arguments like `recent` can be a `datetime.timedelta`
           or a duration string like `1d12h` or `30m`.
+        - Parameters that accept input as 0/1 or on/off
+          may be given as a boolean instead (i.e., True/False).
     """
 
     def __init__(
@@ -233,14 +235,25 @@ class SynopticAPI:
         params.pop("output", None)
 
         for key, value in params.items():
-            # Convert lists to comma-separated string.
-            #   stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
-            #   radius=[40, -100, 10] --> radius='40,-100,10'
             if key == "obrange":
                 params[key] = parse_obrange(value)
 
+            # Convert lists to comma-separated string.
+            #   stid=['KSLC', 'KMRY'] --> stid='KSLC,KRMY'.
+            #   radius=[40, -100, 10] --> radius='40,-100,10'
             elif isinstance(value, (list, tuple)):
                 params[key] = ",".join([str(i) for i in value])
+
+            # Handle Boolean input
+            # Some examples that can be given as boolean:
+            #   complete, showemptystations, showemptyvars, precip, all_reports, hfmetars, sensorvars
+            # Special Cases:
+            #   qc, qc_remove_data, qc_flag
+            elif isinstance(value, bool):
+                if key in {"qc", "qc_remove_data", "qc_flag"}:
+                    params[key] = "on" if value else "off"
+                else:
+                    params[key] = int(value)
 
             # Convert datetime or string datetime to 'YYYYMMDDHHMM'.
             elif key in {"start", "end", "expire", "attime"}:
