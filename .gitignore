@@ -8,6 +8,7 @@ env_pypi.yml
 
 sandbox/
 sandbox.ipynb
+sandbox*
 
 .coverage
 

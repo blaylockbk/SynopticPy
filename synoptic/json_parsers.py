@@ -189,16 +189,32 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
             else:
                 print(f"WARNING: Unknown struct for {col=} {struct=}")
 
-        # TODO: If qc exists in the struct, I need to specify the schema
-        # TODO: so it doesn't set all the qc values to null
-
         # Parse all observations with Float64 values. (column 'value')
         observed_float = df.select(col_has_float_value)
         if len(observed_float):
-            observed_float = observed_float.transpose(
-                include_header=True, header_name="variable"
-            ).unnest("column_0")
+            z = []
+            for i in col_has_float_value:
+                z.append(df.select(i).unnest(i).with_columns(variable=pl.lit(i)))
+            z = pl.concat(z, how="diagonal_relaxed")
 
+            col_order = ["date_time", "variable", "value", "qc"]
+            col_order += [col for col in z.columns if col not in col_order]
+
+            z = z.select(col_order)
+
+            if "qc" in z.columns:
+                z = (
+                    z.unnest("qc")
+                    .rename({"status": "qc_passed"})
+                    .with_columns(
+                        pl.col("qc_passed").replace_strict(
+                            {"failed": False, "passed": True}
+                        )
+                    )
+                )
+            observed_float = z
+
+        # TODO: Do I need to do the same loops as I did for observed_float?
         # Parse all observations with String values. (Column 'value_string')
         observed_string = df.select(col_has_string_value)
         if len(observed_string):
