@@ -197,7 +197,7 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
                 z.append(df.select(i).unnest(i).with_columns(variable=pl.lit(i)))
             z = pl.concat(z, how="diagonal_relaxed")
 
-            col_order = ["date_time", "variable", "value", "qc"]
+            col_order = ["date_time", "variable", "value"]
             col_order += [col for col in z.columns if col not in col_order]
 
             z = z.select(col_order)
