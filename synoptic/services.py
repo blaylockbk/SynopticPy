@@ -1,16 +1,11 @@
 """
-Synoptic Data to Polars DataFrame.
+Get Synoptic Weather API data as a Polars DataFrame.
 
 QUESTION: Are derived variables flagged if the variable used to derive it is also flagged?
 
-Note: Does not parse non-numeric values (document this fact), like wind_cardinal_direction. (TODO: Are there any others?)
-    These are what I found so far...'wind_cardinal_direction_set_1d', 'weather_condition_set_1d', 'weather_summary_set_1d'
-
-TODO: Allow user to cast values column to float or string, then drop null rows
+TODO: Use uv with hatchling
 
 TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
-
-TODO: Let user use Boolean input (True/False) for params like `qc_remvoe_data` amd others that have 0/1 input
 
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
