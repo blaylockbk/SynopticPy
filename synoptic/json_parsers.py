@@ -229,7 +229,7 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
             print(
                 f"WARNING: There are {len(col_has_struct_value)} columns"
                 f" in {metadata['STID'].item()} that are not parsed because"
-                " of nested data structure."
+                f" of nested data structure; {col_has_struct_value}"
             )
 
         # Join float and string observations

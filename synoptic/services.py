@@ -5,6 +5,8 @@ QUESTION: Are derived variables flagged if the variable used to derive it is als
 
 TODO: Use uv with hatchling
 
+TODO: Parse Latest/NearstTime minmax column
+
 TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
 
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
@@ -74,6 +76,46 @@ ServiceType = Literal[
     "networks",
     "networktypes",
 ]
+
+station_selectors = {
+    "stid",
+    "state",
+    "country",
+    "nwszone",
+    "nwsfirezone",
+    "cwa",
+    "gacc",
+    "subgacc",
+    "county",
+    "vars",
+    "varsoperator",
+    "network",
+    "radius",
+    "bbox",
+    "status",
+    "complete",
+    "fields",  # NOT SUPPORTED
+}
+
+optional_parameters = {
+    "obtimezone",  # IGNORED, only returns data in UTC
+    "showemptystations",
+    "showemptyvars",
+    "units",
+    "precip",
+    "all_reports",
+    "hfmetars",
+    "sensorvars",
+    "qc",
+    "qc_remove_data",
+    "qc_flags",
+    "qc_checks",
+    "minmax",
+    "minmaxtype",
+    "minmaxtimezone",
+    "timeformat",  # IGNORED, only
+    "output",  # IGNORED, only requests JSON data.
+}
 
 
 class SynopticAPIError(Exception):
@@ -331,17 +373,31 @@ class SynopticAPI:
 
 
 class TimeSeries(SynopticAPI):
-    """Get time series data for a station or stations.
+    """Get time series data for one or more stations.
 
     https://docs.synopticdata.com/services/time-series
 
     Parameters
     ----------
-    with_latency : bool
+    start, end : datetime, 'YYYYMMDDHHMM'
+        Start and end time of the desired timerange.
+        > NOTE: Both required when `recent` not provided.
+    recent : timedelta, int, duration string
+        A timedelta, integer (in minutes), or duration string like
+        `'3h'` indicating to get the data prior to the current time.
+        > NOTE: Required when `start` and `end` are not provided.
+    **station_selection
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+
+    with_latency : bool (extra from SynopticPy)
         If True, return data with latency column from the Latency service.
-    **params
-        - `start`, `end` | `recent`
-        https://docs.synopticdata.com/services/timeseries
+
+    Other Parameters
+    ----------------
+    **optional_parameters
+        units, precip, qc, etc.
     """
 
     def __init__(self, with_latency=False, **params):
@@ -373,8 +429,20 @@ class Latest(SynopticAPI):
 
     Parameters
     ----------
-    **params
-        - `within` (optional)
+    **station_selection
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+
+    Other Parameters
+    ----------------
+    within : timedelta, int
+        Limit data to within a certain time window.
+    minmax :
+    minmaxtype :
+    minmaxtimezone :
+    **optional_parameters
+        units, precip, qc, etc.
     """
 
     def __init__(self, **params):
@@ -389,9 +457,19 @@ class NearestTime(SynopticAPI):
 
     Parameters
     ----------
-    **params
-        - `attime`
-        - `within` (optional)
+    attime : datetime, YYYYMMDDHHMM
+        If not given, will act like Latest request.
+    within : timedelta, int, duration string
+        Required if `atttime` is given.
+    **station_selection
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+
+    Other Parameters
+    ----------------
+    **optional_parameters
+        units, precip, qc, etc.
     """
 
     def __init__(self, **params):
@@ -407,9 +485,18 @@ class Precipitation(SynopticAPI):
 
     Parameters
     ----------
-    **params
-        - Station selection parameters.
-        - `start` and `end` | `recent`
+    start, end : datetime, 'YYYYMMDDHHMM'
+        Start and end time of the desired timerange.
+        > NOTE: Both required when `recent` not provided.
+
+    recent : timedelta, int, duration string
+        A timedelta, integer (in minutes), or duration string like
+        `'3h'` indicating to get the data prior to the current time.
+        > NOTE: Required when `start` and `end` are not provided.
+    **station_selection
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
 
     Optional Parameters
     -------------------
@@ -418,6 +505,11 @@ class Precipitation(SynopticAPI):
     interval : int | {'hour', 'day', 'week', 'month', 'year'}
         Integer hours, or string interval.
         Default is "day" if not set.
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    interval_window : int
+        Time window in hours
+    **optional_parameters
+        units, precip, qc, etc.
     """
 
     def __init__(self, **params):
@@ -428,6 +520,14 @@ class Precipitation(SynopticAPI):
         self.df = parse_stations_precipitation(self)
 
 
+class QCSegments(SynopticAPI):
+    """Get quality control segments."""
+
+    def __init__(self, **params):
+        super().__init__("qcsegments", **params)
+        raise NotImplementedError()
+
+
 class Latency(SynopticAPI):
     """
     Request station latency.
@@ -436,9 +536,19 @@ class Latency(SynopticAPI):
 
     Parameters
     ----------
-    **params
-        - Station selection parameters.
-        - `start` and `end` | `recent`
+    start, end : datetime, 'YYYYMMDDHHMM'
+        Start and end time of the desired timerange.
+        > NOTE: Both required when `recent` not provided.
+    **station_selection
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+
+    Optional Parameters
+    -------------------
+    stats : {'min', 'max', 'mean', 'median', 'count', 'stdev', 'all'}
+    **optional_parameters
+        units, precip, qc, etc.
     """
 
     def __init__(self, **params):
@@ -451,11 +561,18 @@ class Metadata(SynopticAPI):
 
     Parameters
     ----------
-    complete : {0,1}
-    sensorvars : {0,1}
-        If 1, returns a struct for sensor_variables.
-    **params
-        https://docs.synopticdata.com/services/metadata
+    **station_selection
+        stid, state, county, radius, bbox, vars, varsoperator, etc.
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+
+    Optional Parameters
+    -------------------
+    stats : {'min', 'max', 'mean', 'median', 'count', 'stdev', 'all'}
+    complete : bool
+    sensorvars : bool
+    obrange : [datetime, datetime]
+        Start and end datetime.
     """
 
     def __init__(self, **params):
@@ -503,16 +620,18 @@ class Metadata(SynopticAPI):
         self.df = df
 
 
-class QCSegments(SynopticAPI):
-    """Get quality control segments."""
-
-    def __init__(self, **params):
-        super().__init__("qcsegments", **params)
-        raise NotImplementedError()
-
-
 class QCTypes(SynopticAPI):
-    """Get all QC types and names."""
+    """Get all QC types and names.
+
+    https://docs.synopticdata.com/services/quality-control-types
+
+    Parameters
+    ----------
+    shortname :
+    id :
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+    """
 
     def __init__(self, **params):
         super().__init__("qctypes", **params)
@@ -527,7 +646,14 @@ class QCTypes(SynopticAPI):
 class Variables(SynopticAPI):
     """Get all available variables.
 
+    https://docs.synopticdata.com/services/variables
+
     Provides variable name, variable index, long name, and default unit.
+
+    Parameters
+    ----------
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
     """
 
     def __init__(self, **params):
@@ -544,7 +670,18 @@ class Variables(SynopticAPI):
 
 
 class Networks(SynopticAPI):
-    """Get all available networks."""
+    """Get all available networks.
+
+    https://docs.synopticdata.com/services/networks
+
+    Parameters
+    ----------
+    id :
+    shortname :
+    sortby : {'alphabet'} (optional)
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+    """
 
     def __init__(self, **params):
         super().__init__("networks", **params)
@@ -574,7 +711,16 @@ class Networks(SynopticAPI):
 
 
 class NetworkTypes(SynopticAPI):
-    """Get all available network types."""
+    """Get all available network types.
+
+    https://docs.synopticdata.com/services/network-types
+
+    Parameters
+    ----------
+    id :
+    token
+        Required if SYNOPTIC_TOKEN or config file is unset.
+    """
 
     def __init__(self, **params):
         super().__init__("networktypes", **params)
