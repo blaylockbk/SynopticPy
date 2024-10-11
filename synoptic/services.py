@@ -3,27 +3,23 @@ Get Synoptic Weather API data as a Polars DataFrame.
 
 QUESTION: Are derived variables flagged if the variable used to derive it is also flagged?
 
+TODO: Docs, each class on it's own page.
+TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
+
 TODO: Use uv with hatchling
 
-TODO: Parse Latest/NearstTime minmax column
-
-TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
-
+TODO: Latest/NearstTime: unnest minmax column
+TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
+TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
-TODO: Need to use to_timezone(timezone=...) if obtimezone='local'
-
-TODO: Extensive testing and examples. Tests for each service in their own files.
-
+TODO: Provide helper functino `to_timezone(timezone=...)` because obtimezone='local' is IGNORED
 TODO: Provide helper function to do proper pivot
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
-TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
-TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
-TODO: Metadata: need to handle 'obrange' param.
 TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
-TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
 
+TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
 """
 
 import os
@@ -97,6 +93,7 @@ station_selectors = {
     "fields",  # NOT SUPPORTED
 }
 
+# TODO: Not a complete list
 optional_parameters = {
     "obtimezone",  # IGNORED, only returns data in UTC
     "showemptystations",
