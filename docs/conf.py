@@ -53,7 +53,6 @@ extensions = [
     "autodocsumm",
     "sphinx_markdown_tables",
     "myst_parser",
-    "sphinxcontrib.mermaid",
 ]
 
 
