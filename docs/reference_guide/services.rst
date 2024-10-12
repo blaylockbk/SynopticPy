@@ -3,7 +3,6 @@ Synoptic Services
 =================
 
 .. toctree::
-    :caption: Data Services
     :maxdepth: 2
 
 .. currentmodule:: synoptic.services
@@ -17,17 +16,6 @@ Synoptic Services
    NearestTime
    Precipitation
    Latency
-
-
-.. toctree::
-    :caption: Metadata Services
-    :maxdepth: 2
-
-.. currentmodule:: synoptic.services
-
-.. autosummary::
-   :toctree: _autosummary
-
    Metadata
    QCTypes
    Variables
