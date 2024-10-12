@@ -1,6 +1,6 @@
-========
-services
-========
+=================
+Synoptic Services
+=================
 
 .. toctree::
     :caption: Data Services

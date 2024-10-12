@@ -6,6 +6,9 @@ Reference Guide
    :hidden:
    :maxdepth: 1
 
+   services
+
+
 .. automodule:: synoptic.services
 .. automodule:: synoptic.accessors
 .. automodule:: synoptic.json_parsers
