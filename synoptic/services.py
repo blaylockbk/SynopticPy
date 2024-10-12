@@ -180,6 +180,8 @@ def parse_obrange(x: str | datetime | tuple[datetime, datetime]):
 class SynopticAPI:
     """Request data from the Synoptic Data Weather API.
 
+    This is the parent class for all other Synoptic service classes.
+
     Parameters
     ----------
     service : {'timeseries', 'latest', 'nearesttime', 'precipitation', etc.}
