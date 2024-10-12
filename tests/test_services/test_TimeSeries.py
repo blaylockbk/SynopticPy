@@ -12,7 +12,7 @@ def test_string_date_input():
         start=datetime(2024, 1, 1),
         end="2024-1-1 06:00",
     )
-    assert len(s.df)
+    assert len(s.df())
     assert s.params["start"] == "202401010000"
     assert s.params["end"] == "202401010600"
 
@@ -27,7 +27,7 @@ def test_all_qc_on():
         qc_checks="all",
         qc_remove_data="off",
     )
-    assert len(s.df)
+    assert len(s.df())
     assert s.params["recent"] == str(6 * 60)
 
 
@@ -42,13 +42,13 @@ def test_radius_with_complete_metadata():
         qc_remove_data="off",
         complete=1,
     )
-    assert len(s.df)
+    assert len(s.df())
     assert s.params["radius"] == "kslc,5"
 
 
 def test_column_names():
     """Get time series data and check for expected column names."""
-    df = TimeSeries(stid="wbb,ukbkb", recent=30).df
+    df = TimeSeries(stid="wbb,ukbkb", recent=30).df()
 
     # Column `STATUS` is renamed `is_active` and cast as bool
     assert "is_active" in df.columns

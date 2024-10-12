@@ -11,4 +11,4 @@ def test_all_stats():
         end=datetime(2024, 1, 2),
         stats="all",
     )
-    assert len(s.df)
+    assert len(s.df())

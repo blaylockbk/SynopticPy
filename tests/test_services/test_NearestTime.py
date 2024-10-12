@@ -18,9 +18,9 @@ def test_qced_air_temp():
         qc_checks="all",
         qc_remove_data="off",
     )
-    assert len(s.df)
-    assert any(s.df["qc_flags"].is_not_null())
-    assert s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df["qc_passed"]).sum() == 1
+    assert len(s.df())
+    assert any(s.df()["qc_flags"].is_not_null())
+    assert s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df()["qc_passed"]).sum() == 1
 
 
 def test_radius_kmry():
@@ -33,7 +33,7 @@ def test_radius_kmry():
 
     assert (
         len(s.STATION)
-        == s.df["stid"].n_unique()
+        == s.df()["stid"].n_unique()
         == s.SUMMARY["NUMBER_OF_OBJECTS"]
         == 30
     )
@@ -52,12 +52,12 @@ def test_kmry_wind_qc():
 
     assert (
         len(s.STATION)
-        == s.df["stid"].n_unique()
+        == s.df()["stid"].n_unique()
         == s.SUMMARY["NUMBER_OF_OBJECTS"]
         == 28
     )
 
-    assert s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df["qc_passed"]).sum() == 3
+    assert s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df()["qc_passed"]).sum() == 3
 
     for i in s.STATION:
         if i["STID"] == "E1554":
@@ -68,7 +68,7 @@ def test_kmry_wind_qc():
                     "qc": {"status": "failed", "qc_flags": [3]},
                 }
             }
-            E1554 = s.df.filter(stid="E1554")
+            E1554 = s.df().filter(stid="E1554")
             assert E1554["date_time"][0] == datetime(2024, 1, 1, 0, 0, tzinfo=UTC)
             assert E1554["variable"][0] == "wind_speed"
             assert E1554["value"][0] == 0

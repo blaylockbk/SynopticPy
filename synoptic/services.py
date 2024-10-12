@@ -27,6 +27,7 @@ import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Literal
+from functools import lru_cache
 
 import polars as pl
 import requests
@@ -359,8 +360,6 @@ class SynopticAPI:
         messages = f"╭─ Synoptic {self.service} service ─────\n"
         if hasattr(self, "STATION"):
             messages += f"│ Stations : {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}\n"
-        if hasattr(self, "df"):
-            messages += f"│ Total Obs: {len(self.df):,}\n"
         if hasattr(self, "QC_SUMMARY"):
             messages += (
                 f"│ QC Checks: {len(self.QC_SUMMARY.get('QC_CHECKS_APPLIED'))}\n"
@@ -388,21 +387,28 @@ class TimeSeries(SynopticAPI):
     token
         Required if SYNOPTIC_TOKEN or config file is unset.
 
-    with_latency : bool (extra from SynopticPy)
-        If True, return data with latency column from the Latency service.
-
     Other Parameters
     ----------------
     **optional_parameters
         units, precip, qc, etc.
     """
 
-    def __init__(self, with_latency=False, **params):
+    def __init__(self, **params):
         super().__init__("timeseries", **params)
-        self.df = parse_stations_timeseries(self)
+
+    @lru_cache
+    def df(self, with_latency=False) -> pl.DataFrame:
+        """Stations timeseries DataFrame.
+
+        Parameters
+        ----------
+        with_latency : bool
+            If True, return data with latency column from the Latency service.
+        """
+        df = parse_stations_timeseries(self)
 
         if with_latency:
-            latency = Latency(**params).df
+            latency = Latency(**self.params).df
             cols = [
                 "date_time",
                 "id",
@@ -412,11 +418,12 @@ class TimeSeries(SynopticAPI):
                 "latitude",
                 "longitude",
             ]
-            self.df = self.df.join(
+            df = df.join(
                 latency.select(cols + ["latency"]),
                 on=cols,
                 how="left",
             )
+        return df
 
 
 class Latest(SynopticAPI):
@@ -444,7 +451,12 @@ class Latest(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("latest", **params)
-        self.df = parse_stations_latest_nearesttime(self)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations latest DataFrame."""
+        df = parse_stations_latest_nearesttime(self)
+        return df
 
 
 class NearestTime(SynopticAPI):
@@ -471,7 +483,12 @@ class NearestTime(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("nearesttime", **params)
-        self.df = parse_stations_latest_nearesttime(self)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations nearest time DataFrame."""
+        df = parse_stations_latest_nearesttime(self)
+        return df
 
 
 class Precipitation(SynopticAPI):
@@ -514,7 +531,12 @@ class Precipitation(SynopticAPI):
         params.setdefault("pmode", "totals")
 
         super().__init__("precipitation", **params)
-        self.df = parse_stations_precipitation(self)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations precipitation DataFrame."""
+        df = parse_stations_precipitation(self)
+        return df
 
 
 class QCSegments(SynopticAPI):
@@ -550,7 +572,12 @@ class Latency(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("latency", **params)
-        self.df = parse_stations_latency(self)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations latency DataFrame."""
+        df = parse_stations_latency(self)
+        return df
 
 
 class Metadata(SynopticAPI):
@@ -575,6 +602,9 @@ class Metadata(SynopticAPI):
     def __init__(self, **params):
         super().__init__("metadata", **params)
 
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations metadata DataFrame."""
         df = pl.DataFrame(
             self.STATION,
             schema_overrides={
@@ -614,7 +644,7 @@ class Metadata(SynopticAPI):
         )
 
         df = df.rename({i: i.lower() for i in df.columns})
-        self.df = df
+        return df
 
 
 class QCTypes(SynopticAPI):
@@ -633,11 +663,14 @@ class QCTypes(SynopticAPI):
     def __init__(self, **params):
         super().__init__("qctypes", **params)
 
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Quality control typres DataFrame."""
         df = pl.DataFrame(self.QCTYPES).with_columns(
             pl.col("ID", "SOURCE_ID").cast(pl.UInt32)
         )
         df = df.rename({i: i.lower() for i in df.columns})
-        self.df = df
+        return df
 
 
 class Variables(SynopticAPI):
@@ -655,6 +688,10 @@ class Variables(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("variables", **params)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Variables DataFrame."""
         df = pl.concat(
             [
                 pl.DataFrame(i)
@@ -663,7 +700,7 @@ class Variables(SynopticAPI):
                 for i in self.VARIABLES
             ]
         ).with_columns(pl.col("vid").cast(pl.UInt32))
-        self.df = df
+        return df
 
 
 class Networks(SynopticAPI):
@@ -682,6 +719,10 @@ class Networks(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("networks", **params)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Networks DataFrame."""
         df = (
             pl.concat([pl.DataFrame(i) for i in self.MNET], how="diagonal_relaxed")
             .with_columns(
@@ -704,7 +745,7 @@ class Networks(SynopticAPI):
         )
 
         df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnet_id"})
-        self.df = df
+        return df
 
 
 class NetworkTypes(SynopticAPI):
@@ -721,6 +762,10 @@ class NetworkTypes(SynopticAPI):
 
     def __init__(self, **params):
         super().__init__("networktypes", **params)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Network types DataFrame."""
         df = (
             pl.DataFrame(self.MNETCAT)
             .with_columns(
@@ -741,4 +786,4 @@ class NetworkTypes(SynopticAPI):
             .unnest("PERIOD_OF_RECORD")
         )
         df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnetcat_id"})
-        self.df = df
+        return df

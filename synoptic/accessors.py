@@ -20,7 +20,8 @@ def with_network_name(df: pl.DataFrame, which: Literal["short", "long"] = "short
 
     return df.join(
         Networks(id=df["mnet_id"].unique().to_list(), verbose=False)
-        .df.select("mnet_id", f"{which}name")
+        .df()
+        .select("mnet_id", f"{which}name")
         .rename({f"{which}name": "network_name"}),
         on="mnet_id",
     )

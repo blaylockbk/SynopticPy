@@ -18,7 +18,7 @@ def test_pmode_total():
         pmode='totals',
         start="2024-06-01",
         end="2024-06-06",
-    ).df
+    ).df()
 
     assert len(df), "Should not have gotten an empty dataframe."
     assert df.filter(stid="WBB")["total"][0] == 0.254
@@ -29,7 +29,7 @@ def test_pmode_total_recent():
     df = Precipitation(
         stid="WBB",
         recent=timedelta(days=20),
-    ).df
+    ).df()
     assert len(df)
 
 
@@ -40,7 +40,7 @@ def test_pmode_last_accum():
         end="2024-09-05",
         pmode="last",
         accum_hours=["12,24,100"],
-    ).df
+    ).df()
     assert len(df) == 6
 
 
@@ -53,7 +53,7 @@ def test_pmode_interval_daily():
         pmode="intervals",
         units="english",
         interval="day",
-    ).df
+    ).df()
 
     assert len(df) == 31, "There should be 31 row, one for each day of the month."
     assert np.isclose(df["total"].sum(), 1.15), "Expected total precipitation to be 1.5 inches."
