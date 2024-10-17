@@ -4,7 +4,7 @@ The SynopticPy logo and colors are inspired by a blend between Synoptic and Pola
 
 Thanks to [Nathan Blaylock](https://nathanblaylock.com/) for improving the logo design!
 
-## Font: Signika
+## Font: [Signika](https://fonts.google.com/specimen/Signika)
 
 ## Colors
 

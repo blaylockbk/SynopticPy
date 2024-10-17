@@ -1,13 +1,13 @@
 # 🌳 Concepts
 
-## Prefured Import
+## Preferred Import
 
-You can import SynopticPy either by importing the entire `synoptic` module or by importing individual services. You can then retrieve data as a DataFrame using the `.df` attribute. For example:
+You can import SynopticPy either by importing the entire `synoptic` module or by importing individual services. You can then retrieve data as a DataFrame using the `.df()` method. For example:
 
 ```python
 import synoptic
 
-df = synoptic.Latest(stid='wbb').df
+df = synoptic.Latest(stid='wbb').df()
 ```
 
 or
@@ -15,33 +15,32 @@ or
 ```python
 from synoptic import Latest
 
-df = Latest(stid='wbb').df
+df = Latest(stid='wbb').df()
 ```
 
-## Function parameters
+## Constructor arguments
 
-Function arguments are stitched together to create a web query. The parameters you can use to filter the data depend on the API service. Synoptic's [API Explorer](https://developers.synopticdata.com/mesonet/explorer/) can help you determine what parameters can be used for each service.
+Constructor arguments or parameters are stitched together to create a web query. The parameters used to specify the data you want depends on the API service. Synoptic's Weather API [Documentation](https://docs.synopticdata.com/services/weather-data-api) and [Query Builder](https://demos.synopticdata.com/query-builder/index.html) can help you determine what parameters can be used for each service.
 
-If the Synoptic API is new to you, I recommend you become familiar with the [Station Selector arguments](https://developers.synopticdata.com/mesonet/v2/station-selectors/) first. These parameters key in on specific stations or a set of stations within an area of interest (`stid`, `radius`, `vars`, `state`, etc.).
+**If the Synoptic API is new to you, I highly recommend you become familiar with its [documentation](https://docs.synopticdata.com/services/weather-data-api).**
 
-Some things you should know when specifying a parameter:
+SynopticPy allows you to use more "Pythonic" input for these parameters. Pay attention to these SynopticPy extensions when requesting data:
 
-1. All lists are joined together into a comma separated string. For instance, if you are requesting three stations, you could do `stid=['WBB', 'KSLC', 'KMRY']`, and that will be converted to a comma separated list `stid='WBB,KSLC,KMRY'` required for the API request URL. Both inputs are accepted by the functions.
-1. Any input that is a datetime object (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API. For example, `start=datetime(2020,1,1)` will be converted to `start='YYYYmmddHHMM'` when the query is made. Both inputs are accepted by the functions.
-1. For services that requires the `within` or `recent` arguments, the API required these given in **minutes**. You may give integers for those arguments, but converting time to minutes is done automatically by the function if you input a `datetime.timedelta` or a `pandas timedelta`. For example, if you set `within=timedelta(hours=1)` or `recent=pd.to_timedelta('1d')`, the function will convert the value to minutes for you.
+1. Parameters may be given as lists or tuples, which are joined together into a comma separated string. One example where this is useful is in selecting multiple stations. While you can request `stid='WBB,KSLC,KMRY`, you may also request `stid=["WBB", "KSLC", "KMRY"]`. Both inputs are acceptable. Another example is `radius=("wbb", 20)` is equivalent to `radius="wbb,20"`
 
-> **❓ What if I don't know a station's ID?**  
-> MesoWest is your friend if you don't know what stations are available or what they are named: https://mesowest.utah.edu/.
+1. Datetime objects (any datetime that can be parsed with f-string, `f'{DATE:%Y%m%d%H%M}'`) will be converted to a string required by the API. For example, `start=datetime.datetime(2020,1,1)` will be converted to `start='202001010000'` when the query is made. Both inputs are accepted, but using a datetime object is preferred. A special case is `obrange` which can be provided as a tuple of datetimes `obrange=(datetime_start, datetime_end)`.
 
-## 💨 U and V Wind Components
+1. While Synoptic expects the `within` and `recent` arguments to be integer minutes, SynopticPy lets you use a timedelta object or polar-style duration string. The following are equivalent `within=datetime.timedelta(hours=1)` or `within='1h'` or `within=60`.
 
-TODO: Convert wind speed and directionto U and V components.
+1. When Synoptic expects values of `0`, `1`, `'on'`, or `'off'`, SynopticPy lets you give these as booleans. For example `showemptystations=False` is the same as `showemptystations=0`, and `qc=True` is the same as `qc='on'`.
 
-## ⏲ Timezone
+## What if I don't know a station's ID?
 
-Timezone is _always_ returned in UTC, even if you set `obtimezone=local`.
+Use these two amazing resources:
 
-TODO: Example
+- [Syonptic's Data Viewer](https://viewer.synopticdata.com/)
+- [MesoWest](https://mesowest.utah.edu/)
+
 
 ## What are these DataFrames?
 
@@ -51,14 +50,17 @@ The primary goal of SynopticPy is to unpack Synoptic's JSON data into a DataFram
 
 > If you prefer working with Pandas, you can easily convert a Polars DataFrame to a Pandas DataFrame using `df.to_pandas()`.
 
-The [seaborn](https://seaborn.pydata.org/tutorial/data_structure.html) plotting library works really well for plotting long-format DataFrames, and you'll see me use seaborn to plot some of the examples in these docs.
+## Why are all Timezones in UTC?
+
+Timezone is _always_ returned in UTC, even if you set `obtimezone=local`. This is because SynopticPy organizes the data in long-form DataFrames where all the observation times are in a single column. All datetimes in the date-time column must be in the same time zone.
+
+It is possible to convert data to a specific timezone using Polars. If you have multiple stations, you will probably want to partition the DataFrame by the `date-time` column.
 
 ## Plotting
 
 Throughout these docs, I use many different plotting tools.
 
 - Matplotlib
-- Seaborn
-- Cartopy
-
-When I use Cartopy, and I typically use my shortcut `EasyMap` tool included in [Herbie](https://github.com/blaylockbk/Herbie) to create those cartopy maps.
+- [Seaborn](https://seaborn.pydata.org/tutorial/data_structure.html) - Works really well for plotting long-form DataFrames.
+- Cartopy - When I use Cartopy, and I typically use my shortcut `EasyMap` tool included in [Herbie](https://github.com/blaylockbk/Herbie) to create those cartopy maps.
+- Altair - Built-in plotting support for Polars.
