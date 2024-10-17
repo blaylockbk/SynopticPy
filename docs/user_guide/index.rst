@@ -16,7 +16,7 @@ User Guide
    :maxdepth: 1
    :caption: Tutorial
 
-   services_tutorial/*
+   services_tutorials/*
 
 .. toctree::
    :glob:
