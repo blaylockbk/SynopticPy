@@ -16,16 +16,16 @@ User Guide
    :maxdepth: 1
    :caption: Tutorial
 
-   services_tutorial/*
-   services_tutorial/*
-   services_tutorial/*
+   services_tutorial/*.ipynb
+   services_tutorial/*.ipynb
+   services_tutorial/*.ipynb
 
 .. toctree::
    :glob:
    :maxdepth: 1
    :caption: Gallery
 
-   gallery/*
+   gallery/*.ipynb
 
 .. toctree::
    :maxdepth: 1
