@@ -3,12 +3,16 @@
    <div align=center>
    <img src="_static/SynopticPy_white.svg" style="background-color:transparent" width=350 class='only-dark' />
    </div>
+   <br>
+   <br>
 
 .. raw :: html
 
    <div align=center>
    <img src="_static/SynopticPy_blue.svg" style="background-color:transparent" width=350 class='only-light' />
    </div>
+   <br>
+   <br>
 
 .. toctree::
    :maxdepth: 3
@@ -16,6 +20,8 @@
 
    /user_guide/index
    /reference_guide/index
+
+
 
 ===================================
 SynopticPy: Synoptic API for Python
@@ -33,7 +39,7 @@ I'm a Synoptic user. I wrote this package to conveniently request data from Syno
    df = TimeSeries(
       stid="wbb",
       recent=timedelta(minutes=30)
-   ).df
+   ).df()
 
 .. raw :: html
 
