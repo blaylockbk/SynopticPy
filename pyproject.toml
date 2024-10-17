@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Atmospheric Science",
 ]
 keywords = ["weather", "meteorology", "mesonet", "atmosphere"]
-dependencies = ["numpy", "polars>=1.7.1", "requests", "toml"]
+dependencies = ["numpy", "polars[style,plot,timezones]>=1.9.0", "requests", "toml"]
 dynamic = ["version"]
 
 [project.urls]
