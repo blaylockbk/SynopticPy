@@ -17,8 +17,6 @@ User Guide
    :caption: Tutorial
 
    services_tutorial/*.ipynb
-   services_tutorial/*.ipynb
-   services_tutorial/*.ipynb
 
 .. toctree::
    :glob:
