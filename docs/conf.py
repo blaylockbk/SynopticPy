@@ -42,7 +42,7 @@ copyright = f"{datetime.datetime.now(datetime.UTC).strftime('%Y')}, {author}.   
 # ones.
 extensions = [
     "nbsphinx",
-    "sphinx.ext.autodoc",
+    "sphinx.ext.autodocautodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.autosectionlabel",
     "sphinx.ext.napoleon",
@@ -167,11 +167,11 @@ autodoc_typehints = "description"
 autodoc_member_order = "groupwise"
 
 ## Set autodoc defaults
-#autodoc_default_options = {
-#    "autosummary": True,  # Include a members "table of contents"
-#    "members": True,  # Document all functions/members
-#    "special-members": "__init__",
-#}
+autodoc_default_options = {
+    #    "autosummary": True,  # Include a members "table of contents"
+    "members": True,  # Document all functions/members
+    #    "special-members": "__init__",
+}
 
 autodoc_mock_imports = [
     "numpy",
