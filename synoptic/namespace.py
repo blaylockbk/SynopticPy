@@ -1,6 +1,3 @@
-from synoptic.services import Networks
-
-
 import polars as pl
 
 
@@ -73,6 +70,8 @@ class SynopticFrame:
         which : {'short', 'long'}
             Specify if the network shortname or longname is joined.
         """
+        from synoptic.services import Networks
+
         df = self._df
 
         if "mnet_id" not in df.columns:

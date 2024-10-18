@@ -25,6 +25,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Literal
 from functools import lru_cache
+import synoptic.namespace  # noqa: E402, F401
+
 
 import polars as pl
 import requests
@@ -786,8 +788,3 @@ class NetworkTypes(SynopticAPI):
         )
         df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnetcat_id"})
         return df
-
-# Import SynopticPy's custom Polars namespace
-# (can't import at beginning because of circular import)
-import synoptic.namespace  # noqa: E402, F401
-
