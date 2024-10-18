@@ -124,6 +124,7 @@ html_theme_options = {
         },
     ],
     "logo": {
+        "test": "SynopticPy",
         "image_light": "_static/logo_SynopticPy_blue.svg",
         "image_dark": "_static/logo_SynopticPy_white.svg",
     },
