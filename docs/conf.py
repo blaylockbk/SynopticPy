@@ -168,9 +168,9 @@ autodoc_member_order = "groupwise"
 
 ## Set autodoc defaults
 autodoc_default_options = {
-    "autosummary": True,  # Include a members "table of contents"
+    #"autosummary": True,  # Include a members "table of contents"
     "members": True,  # Document all functions/members
-    "special-members": "__init__",
+    #"special-members": "__init__",
 }
 
 autodoc_mock_imports = [
