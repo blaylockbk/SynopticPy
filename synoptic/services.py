@@ -3,7 +3,6 @@ Get Synoptic Weather API data as a Polars DataFrame.
 
 QUESTION: Are derived variables flagged if the variable used to derive it is also flagged?
 
-TODO: Docs, each class on it's own page.
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
 
 TODO: Use uv with hatchling
@@ -789,3 +788,38 @@ class NetworkTypes(SynopticAPI):
         )
         df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnetcat_id"})
         return df
+
+
+# ======================================================================
+# Custom Namespace
+# ======================================================================
+
+@pl.api.register_dataframe_namespace("synoptic")
+class SynopticFrame:
+    """Custom polars namespace for SynopticPy DataFrames."""
+
+    def __init__(self, df: pl.DataFrame) -> None:
+        self._df = df
+
+    def with_network_name(
+        self, which: Literal["short", "long"] = "short"
+    ) -> pl.DataFrame:
+        """Provide DataFrame with a new column `network_name`.
+
+        Parameters
+        ----------
+        which : {'short', 'long'}
+            Specify if the network shortname or longname is joined.
+        """
+        df = self._df
+
+        if "mnet_id" not in df.columns:
+            raise ValueError("Column 'mnet_id' is not in the DataFrame.")
+
+        return df.join(
+            Networks(id=df["mnet_id"].unique().to_list(), verbose=False)
+            .df()
+            .select("mnet_id", f"{which}name")
+            .rename({f"{which}name": "network_name"}),
+            on="mnet_id",
+        )
