@@ -14,4 +14,4 @@ For example `df.synoptic.with_networkname()`.
 .. autosummary::
    :toctree: _autosummary
 
-   with_network_name
+   SynopticFrame
