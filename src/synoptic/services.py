@@ -5,8 +5,6 @@ QUESTION: Are derived variables flagged if the variable used to derive it is als
 
 TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
 
-TODO: Use uv with hatchling
-
 TODO: Latest/NearstTime: unnest minmax column
 TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
 TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
