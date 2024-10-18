@@ -13,10 +13,8 @@ TODO: Latency: unnest statistics column if present and cast to appropriate datet
 TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
 TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
-TODO: Provide helper functino `to_timezone(timezone=...)` because obtimezone='local' is IGNORED
-TODO: Provide helper function to do proper pivot
+TODO: Provide helper function `to_timezone(timezone=...)` because obtimezone='local' is IGNORED
 TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
-TODO: If wind_speed and wind_direction are included, derive wind_u and wind_v
 
 TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
 """
