@@ -6,3 +6,4 @@ Reference Guide
    :maxdepth: 1
 
    services
+   namespace
