@@ -141,9 +141,7 @@ html_theme_options = {
 }
 
 
-html_sidebars = {
-    "**": ["search-field.html", "sidebar-nav-bs.html", "sidebar-ethical-ads.html"]
-}
+html_sidebars = {}
 
 
 html_context = {
