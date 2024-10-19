@@ -29,5 +29,6 @@ User Guide
    :maxdepth: 1
    :caption: Housekeeping
 
+   roadmap
    style_guide
    contribute

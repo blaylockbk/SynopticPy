@@ -49,3 +49,9 @@ def test_stid_with_string_ob_values():
     df = Latest(stid="kslc").df()
     assert "value" in df.columns
     assert "value_string" in df.columns
+
+
+def test_showemptystations():
+    """Test bounding box with showemptystations."""
+    df = Latest(bbox=[-120, 40, -119, 41], showemptystations=True).df()
+    assert len(df)

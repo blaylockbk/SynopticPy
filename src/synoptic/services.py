@@ -1,35 +1,17 @@
-"""
-Get Synoptic Weather API data as a Polars DataFrame.
-
-QUESTION: Are derived variables flagged if the variable used to derive it is also flagged?
-
-TODO: Document how to write to Parquet so user doesn't have to make API call to get data again (i.e., doing research)
-
-TODO: Latest/NearstTime: unnest minmax column
-TODO: Metadata: Not implemented; parsing sensor_variables column when `sensorvars=1`
-TODO: Latency: unnest statistics column if present and cast to appropriate datetime and duration types
-TODO: Option to join Network name from mnet_id (call column network_name; call argument "with_network_name")
-TODO: Timeseries: could have argument `with_latency` and make a latency request and join to data.
-
-TODO: Provide helper function `to_timezone(timezone=...)` because obtimezone='local' is IGNORED
-TODO: Provide helper function to do proper rolling and resample windows (https://docs.pola.rs/user-guide/transformations/time-series/resampling/)
-
-TODO: Add some quick, standardized plots (leverage seaborn, cartopy optional)
-"""
+"""Get Synoptic Weather API data as a Polars DataFrame."""
 
 import os
 import re
 from datetime import datetime, timedelta
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal
-from functools import lru_cache
-import synoptic.namespace  # noqa: E402, F401
-
 
 import polars as pl
 import requests
 import toml
 
+import synoptic.namespace  # noqa: E402, F401
 from synoptic.json_parsers import (
     parse_stations_latency,
     parse_stations_latest_nearesttime,

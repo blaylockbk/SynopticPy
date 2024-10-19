@@ -1,7 +1,6 @@
-import polars as pl
-
-
 from typing import Literal
+
+import polars as pl
 
 
 @pl.api.register_dataframe_namespace("synoptic")
