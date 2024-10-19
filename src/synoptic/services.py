@@ -175,37 +175,43 @@ def parse_obrange(x: str | datetime | tuple[datetime, datetime]):
 
 
 class SynopticAPI:
-    """Request data from the Synoptic Data Weather API.
+    """
+    Request data from Synoptic's Weather API.
 
-    This is the parent class for all other Synoptic service classes.
+    This is the parent class for all other services.
 
     Parameters
     ----------
-    service : {'timeseries', 'latest', 'nearesttime', 'precipitation', etc.}
-        The Synoptic API service to request data from.
-        Refer to the Synoptic Weather Data API documentation for a full
-        list of services: https://docs.synopticdata.com/services/weather-data-api
+    service : {'timeseries', 'latest', 'nearesttime', 'precipitation', ...}
+        The Synoptic API service to request data from. Refer to the
+        Synoptic Weather Data API documentation for a full list of
+        services: https://docs.synopticdata.com/services/weather-data-api
     token : str
-        A 32-character Synoptic account token.
-        If None, tries to get value from the following:
+        A 32-character Synoptic account token. If None, attempts to
+        retrieve the token from the following sources (in order):
         1. Environment variable `SYNOPTIC_TOKEN`,
         2. The `token="..."` value in `~/.config/SynopticPy/config.toml`.
     verbose : bool
-        Print each step.
-    **params
-        Synoptic API request arguments. Refer to the Synoptic Weather
-        Data API documentation for expected and valid arguments for
-        each service: https://docs.synopticdata.com/services/weather-data-api
+        If True, prints each step of the request process.
+    **params : dict, optional
+        Additional Synoptic API request parameters. Refer to the
+        Synoptic Weather Data API documentation for expected and valid
+        arguments for each service: https://docs.synopticdata.com/services/weather-data-api
 
-        This Class can accept specific inputs:
-        - Any comma separated strings can be given as a list instead
-          (i.e., `stid=['wbb', 'ukbkb']`).
-        - Datetime arguments like `start` and `end` may be
-          a `datetime.datetime` or string in format `YYYY-MM-DD HH:MM`.
-        - Duration arguments like `recent` can be a `datetime.timedelta`
-          or a duration string like `1d12h` or `30m`.
-        - Parameters that accept input as 0/1 or on/off
-          may be given as a boolean instead (i.e., True/False).
+        This class accepts specific inputs:
+
+        - Comma-separated strings can be provided as a list (e.g., `stid=['wbb', 'ukbkb']`).
+        - Datetime arguments like `start` and `end` can be a `datetime.datetime` object
+        or a string in the format `YYYY-MM-DD HH:MM`.
+        - Duration arguments like `recent` can be a `datetime.timedelta` object
+        or a duration string (e.g., `1d12h`, `30m`).
+        - Parameters that accept 0/1 or on/off can be given as boolean values
+        (e.g., True/False).
+
+    Raises
+    ------
+    ValueError
+        If the provided service is not recognized.
     """
 
     def __init__(
