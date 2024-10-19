@@ -189,8 +189,9 @@ class SynopticAPI:
     token : str
         A 32-character Synoptic account token. If None, attempts to
         retrieve the token from the following sources (in order):
-        1. Environment variable `SYNOPTIC_TOKEN`,
-        2. The `token="..."` value in `~/.config/SynopticPy/config.toml`.
+
+        1. Environment variable ``SYNOPTIC_TOKEN``,
+        2. The ``token="..."`` value in ``~/.config/SynopticPy/config.toml``.
     verbose : bool
         If True, prints each step of the request process.
     **params : dict, optional
@@ -198,13 +199,13 @@ class SynopticAPI:
         Synoptic Weather Data API documentation for expected and valid
         arguments for each service: https://docs.synopticdata.com/services/weather-data-api
 
-        This class accepts specific inputs:
+        This class accepts the following extended input:
 
-        - Comma-separated strings can be provided as a list (e.g., `stid=['wbb', 'ukbkb']`).
-        - Datetime arguments like `start` and `end` can be a `datetime.datetime` object
-        or a string in the format `YYYY-MM-DD HH:MM`.
-        - Duration arguments like `recent` can be a `datetime.timedelta` object
-        or a duration string (e.g., `1d12h`, `30m`).
+        - Comma-separated strings can be provided as a list (e.g., ``stid=['wbb', 'ukbkb']``).
+        - Datetime arguments like ``start`` and ``end`` can be a *datetime.datetime* object
+        or a string in the format ``YYYY-MM-DD HH:MM``.
+        - Duration arguments like ``recent`` can be a *datetime.timedelta* object
+        or a duration string (e.g., ``'1d12h'``, ``30m``).
         - Parameters that accept 0/1 or on/off can be given as boolean values
         (e.g., True/False).
 
@@ -374,28 +375,39 @@ class SynopticAPI:
 
 
 class TimeSeries(SynopticAPI):
-    """Get time series data for one or more stations.
+    """
+    Get time series data for one or more stations.
 
-    https://docs.synopticdata.com/services/time-series
+    Refer to the official documentation: https://docs.synopticdata.com/services/time-series
 
     Parameters
     ----------
-    start, end : datetime, 'YYYYMMDDHHMM'
-        Start and end time of the desired timerange.
-        > NOTE: Both required when `recent` not provided.
-    recent : timedelta, int, duration string
-        A timedelta, integer (in minutes), or duration string like
-        `'3h'` indicating to get the data prior to the current time.
-        > NOTE: Required when `start` and `end` are not provided.
-    **station_selection
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
+    start : datetime or str, optional
+        The start time of the desired time range, either as a `datetime` object
+        or a string in the format `'YYYYMMDDHHMM'`. Required if `recent` is not provided.
+    end : datetime or str, optional
+        The end time of the desired time range, either as a `datetime` object
+        or a string in the format `'YYYYMMDDHHMM'`. Required if `recent` is not provided.
+    recent : timedelta, int, or str, optional
+        A `timedelta` object, an integer (representing minutes), or a duration string
+        (e.g., `'3h'`) that specifies the period of data to retrieve prior to the current time.
+        Required if `start` and `end` are not provided.
+    **station_selection : dict, optional
+        Station selection parameters such as `stid`, `state`, `county`, `radius`, `bbox`,
+        `vars`, `varsoperator`, etc. Refer to the Synoptic API documentation for details.
+    token : str, optional
+        Synoptic API token. Required if the `SYNOPTIC_TOKEN` environment variable or
+        config file entry is not set.
 
     Other Parameters
     ----------------
-    **optional_parameters
-        units, precip, qc, etc.
+    **optional_parameters : dict, optional
+        Additional parameters such as `units`, `precip`, `qc`, etc.
+
+    Notes
+    -----
+    - If `recent` is provided, `start` and `end` are not needed.
+    - If `start` and `end` are provided, `recent` should not be used.
     """
 
     def __init__(self, **params):
