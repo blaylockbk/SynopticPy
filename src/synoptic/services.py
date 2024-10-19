@@ -145,8 +145,9 @@ def parse_obrange(x: str | datetime | tuple[datetime, datetime]):
 
     Parameters
     ----------
-    x
+    x : str, datetime, tuple
         obrange may be given as the following:
+
         - Start date as string `'YYYYMMDDHHMM'` (end date is current time)
         - Start date as `datetime` (end date is current time)
         - Start and end date as string `['YYYYMMDDHHMM','YYYYMMDDHHMM']`
@@ -201,18 +202,10 @@ class SynopticAPI:
 
         This class accepts the following extended input:
 
-        - Comma-separated strings can be provided as a list (e.g., ``stid=['wbb', 'ukbkb']``).
-        - Datetime arguments like ``start`` and ``end`` can be a *datetime.datetime* object
-        or a string in the format ``YYYY-MM-DD HH:MM``.
-        - Duration arguments like ``recent`` can be a *datetime.timedelta* object
-        or a duration string (e.g., ``'1d12h'``, ``30m``).
-        - Parameters that accept 0/1 or on/off can be given as boolean values
-        (e.g., True/False).
-
-    Raises
-    ------
-    ValueError
-        If the provided service is not recognized.
+        - Where Synoptic expects comma-separated strings, you can instead provided a list or tuple (e.g., ``stid=['wbb', 'ukbkb']``, ``radius=('wbb', 20)``).
+        - Datetime parameters like ``start`` and ``end`` can be a *datetime.datetime* or a string in the format ``YYYY-MM-DD HH:MM``.
+        - Duration parameters like ``recent`` can be a *datetime.timedelta* or a duration string (e.g., ``'1d12h'``, ``30m``).
+        - Parameters that accept ``0``, ``1``, ``on``, ``off`` can be given as boolean values.
     """
 
     def __init__(
@@ -383,25 +376,20 @@ class TimeSeries(SynopticAPI):
     Parameters
     ----------
     start : datetime or str, optional
-        The start time of the desired time range, either as a `datetime` object
-        or a string in the format `'YYYYMMDDHHMM'`. Required if `recent` is not provided.
+        The start time of the desired time range as a *datetime.datetime* or a string in the form ``'YYYYMMDDHHMM'`` or ``'YYYY-MM-DD HH:MM'``.
+        Required if ``recent`` is not provided.
     end : datetime or str, optional
-        The end time of the desired time range, either as a `datetime` object
-        or a string in the format `'YYYYMMDDHHMM'`. Required if `recent` is not provided.
+        The end time of the desired time range as a *datetime.datetime* or a string in the form ``'YYYYMMDDHHMM'`` or ``'YYYY-MM-DD HH:MM'``.
+        Required if `recent` is not provided.
     recent : timedelta, int, or str, optional
-        A `timedelta` object, an integer (representing minutes), or a duration string
-        (e.g., `'3h'`) that specifies the period of data to retrieve prior to the current time.
-        Required if `start` and `end` are not provided.
-    **station_selection : dict, optional
-        Station selection parameters such as `stid`, `state`, `county`, `radius`, `bbox`,
-        `vars`, `varsoperator`, etc. Refer to the Synoptic API documentation for details.
+        A *datetime.timedelta*, integer (representing minutes), or a duration string (e.g., `'3h'`) that specifies the period of data to retrieve prior to the current time.
+        Required if ``start`` and ``end`` are not provided.
+    **station_selection :
+        Station selection parameters such as ``stid``, ``state``, ``county``, ``radius``, ``bbox``, ``vars``, ``varsoperator``, etc.
+        Refer to the Synoptic API documentation for details.
     token : str, optional
-        Synoptic API token. Required if the `SYNOPTIC_TOKEN` environment variable or
-        config file entry is not set.
-
-    Other Parameters
-    ----------------
-    **optional_parameters : dict, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
+    **optional_parameters :
         Additional parameters such as `units`, `precip`, `qc`, etc.
 
     Notes
@@ -446,18 +434,16 @@ class TimeSeries(SynopticAPI):
 class Latest(SynopticAPI):
     """Get the most recent data from a station or stations.
 
-    https://docs.synopticdata.com/services/latest
+    Refer to the official documentation: https://docs.synopticdata.com/services/latest
 
     Parameters
     ----------
-    **station_selection
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
-
-    Other Parameters
-    ----------------
-    within : timedelta, int
+    **station_selection :
+        Station selection parameters such as ``stid``, ``state``, ``county``, ``radius``, ``bbox``, ``vars``, ``varsoperator``, etc.
+        Refer to the Synoptic API documentation for details.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
+    within : timedelta, int, optional
         Limit data to within a certain time window.
     minmax :
     minmaxtype :
@@ -479,7 +465,7 @@ class Latest(SynopticAPI):
 class NearestTime(SynopticAPI):
     """Get data closest to the requested time for a station or stations.
 
-    https://docs.synopticdata.com/services/nearest-time
+    Refer to the official documentation: https://docs.synopticdata.com/services/nearest-time
 
     Parameters
     ----------
@@ -487,13 +473,11 @@ class NearestTime(SynopticAPI):
         If not given, will act like Latest request.
     within : timedelta, int, duration string
         Required if `atttime` is given.
-    **station_selection
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
-
-    Other Parameters
-    ----------------
+    **station_selection :
+        Station selection parameters such as ``stid``, ``state``, ``county``, ``radius``, ``bbox``, ``vars``, ``varsoperator``, etc.
+        Refer to the Synoptic API documentation for details.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     **optional_parameters
         units, precip, qc, etc.
     """
@@ -512,31 +496,28 @@ class Precipitation(SynopticAPI):
     """
     Request derived precipitation total or intervals.
 
-    https://docs.synopticdata.com/services/precipitation
+    Refer to the official documentation: https://docs.synopticdata.com/services/precipitation
 
     Parameters
     ----------
-    start, end : datetime, 'YYYYMMDDHHMM'
-        Start and end time of the desired timerange.
-        > NOTE: Both required when `recent` not provided.
-
-    recent : timedelta, int, duration string
-        A timedelta, integer (in minutes), or duration string like
-        `'3h'` indicating to get the data prior to the current time.
-        > NOTE: Required when `start` and `end` are not provided.
-    **station_selection
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
-
-    Optional Parameters
-    -------------------
+    start : datetime or str, optional
+        The start time of the desired time range as a *datetime.datetime* or a string in the form ``'YYYYMMDDHHMM'`` or ``'YYYY-MM-DD HH:MM'``.
+        Required if ``recent`` is not provided.
+    end : datetime or str, optional
+        The end time of the desired time range as a *datetime.datetime* or a string in the form ``'YYYYMMDDHHMM'`` or ``'YYYY-MM-DD HH:MM'``.
+        Required if `recent` is not provided.
+    recent : timedelta, int, or str, optional
+        A *datetime.timedelta*, integer (representing minutes), or a duration string (e.g., `'3h'`) that specifies the period of data to retrieve prior to the current time.
+        Required if ``start`` and ``end`` are not provided.
+    **station_selection :
+        Station selection parameters such as ``stid``, ``state``, ``county``, ``radius``, ``bbox``, ``vars``, ``varsoperator``, etc.
+        Refer to the Synoptic API documentation for details.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     pmode : {'totals', 'intervals', 'last'}
-        Default is totals.
+        Precipitation mode. Default is *"totals"*.
     interval : int | {'hour', 'day', 'week', 'month', 'year'}
-        Integer hours, or string interval.
-        Default is "day" if not set.
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
+        Integer hours, or string interval. Default is *"day"*.
     interval_window : int
         Time window in hours
     **optional_parameters
@@ -557,7 +538,10 @@ class Precipitation(SynopticAPI):
 
 
 class QCSegments(SynopticAPI):
-    """Get quality control segments."""
+    """Get quality control segments. NOT IMPLEMENTED.
+
+    Refer to the official documentation: https://docs.synopticdata.com/services/quality-control-segments
+    """
 
     def __init__(self, **params):
         super().__init__("qcsegments", **params)
@@ -568,20 +552,21 @@ class Latency(SynopticAPI):
     """
     Request station latency.
 
-    https://docs.synopticdata.com/services/latency
+    Refer to the official documentation: https://docs.synopticdata.com/services/latency
 
     Parameters
     ----------
-    start, end : datetime, 'YYYYMMDDHHMM'
-        Start and end time of the desired timerange.
-        > NOTE: Both required when `recent` not provided.
-    **station_selection
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
-
-    Optional Parameters
-    -------------------
+    start : datetime or str, optional
+        The start time of the desired time range as a *datetime.datetime* or a string in the form ``'YYYYMMDDHHMM'`` or ``'YYYY-MM-DD HH:MM'``.
+        Required if ``recent`` is not provided.
+    end : datetime or str, optional
+        The end time of the desired time range as a *datetime.datetime* or a string in the form ``'YYYYMMDDHHMM'`` or ``'YYYY-MM-DD HH:MM'``.
+        Required if `recent` is not provided.
+    **station_selection :
+        Station selection parameters such as ``stid``, ``state``, ``county``, ``radius``, ``bbox``, ``vars``, ``varsoperator``, etc.
+        Refer to the Synoptic API documentation for details.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     stats : {'min', 'max', 'mean', 'median', 'count', 'stdev', 'all'}
     **optional_parameters
         units, precip, qc, etc.
@@ -600,20 +585,20 @@ class Latency(SynopticAPI):
 class Metadata(SynopticAPI):
     """Retrieve metadata for a station or stations.
 
+    Refer to the official documentation: https://docs.synopticdata.com/services/metadata
+
     Parameters
     ----------
-    **station_selection
-        stid, state, county, radius, bbox, vars, varsoperator, etc.
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
-
-    Optional Parameters
-    -------------------
+    **station_selection :
+        Station selection parameters such as ``stid``, ``state``, ``county``, ``radius``, ``bbox``, ``vars``, ``varsoperator``, etc.
+        Refer to the Synoptic API documentation for details.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     stats : {'min', 'max', 'mean', 'median', 'count', 'stdev', 'all'}
     complete : bool
     sensorvars : bool
-    obrange : [datetime, datetime]
-        Start and end datetime.
+    obrange : str, tuple
+        Start and end datetime, as a tuple ``(datetime.datetime, datetime.datetime)`` or string ``YYMMDDHHMM,YYMMDDHHMM`
     """
 
     def __init__(self, **params):
@@ -667,14 +652,14 @@ class Metadata(SynopticAPI):
 class QCTypes(SynopticAPI):
     """Get all QC types and names.
 
-    https://docs.synopticdata.com/services/quality-control-types
+    Refer to the official documentation: https://docs.synopticdata.com/services/quality-control-types
 
     Parameters
     ----------
     shortname :
     id :
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     """
 
     def __init__(self, **params):
@@ -691,16 +676,17 @@ class QCTypes(SynopticAPI):
 
 
 class Variables(SynopticAPI):
-    """Get all available variables.
-
-    https://docs.synopticdata.com/services/variables
+    """
+    Get all available variables.
 
     Provides variable name, variable index, long name, and default unit.
 
+    Refer to the official documentation: https://docs.synopticdata.com/services/variables
+
     Parameters
     ----------
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     """
 
     def __init__(self, **params):
@@ -723,15 +709,15 @@ class Variables(SynopticAPI):
 class Networks(SynopticAPI):
     """Get all available networks.
 
-    https://docs.synopticdata.com/services/networks
+    Refer to the official documentation: https://docs.synopticdata.com/services/networks
 
     Parameters
     ----------
     id :
     shortname :
     sortby : {'alphabet'} (optional)
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     """
 
     def __init__(self, **params):
@@ -768,13 +754,13 @@ class Networks(SynopticAPI):
 class NetworkTypes(SynopticAPI):
     """Get all available network types.
 
-    https://docs.synopticdata.com/services/network-types
+    Refer to the official documentation: https://docs.synopticdata.com/services/network-types
 
     Parameters
     ----------
     id :
-    token
-        Required if SYNOPTIC_TOKEN or config file is unset.
+    token : str, optional
+        Synoptic API token. Required if the ``SYNOPTIC_TOKEN`` environment variable and the config file entry are not set.
     """
 
     def __init__(self, **params):

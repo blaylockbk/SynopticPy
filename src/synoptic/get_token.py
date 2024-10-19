@@ -4,13 +4,14 @@
 SynopticPy needs to know your public Synoptic API token.
 
 It looks for your token in this order:
-1. The class constructor argument `token='...'`
-2. The environment variable `SYNOPTIC_TOKEN`
-3. The SynopticPy config file `~/.config/SynopticPy/config.toml`
+
+1. The class constructor argument ``token='...'``
+2. The environment variable ``SYNOPTIC_TOKEN``
+3. The SynopticPy config file ``~/.config/SynopticPy/config.toml``
 
 The first time you `import synoptic`, it will
 ask for your API token and store that information in
-`~/.config/SynopticPy/config.cfg`. You may edit that config file if
+``~/.config/SynopticPy/config.cfg``. You may edit that config file if
 you need.
 
 """

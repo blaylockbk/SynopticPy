@@ -6,15 +6,15 @@ from typing import Literal
 
 @pl.api.register_dataframe_namespace("synoptic")
 class SynopticFrame:
-    """Custom polars namespace for SynopticPy DataFrames."""
+    """Custom Polars namespace for SynopticPy DataFrames."""
 
     def __init__(self, df: pl.DataFrame) -> None:
         self._df = df
 
-    def pivot(self, *, sensor_index=1, **kwargs) -> pl.DataFrame:
-        """Pivot a long-form Synoptic DataFrame to wide-form.
+    def pivot(self, *, sensor_index: int = 1, **kwargs) -> pl.DataFrame:
+        """Pivot a long-form SynopticPy DataFrame to wide-form.
 
-        This likely gets what you're looking for, but is is recommended
+        This likely gets what you're looking for, but it is recommended
         to use Polars directly to accomplish more customized pivots.
 
         - Long-form DataFrame has a row for each observation.
@@ -41,7 +41,7 @@ class SynopticFrame:
         return df
 
     def with_wind_uv(self) -> pl.DataFrame:
-        """Create new columns 'wind_u' and 'wind_v'.
+        """Provide ``wind_u`` and ``wind_v`` columns from wind speed and direction.
 
         **IMPORTANT** Requires a wide-form DataFrame (pivoted) with
         columns `wind_speed` and `wind_direction`.
@@ -63,7 +63,7 @@ class SynopticFrame:
     def with_network_name(
         self, which: Literal["short", "long"] = "short"
     ) -> pl.DataFrame:
-        """Provide DataFrame with a new column `network_name`.
+        """Provide DataFrame with ``network_name`` column.
 
         Parameters
         ----------
