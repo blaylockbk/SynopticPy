@@ -18,6 +18,11 @@ from synoptic.json_parsers import (
     parse_stations_precipitation,
     parse_stations_timeseries,
 )
+from synoptic.token import Token
+
+# Initialize Token to get any environment or configured value
+TOKEN = Token()
+TOKEN.is_valid(configure_on_fail=True)
 
 # Available API Services
 # https://docs.synopticdata.com/services/weather-data-api
@@ -194,7 +199,7 @@ class SynopticAPI:
         self,
         service: ServiceType,
         *,
-        token: str | None = None,
+        token: str | Token | None = None,
         verbose=True,
         **params,
     ):
@@ -204,6 +209,18 @@ class SynopticAPI:
         # -------------
         # Get API token
         if token is None:
+            self.token = TOKEN
+        elif isinstance(token, str):
+            self.token = Token(token)
+        elif isinstance(token, Token):
+            self.token = token
+
+
+
+
+        if token is None:
+            token = Token().token
+
             token = os.getenv("SYNOPTIC_TOKEN")
             if token is None:
                 _config_path = os.getenv(
@@ -235,7 +252,7 @@ class SynopticAPI:
                 self.token_source = "environment variable SYNOPTIC_TOKEN"
 
         else:
-            self.token_source = "class constructor argument `token='...'`"
+            self.token_source = "SynopticAPI token argument."
 
         # ----------------
         # Parse parameters
