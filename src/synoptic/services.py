@@ -18,11 +18,11 @@ from synoptic.json_parsers import (
     parse_stations_precipitation,
     parse_stations_timeseries,
 )
-from synoptic.token import Token
+from synoptic.token import Token, ANSI, configure
 
 # Initialize Token to get any environment or configured value
 TOKEN = Token()
-TOKEN.is_valid(configure_on_fail=True)
+TOKEN.is_valid()
 
 # Available API Services
 # https://docs.synopticdata.com/services/weather-data-api
@@ -215,51 +215,12 @@ class SynopticAPI:
         elif isinstance(token, Token):
             self.token = token
 
-
-
-
-        if token is None:
-            token = Token().token
-
-            token = os.getenv("SYNOPTIC_TOKEN")
-            if token is None:
-                _config_path = os.getenv(
-                    "SYNOPTICPY_CONFIG_PATH", "~/.config/SynopticPy"
-                )
-                _config_path = Path(_config_path).expanduser()
-                _config_file = _config_path / "config.toml"
-                if _config_file.exists():
-                    try:
-                        token = toml.load(_config_file).get("token")
-                    except:
-                        # legacy token configuration
-                        token = toml.load(_config_file)["default"].get("token")
-                else:
-                    raise SynopticAPIError(
-                        "\n"
-                        " ╭─SynopticPy:FATAL────────────────────────────────────────────╮\n"
-                        " │ A valid Synoptic token is required. Do one of the following:│\n"
-                        " │  1) Specify `token='1234567889ABCDE...'` in your request.   │\n"
-                        " │  2) Set environment variable SYNOPTIC_TOKEN.                │\n"
-                        " │  3) Configure a token in ~/.config/SynopticPy/config.toml   │\n"
-                        " │                                                             │\n"
-                        " │ You can sign up for a free open-access acount at            │\n"
-                        " │ https://customer.synopticdata.com/signup/                   │\n"
-                        " ╰─────────────────────────────────────────────────────────────╯\n"
-                    )
-                self.token_source = f"Config File: {_config_path}"
-            else:
-                self.token_source = "environment variable SYNOPTIC_TOKEN"
-
-        else:
-            self.token_source = "SynopticAPI token argument."
-
         # ----------------
         # Parse parameters
 
         # Force all param keys to be lower case.
         params = {k.lower(): v for k, v in params.items()}
-        params["token"] = token
+        params["token"] = self.token
 
         # Don't allow user to specify 'timeformat'
         params.pop("timeformat", None)

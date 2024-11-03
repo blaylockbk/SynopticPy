@@ -1,5 +1,5 @@
 """
-🎫 Configure Synoptic API Token.
+🎫 Store and configure Synoptic API Token.
 
 SynopticPy needs to know your public Synoptic API token.
 
@@ -21,54 +21,6 @@ import os
 import re
 from pathlib import Path
 import requests
-
-# Default TOML Configuration Values
-DEFAULT_TOML = """# SynopticPy needs to know your public Synoptic API token.
-# That token can be stored in this file or set as
-# an environment variable SYNOPTIC_TOKEN.
-
-token = ""
-hide_token = true
-verbose = false
-"""
-
-TOKEN_WELCOME = """
-    ╭─SynopticPy:WELCOME─────────────────────────────────────────────────────╮
-    │                                                                        │
-    │ Welcome to SynopticPy.                                                 │
-    │                                                                        │
-    │ Before you get started, you need a Synoptic account and valid Synoptic │
-    │ API token. To get started with the open-access datasets,               │
-    │                                                                        │
-    │ 1) Go to https://customer.synopticdata.com/signup/                     │
-    │    and create a new account or log into your account.                  │
-    │                                                                        │
-    │ 2) You can view, create, and manage your API tokens at                 │
-    │    https://customer.synopticdata.com/credentials/.                     │
-    │                                                                        │
-    ╰────────────────────────────────────────────────────────────────────────╯
-"""
-
-TOKEN_HELP = f"""
-    ╭─SynopticPy:HELP────────────────────────────────────────────────────────╮
-    │                                                                        │
-    │ A valid Synoptic token is required.                                    │
-    │                                                                        │
-    │ You can sign up for a free open-access acount at                       │
-    │ https://customer.synopticdata.com/signup/                              │
-    │                                                                        │
-    ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
-    │                                                                        │
-    │ Do one of the following:                                               │
-    │                                                                        │
-    │  1) Specify {ANSI.text('token="YoutTokenHere"', ANSI.GREEN)} in your request.                     │
-    │                                                                        │
-    │  2) Set the environment variable {ANSI.text('SYNOPTIC_TOKEN', ANSI.BOLD)}.                       │
-    │                                                                        │
-    │  3) Configure a token in {ANSI.text('~/.config/SynopticPy/config.toml', ANSI.MAGENTA)}              │
-    │                                                                        │
-    ╰────────────────────────────────────────────────────────────────────────╯
-"""
 
 
 class ANSI:
@@ -111,6 +63,55 @@ class ANSI:
         return f"{color}{text}{ANSI.RESET}"
 
 
+DEFAULT_TOML = """# SynopticPy needs to know your public Synoptic API token.
+# That token can be stored in this file or set as
+# an environment variable SYNOPTIC_TOKEN.
+
+token = ""
+hide_token = true
+verbose = false
+"""
+
+TOKEN_WELCOME = """
+    ╭─SynopticPy:WELCOME─────────────────────────────────────────────────────╮
+    │                                                                        │
+    │ Welcome to SynopticPy.                                                 │
+    │                                                                        │
+    │ Before you get started, you need a Synoptic account and valid Synoptic │
+    │ API token. To get started with the open-access datasets,               │
+    │                                                                        │
+    │ 1) Go to https://customer.synopticdata.com/signup/                     │
+    │    and create a new account or log into your account.                  │
+    │                                                                        │
+    │ 2) You can view, create, and manage your API tokens at                 │
+    │    https://customer.synopticdata.com/credentials/.                     │
+    │                                                                        │
+    ╰────────────────────────────────────────────────────────────────────────╯
+"""
+
+TOKEN_HELP = f"""
+    ╭─SynopticPy:HELP────────────────────────────────────────────────────────╮
+    │                                                                        │
+    │ A valid Synoptic token is required.                                    │
+    │                                                                        │
+    │ You can sign up for a free open-access acount at                       │
+    │ https://customer.synopticdata.com/signup/                              │
+    │                                                                        │
+    ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
+    │                                                                        │
+    │ Do one of the following:                                               │
+    │                                                                        │
+    │  1) Specify {ANSI.text('token="YourTokenHere"', ANSI.GREEN)} in your request.                     │
+    │                                                                        │
+    │  2) Set the environment variable {ANSI.text('SYNOPTIC_TOKEN', ANSI.BOLD)}.                       │
+    │                                                                        │
+    │  3) Configure a token in {ANSI.text('~/.config/SynopticPy/config.toml', ANSI.MAGENTA)}              │
+    │     or run the command {ANSI.text('synoptic.configure(token="YourTokenHere")', ANSI.GREEN)}       │
+    │                                                                        │
+    ╰────────────────────────────────────────────────────────────────────────╯
+"""
+
+
 class Token:
     """Synoptic API Token for validating and storing API access credentials.
 
@@ -135,16 +136,23 @@ class Token:
     ).expanduser()
     CONFIG_FILE = CONFIG_PATH / "config.toml"
 
-    def __init__(self, token: str | None = None):
+    def __init__(self, token: str | None = None, hide: bool = False):
         """Initialize Token instance, attempting to retrieve token if not provided."""
         self.source = "user"
         self.token = token or self._retrieve_token()
+        self.hide = hide
 
     def __str__(self):  # noqa: D105
         return self.token
 
     def __repr__(self):  # noqa: D105
-        return f"🎫 Synoptic API token: {ANSI.text(self.token, ANSI.GREEN)} ({self.source})"
+        if self.hide:
+            display = "🙈 HIDDEN"
+        else:
+            display = self.token
+        return (
+            f"🎫 Synoptic API token: {ANSI.text(display, ANSI.GREEN)} ({self.source})"
+        )
 
     def _retrieve_token(self):
         """Retrieve token from environment, config, or prompt user for input."""
@@ -169,7 +177,7 @@ class Token:
         self.source = "user input"
         return input("Enter your Synoptic API token: ").strip()
 
-    def is_valid(self, *, configure_on_fail=False, verbose=False) -> bool:
+    def is_valid(self, *, verbose=False) -> bool:
         """Check if the token is valid by making a test request to the API."""
         if verbose:
             print(f"🧪 Testing token={ANSI.text(self.token, ANSI.GREEN)}")
@@ -186,35 +194,41 @@ class Token:
             return True
         else:
             print(
-                f"Token '{ANSI.text(self.token, ANSI.RED)}' is invalid.\n"
-                f"Response: {ANSI.text(response, ANSI.RED)}.\n"
-                "Please update your token or sign up at: https://customer.synopticdata.com/signup/"
+                f"Token {ANSI.text(self.token, ANSI.GREEN)} is invalid.\n"
+                f"{ANSI.text(response, ANSI.RED)}"
             )
-            if configure_on_fail:
-                self.token = self._prompt_user_for_token()
-                if self.is_valid():
-                    self.update_config_file()
-            else:
-                print(TOKEN_HELP)
+            print(TOKEN_HELP)
             return False
 
-    def update_config_file(self, verbose=True):
-        """Update the config file with the current token if it's valid."""
-        if not self.is_valid():
-            raise ValueError("Cannot save an invalid token.")
 
-        content = self._read_config_file()
-        updated_content = re.sub(r'token=".*?"', f'token="{self.token}"', content)
+def configure(token: str | None = None, verbose=True):
+    """Create or update the config file with a valid token.
 
-        with open(self.CONFIG_FILE, "w") as file:
-            file.write(updated_content)
+    Updates the file `~/.config/SynopticPy/config.toml`.
 
-        if verbose:
-            print(f"📝 Token updated in {self.CONFIG_FILE}.")
+    Parameters
+    ----------
+    token : str
+        Your 32-character Synoptic Weather API token.
+    """
+    t = Token(token)
 
-    def _read_config_file(self):
-        """Read the config file, returning default content if not found."""
-        if self.CONFIG_FILE.exists():
-            with open(self.CONFIG_FILE) as f:
-                return f.read()
-        return DEFAULT_TOML
+    if not t.is_valid():
+        raise ValueError("💔 Token is not valid. Cannot save an invalid token.")
+
+    # Read a config file (or create one)
+    if t.CONFIG_FILE.exists():
+        with open(t.CONFIG_FILE) as f:
+            content = f.read()
+    else:
+        content = DEFAULT_TOML
+
+    updated_content = re.sub(r'token=".*?"', f'token="{t.token}"', content)
+
+    with open(t.CONFIG_FILE, "w") as file:
+        file.write(updated_content)
+
+    if verbose:
+        print(
+            f"📝 Token updated in {ANSI.text(t.CONFIG_FILE, ANSI.BLUE)} with {ANSI.text(t.token, ANSI.GREEN)}."
+        )
