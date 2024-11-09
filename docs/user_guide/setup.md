@@ -24,7 +24,7 @@ For Linux users, you can add the following line to your `.bashrc`, `.profile`, o
 export SYNOPTIC_TOKEN="yourToken123456789"
 ```
 
-### 3. SynopticPy config file
+### 2. SynopticPy config file
 
 If the environment variable is not defined, SynopticPy then checks for the token in the `~/.config/SynopticPy/config.toml` file.
 
@@ -41,7 +41,7 @@ import synoptic
 synoptic.configure(token="yourToken123456789")
 ```
 
-### 1. Provide the token as an argument
+### 3. Provide the token as an argument
 
 Lastly, you can directly provide the token when instantiating any `synoptic.services` class:
 
@@ -53,7 +53,7 @@ df = synoptic.Metadata(
 ).df()
 ```
 
-<hr>
+## How to check the default token value
 
 You can check the default token SynopticPy is using with the following:
 
@@ -62,8 +62,16 @@ import synoptic
 synoptic.services.TOKEN
 ```
 
-Which will print your token and the source...
+Which will print your token and the source. It will look like one of the following:
+
+```
+🎫 Synoptic API token: yourToken123456789 (environment variable)
+```
 
 ```
 🎫 Synoptic API token: yourToken123456789 (config file)
+```
+
+```
+🎫 Synoptic API token: None (not configured)
 ```

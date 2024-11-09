@@ -393,7 +393,7 @@ class TimeSeries(SynopticAPI):
 
 
 class Latest(SynopticAPI):
-    """Get the most recent data from a station or stations.
+    """Get the most recent data from one or more stations.
 
     Refer to the official documentation: https://docs.synopticdata.com/services/latest
 
@@ -424,7 +424,7 @@ class Latest(SynopticAPI):
 
 
 class NearestTime(SynopticAPI):
-    """Get data closest to the requested time for a station or stations.
+    """Get data nearest a specified time for one or more stations.
 
     Refer to the official documentation: https://docs.synopticdata.com/services/nearest-time
 
@@ -544,7 +544,7 @@ class Latency(SynopticAPI):
 
 
 class Metadata(SynopticAPI):
-    """Retrieve metadata for a station or stations.
+    """Retrieve metadata for one or more stations.
 
     Refer to the official documentation: https://docs.synopticdata.com/services/metadata
 

@@ -2,7 +2,22 @@
 
 ## Preferred Import
 
-You can import SynopticPy either by importing the entire `synoptic` module or by importing individual services. You can then retrieve data as a DataFrame using the `.df()` method. For example:
+You can import SynopticPy either by importing the entire `synoptic` module or by importing individual services.
+
+| `synoptic.service` class | Description                                                 |
+| ------------------------ | ----------------------------------------------------------- |
+| `TimeSeries`             | Get time series data for one or more stations.              |
+| `Latest`                 | Get the most recent data from one or more stations.         |
+| `NearestTime`            | Get data nearest a specified time for one or more stations. |
+| `Precipitation`          | Get derived precipitation total or intervals.               |
+| `Latency`                | Get station latency.                                        |
+| `Metadata`               | Get metadata for one or moe stations.                       |
+| `QCTypes`                | Table of all QC types and names.                            |
+| `Variables`              | Table of all available variables.                           |
+| `Networks`               | Table of all available networks.                            |
+| `NetworkTypes`           | Table of all available network types.                       |
+
+You can then retrieve data as a DataFrame using the `.df()` method. For example:
 
 ```python
 import synoptic
@@ -40,7 +55,6 @@ Use these two amazing resources:
 
 - [Syonptic's Data Viewer](https://viewer.synopticdata.com/)
 - [MesoWest](https://mesowest.utah.edu/)
-
 
 ## What are these DataFrames?
 
