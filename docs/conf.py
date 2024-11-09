@@ -60,7 +60,20 @@ autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
 # MyST Docs: https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 myst_enable_extensions = [
-    "linkify",  # Autodetects URL links in Markdown files
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
 ]
 
 # Set up mapping for other projects' docs
