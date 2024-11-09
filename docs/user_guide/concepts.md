@@ -2,32 +2,32 @@
 
 ## Preferred Import
 
-You can import SynopticPy either by importing the entire `synoptic` module or by importing individual service classes.
+You can import SynopticPy either by importing the entire `synoptic` module
 
 ```python
 import synoptic
 ```
 
-or
+or by importing individual service classes
 
 ```python
 from synoptic import TimeSeries, Latest # ... etc.
 ```
 
-The available services are listed in the following table.
+The available service classes are listed in the following table:
 
-| Synoptic Services | Description                                                 |
-| ----------------- | ----------------------------------------------------------- |
-| `TimeSeries`      | Get time series data for one or more stations.              |
-| `Latest`          | Get the most recent data from one or more stations.         |
-| `NearestTime`     | Get data nearest a specified time for one or more stations. |
-| `Precipitation`   | Get derived precipitation total or intervals.               |
-| `Latency`         | Get station latency.                                        |
-| `Metadata`        | Get metadata for one or moe stations.                       |
-| `QCTypes`         | Table of all QC types and names.                            |
-| `Variables`       | Table of all available variables.                           |
-| `Networks`        | Table of all available networks.                            |
-| `NetworkTypes`    | Table of all available network types.                       |
+| Class           | Description                                                 |
+| --------------- | ----------------------------------------------------------- |
+| `TimeSeries`    | Get time series data for one or more stations.              |
+| `Latest`        | Get the most recent data from one or more stations.         |
+| `NearestTime`   | Get data nearest a specified time for one or more stations. |
+| `Precipitation` | Get derived precipitation total or intervals.               |
+| `Latency`       | Get station latency.                                        |
+| `Metadata`      | Get metadata for one or moe stations.                       |
+| `QCTypes`       | Table of all QC types and names.                            |
+| `Variables`     | Table of all available variables.                           |
+| `Networks`      | Table of all available networks.                            |
+| `NetworkTypes`  | Table of all available network types.                       |
 
 ## Data as a Polars DataFrame
 
@@ -44,6 +44,7 @@ df = TimeSeries(stid='wbb', recent=30, vars='air_temp,wind_speed').df()
 Constructor arguments (class input parameters) are stitched together to create a web query. The parameters used to specify the data you want depends on the API service. Synoptic's Weather API [Documentation](https://docs.synopticdata.com/services/weather-data-api) and [Query Builder](https://demos.synopticdata.com/query-builder/index.html) can help you determine what parameters can be used for each service.
 
 :::{tip}
+
 **If the Synoptic API is new to you, I highly recommend you become familiar with its [documentation](https://docs.synopticdata.com/services/weather-data-api).**
 :::
 
