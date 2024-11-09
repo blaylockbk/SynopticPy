@@ -28,16 +28,30 @@ pip install -e .
 
 ## Quick Start
 
-Import SynopticPy by importing `synoptic` or importing the classes for individual services. 
+Refer to the [Setup](./setup.md) page for additional instructions on getting and configuring your Synoptic API token.
+
+Import SynopticPy by importing the `synoptic` module or importing the classes for individual services.
 
 ```python
 import synoptic
 ```
-
+or
 ```python
 from synoptic import TimeSeries, Precipitation # etc.
 ```
 
-For a general overview of how these services are called, refer to the usage of each of the services in the `tests/` directory.
+You retrieve data as a DataFrame using the `.df()` method. For example:
 
-Refer to the [Setup](./setup.md) page for instructions on getting and configuring your Synoptic API token.
+```python
+import synoptic
+
+df = synoptic.Latest(stid='wbb').df()
+```
+
+or
+
+```python
+from synoptic import Latest
+
+df = Latest(stid='wbb').df()
+```
