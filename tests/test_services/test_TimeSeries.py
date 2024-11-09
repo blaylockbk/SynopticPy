@@ -57,3 +57,8 @@ def test_column_names():
     # Column `RESTRICTED` is renames `is_restricted`
     assert "is_restricted" in df.columns
     assert "restricted" not in df.columns
+
+def test_showemptystations():
+    """Test bounding box with showemptystations."""
+    df = TimeSeries(attime="2024-11-09", recent=30, bbox=[-120, 40, -119, 41], showemptystations=True).df()
+    assert len(df)

@@ -71,9 +71,15 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
     """
     dfs = []
     for station in S.STATION:
-        observations = station["OBSERVATIONS"]
-        qc = station.get("QC")  # Use 'get' because it is not always provided.
+        observations = station.get("OBSERVATIONS")
+        qc = station.get("QC")
         metadata = station_metadata_to_dataframe(station)
+
+        if not observations:
+            # The value of STATION[n]["OBSERVATIONS"] is an empty dict,
+            # in the case of `showemptystatoins=True`.
+            dfs.append(metadata)
+            continue
 
         df = pl.DataFrame(observations)
 
@@ -165,15 +171,20 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     # The JSON structure for the latest and nearest time services are identical.
     dfs = []
     for station in S.STATION:
-        observations = station["OBSERVATIONS"]
+        observations = station.get("OBSERVATIONS")
         metadata = station_metadata_to_dataframe(station)
 
-        # Tip: It's informative to look at the unique schema for all observaitons with
+        # Tip: It's informative to look at the unique schema for all observations with
         # `{dtype for col, dtype in pl.DataFrame(observations).schema.items()}`
+
+        if not observations:
+            # The value of STATION[n]["OBSERVATIONS"] is an empty dict,
+            # in the case of `showemptystatoins=True`.
+            dfs.append(metadata)
+            continue
 
         # TODO: Someday Polars might let you select nested column by wildcard
         # TODO: https://github.com/pola-rs/polars/issues/11067
-
         df = pl.DataFrame(observations)
 
         col_has_float_value = []
@@ -312,8 +323,14 @@ def parse_stations_precipitation(S: "SynopticAPI") -> pl.DataFrame:
     """
     dfs = []
     for station in S.STATION:
-        observations = station["OBSERVATIONS"]
+        observations = station.get("OBSERVATIONS")
         metadata = station_metadata_to_dataframe(station)
+
+        if not observations:
+            # The value of STATION[n]["OBSERVATIONS"] is an empty dict,
+            # in the case of `showemptystatoins=True`.
+            dfs.append(metadata)
+            continue
 
         z = (
             pl.DataFrame(observations["precipitation"]).with_columns(

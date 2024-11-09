@@ -74,3 +74,13 @@ def test_kmry_wind_qc():
             assert E1554["value"][0] == 0
             assert E1554["qc_flags"].to_list() == [[3]]
             assert not E1554["qc_passed"][0]
+
+def test_showemptystations():
+    """Test bounding box with showemptystations."""
+    df = NearestTime(
+        attime="2024-11-09",
+        within=120,
+        bbox=[-120, 40, -119, 41],
+        showemptystations=True,
+    ).df()
+    assert len(df)

@@ -15,7 +15,7 @@ def test_pmode_total():
     """
     df = Precipitation(
         radius="WBB,10",
-        pmode='totals',
+        pmode="totals",
         start="2024-06-01",
         end="2024-06-06",
     ).df()
@@ -56,4 +56,17 @@ def test_pmode_interval_daily():
     ).df()
 
     assert len(df) == 31, "There should be 31 row, one for each day of the month."
-    assert np.isclose(df["total"].sum(), 1.15), "Expected total precipitation to be 1.5 inches."
+    assert np.isclose(
+        df["total"].sum(), 1.15
+    ), "Expected total precipitation to be 1.5 inches."
+
+
+def test_showemptystations():
+    """Test the case with showemptystation==True."""
+    df = Precipitation(
+        START="2024-10-10",
+        end="2024-11-01",
+        bbox=[-120, 40, -119, 41],
+        showemptystations=True,
+    ).df()
+    assert len(df)
