@@ -10,7 +10,7 @@ Below is my running TODO list for this package.
 
 - [ ] Close all legacy GitHub issues and discussions.
 
-- [ ] Make `get_token.py` more robust (create a class `Token`; I started building this in a separate branch long ago.)
+- [ ] Implement logging. Include log level in config file.
 
 ### Documentation
 
@@ -23,8 +23,6 @@ Below is my running TODO list for this package.
 - [ ] Show how to convert timezones because because `obtimezone='local'` is IGNORED (because Polars can't have multiple timezones in same column)
 
 ## Features
-
-- [ ] Latest/NearestTime: doesn't work with `showemptystations=True`
 
 - [ ] Latest/NearstTime: unnest minmax column
 

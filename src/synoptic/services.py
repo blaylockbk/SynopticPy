@@ -22,7 +22,8 @@ from synoptic.token import Token, ANSI, configure
 
 # Initialize Token to get any environment or configured value
 TOKEN = Token()
-TOKEN.is_valid()
+if TOKEN.token:
+    TOKEN.is_valid()
 
 # Available API Services
 # https://docs.synopticdata.com/services/weather-data-api
@@ -208,7 +209,7 @@ class SynopticAPI:
 
         # -------------
         # Get API token
-        if token is None:
+        if token is None and TOKEN.token is not None:
             self.token = TOKEN
         elif isinstance(token, str):
             self.token = Token(token)

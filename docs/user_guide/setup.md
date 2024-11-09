@@ -10,27 +10,13 @@ You will need a Synoptic account and API token to request data.
 
 Whenever you query data from Synoptic's Weather API, you need to provide your public token. You can specify this token in SynopticPy in three ways, listed in order of priority:
 
-1. Set the `token=` argument when using a SynopticPy function;
-2. Define the `SYNOPTIC_TOKEN` environment variable;
-3. Configure a `~/.config/SynopticPy/config.toml` file.
+1. Set the `SYNOPTIC_TOKEN` environment variable with your token;
+1. Configure a `~/.config/SynopticPy/config.toml` file with your token;
+1. Set the `token=` argument when using any `synoptic.services` class.
 
-### 1. Provide the token as an argument
+### 1. Environment Variable
 
-You can directly provide the token when instantiating any `synoptic.services` class:
-
-```python
-import synoptic
-df = synoptic.Metadata(
-    stid='WBB',
-    token="yourToken123456789"
-).df()
-```
-
-If `token` is not provided, then SynopticPy looks for the token from an environment variable and then the config file.
-
-### 2. Environment Variable
-
-If you don't provide the token as an argument, SynopticPy will look for the `SYNOPTIC_TOKEN` environment variable.
+SynopticPy first looks for your token in the `SYNOPTIC_TOKEN` environment variable.
 
 For Linux users, you can add the following line to your `.bashrc`, `.profile`, or another shell configuration file:
 
@@ -40,7 +26,7 @@ export SYNOPTIC_TOKEN="yourToken123456789"
 
 ### 3. SynopticPy config file
 
-Lastly, SynopticPy checks for the token in the `~/.config/SynopticPy/config.toml` file.
+If the environment variable is not defined, SynopticPy then checks for the token in the `~/.config/SynopticPy/config.toml` file.
 
 Your config file should look like this:
 
@@ -48,4 +34,36 @@ Your config file should look like this:
 token = "yourToken123456789"
 ```
 
-If no token is found when making an API query, SynopticPy will prompt you to enter your token and will create the `config.toml` file for you automatically.
+You can create and configure this file like this:
+
+```python
+import synoptic
+synoptic.configure(token="yourToken123456789")
+```
+
+### 1. Provide the token as an argument
+
+Lastly, you can directly provide the token when instantiating any `synoptic.services` class:
+
+```python
+import synoptic
+df = synoptic.Metadata(
+    stid='WBB',
+    token="yourToken123456789"
+).df()
+```
+
+<hr>
+
+You can check the default token SynopticPy is using with the following:
+
+```python
+import synoptic
+synoptic.services.TOKEN
+```
+
+Which will print your token and the source...
+
+```
+🎫 Synoptic API token: yourToken123456789 (config file)
+```

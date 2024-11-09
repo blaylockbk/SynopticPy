@@ -97,21 +97,21 @@ TOKEN_WELCOME = """
 TOKEN_HELP = f"""
   ╭─SynopticPy:HELP────────────────────────────────────────────────────────╮
   │                                                                        │
-  │ A valid Synoptic token is required.                                    │
+  │ A valid Synoptic token is required to use SynopticPy.                  │
   │                                                                        │
-  │ You can sign up for a free open-access acount at                       │
-  │ https://customer.synopticdata.com/signup/                              │
+  │ You can sign up for an open-access account or view your account at     │
+  │ https://customer.synopticdata.com/                                     │
   │                                                                        │
   ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
   │                                                                        │
-  │ Do one of the following:                                               │
+  │ To use your token with SynopticPy, do one of the following:            │
   │                                                                        │
-  │  1) Specify {ANSI.text('token="YourTokenHere"', ANSI.GREEN)} in your request.                     │
+  │  1) Set the environment variable {ANSI.text('SYNOPTIC_TOKEN', ANSI.BOLD)} with your token.       │
   │                                                                        │
-  │  2) Set the environment variable {ANSI.text('SYNOPTIC_TOKEN', ANSI.BOLD)}.                       │
+  │  2) Configure your token in the {ANSI.text('~/.config/SynopticPy/config.toml', ANSI.MAGENTA)} file  │
+  │     by running the command `{ANSI.text('synoptic.configure(token="YourTokenHere")', ANSI.GREEN)}` │
   │                                                                        │
-  │  3) Configure a token in {ANSI.text('~/.config/SynopticPy/config.toml', ANSI.MAGENTA)}              │
-  │     or run the command {ANSI.text('synoptic.configure(token="YourTokenHere")', ANSI.GREEN)}       │
+  │  3) Specify the `{ANSI.text('token="YourTokenHere"', ANSI.GREEN)}` argument in each requests.     │
   │                                                                        │
   ╰────────────────────────────────────────────────────────────────────────╯
 """
@@ -158,19 +158,38 @@ class Token:
 
     def _retrieve_token(self):
         """Retrieve token from environment, config, or prompt user for input."""
-        self.source = "environment variable"
         return (
-            os.getenv("SYNOPTIC_TOKEN")
+            self._get_token_from_env()
             or self._get_token_from_config()
-            or self._prompt_user_for_token()
+            or self._not_configured()
+            # or self._prompt_user_for_token()
         )
+
+    def _get_token_from_env(self):
+        """Retrieve token from environment variable, if available."""
+        value = os.getenv("SYNOPTIC_TOKEN")
+        if value:
+            self.source = "environment variable"
+            return value
+        else:
+            self.source = None
+            return None
 
     def _get_token_from_config(self):
         """Retrieve token from configuration file, if available."""
-        if CONFIG_PATH.exists():
+        if CONFIG_FILE.exists():
             with open(CONFIG_FILE, "rb") as f:
+                value = tomllib.load(f).get("token")
+            if value:
                 self.source = "config file"
-                return tomllib.load(f).get("token")
+                return value
+            else:
+                return None
+        return None
+
+    def _not_configured(self):
+        self.source = "not configured"
+        print(TOKEN_HELP)
         return None
 
     def _prompt_user_for_token(self):
@@ -199,7 +218,6 @@ class Token:
                 f"Token {ANSI.text(self.token, ANSI.GREEN)} is invalid.\n"
                 f"{ANSI.text(response, ANSI.RED)}"
             )
-            print(TOKEN_HELP)
             return False
 
 
