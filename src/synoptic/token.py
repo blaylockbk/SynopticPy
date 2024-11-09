@@ -128,6 +128,8 @@ class Token:
     ----------
     token : str
         A Synoptic API token.
+    hide : bool
+        Whether to hide the token in string representations.
 
     Examples
     --------
