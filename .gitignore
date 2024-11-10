@@ -8,6 +8,9 @@ env_pypi.yml
 
 sandbox/
 sandbox.ipynb
+sandbox*
+
+.coverage
 
 dist/*
 build/*
@@ -25,3 +28,5 @@ _version.py
 node_modules
 dev
 app
+
+sample_*

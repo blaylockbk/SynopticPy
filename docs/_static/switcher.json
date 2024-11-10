@@ -8,5 +8,15 @@
         "name": "stable",
         "version": "stable",
         "url": "https://synopticpy.readthedocs.io/en/stable/"
+    },
+    {
+        "name": "2023.3.0",
+        "version": "2023.3.0",
+        "url": "https://synopticpy.readthedocs.io/en/2023.3.0/"
+    },
+    {
+        "name": "2024.9.0",
+        "version": "2024.9.0",
+        "url": "https://synopticpy.readthedocs.io/en/2024.9.0/"
     }
 ]

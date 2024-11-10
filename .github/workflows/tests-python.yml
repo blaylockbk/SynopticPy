@@ -21,14 +21,14 @@ jobs:
       fail-fast: true
       matrix:
         os: ["ubuntu-latest"]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
         # In order to save resources, only run particular
         # matrix slots on other OS than Linux.
         include:
           - os: "macos-latest"
-            python-version: "3.11"
+            python-version: "3.12"
           - os: "windows-latest"
-            python-version: "3.11"
+            python-version: "3.12"
 
     env:
       OS: ${{ matrix.os }}
@@ -53,13 +53,27 @@ jobs:
           cache: "pip"
           cache-dependency-path: "setup.cfg"
 
-      - name: Install project
+      - name: Install project (Linux)
+        if: runner.os == 'Linux'
         run: |
           pip3 install --requirement=requirements-test.txt
-          pip3 install --editable=.
+          pip3 install --editable='.'
+
+      - name: Install project (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          pip3 install --break-system-packages --requirement=requirements-test.txt
+          pip3 install --break-system-packages --editable='.'
+
+      - name: Install project (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          pip3 install --requirement=requirements-test.txt
+          pip3 install --editable='.'
 
       - name: Run tests
         env:
           TMPDIR: ${{ runner.temp }}
+          SYNOPTIC_TOKEN: ${{ secrets.SYNOPTIC_TOKEN }}
         run: |
           pytest
