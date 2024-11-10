@@ -26,20 +26,14 @@ export SYNOPTIC_TOKEN="yourToken123456789"
 
 ### 2. SynopticPy config file
 
-If the environment variable is not defined, SynopticPy then checks for the token in the `~/.config/SynopticPy/config.toml` file.
-
-Your config file should look like this:
-
-```toml
-token = "yourToken123456789"
-```
-
-You can create and configure this file like this:
+You can create a SynopticPy configuration file and set your token with the following Python code:
 
 ```python
 import synoptic
 synoptic.configure(token="yourToken123456789")
 ```
+
+This creates a new file `~/.config/SynopticPy/config.toml` file with your token. Restart your Python instance, and the next time you `import synoptic` it will use the token value stored in the `config.toml` file.
 
 ### 3. Provide the token as an argument
 

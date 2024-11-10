@@ -60,7 +60,7 @@ makes the following API request: <https://api.synopticdata.com/v2/stations/times
 
 Notice that SynopticPy allows you to use more _Pythonic_ input for these parameters. Pay attention to these extended input conventions used by SynopticPy when requesting data:
 
-1. **Lists and tuples are accepted**, and will be converted to comma- separated strings. For example:
+1. **Lists and tuples are accepted**, and will be converted to comma-separated strings. For example:
 
    When selecting stations, both are acceptable:
 
@@ -106,7 +106,7 @@ Notice that SynopticPy allows you to use more _Pythonic_ input for these paramet
 
    The parameter `obrange` is a special case which can be provided as a tuple of datetimes `obrange=(datetime_start, datetime_end)`.
 
-1. **Timedetla or Polars-style duration strings are accepted** and will be converted to a value required by the Synoptic API. For example:
+1. **Timedelta or Polars-style duration strings are accepted** and will be converted to a value required by the Synoptic API. For example:
 
    While Synoptic expects the `within` and `recent` arguments to be integer minutes, SynopticPy lets you use a timedelta object or a Polars-style duration string.
 
@@ -145,17 +145,7 @@ Use these two amazing resources:
 - [Syonptic's Data Viewer](https://viewer.synopticdata.com/)
 - [MesoWest](https://mesowest.utah.edu/)
 
-## Data as a Polars DataFrame
-
-SynopticPy is built with Polars, and converts Synoptic's JSON data to a long-form Polars DataFrame. Use the `.df()` method on a service class to get the data.
-
-```python
-from synoptic import TimeSeries
-
-df = TimeSeries(stid='wbb', recent=30, vars='air_temp,wind_speed').df()
-```
-
-## What is included in a Services Class instance?
+## What is included in a Service Class instance?
 
 In general, most instances return the following attributes:
 
@@ -179,9 +169,15 @@ In general, most instances return the following attributes:
 
 Let's take a look at the attributes of Metadata service instance...
 
-## What are these DataFrames?
+## Data as a Polars DataFrame
 
-SynopticPy organizes the Synoptic JSON data in _long form_ [Polars DataFrames](https://docs.pola.rs/). A _long form_ dataframe means that each row in the DataFrame represents a single, unique observations. This makes it easy to archive the data locally (i.e., saving to a Parquet file). This format is flexible, allowing you to manipulate the data (e.g., pivoting or concatenating) as needed.
+SynopticPy is built with Polars and converts Synoptic's JSON data to a long-form Polars DataFrame. Use the `.df()` method on a service class to get the data as a DataFrame.
+
+```python
+from synoptic import TimeSeries
+
+df = TimeSeries(stid='wbb', recent=30, vars='air_temp,wind_speed').df()
+```
 
 ```{admonition} Polars!
 :class: sidebar note
@@ -190,14 +186,19 @@ I'm a big Polars user now. It took a minute to convert my brain to understand Po
 I encourage you to get comfortable with Polars, but if you prefer working with Pandas, you can easily convert a Polars DataFrame to a Pandas DataFrame using `df.to_pandas()`.
 ```
 
+SynopticPy organizes the Synoptic JSON data in _long form_ [Polars DataFrames](https://docs.pola.rs/). A _long form_ DataFrame means that each row in the DataFrame represents a single, unique observations. This makes it easy to archive the data locally (i.e., saving to a Parquet file). This format is flexible, allowing you to manipulate the data (e.g., pivoting or concatenating) as needed.
+
 ## Why are all Timezones in UTC?
 
-The `date_time` column and timezones for other DateTime columns are _always_ returned in UTC, even if you set `obtimezone="local"`. This is because SynopticPy organizes the data in long-form DataFrames where all the observation times are in a single column. All datetimes in the date-time column must be in the same time zone.
+The `date_time` column and timezones for other DateTime columns are _always_ returned in UTC, even if you set `obtimezone="local"`. This is because all datetimes in the a date-time column must be in the same time zone.
 
-It is possible to convert data to a specific timezone using Polars. If you have multiple stations, you will probably want to partition the DataFrame by the `date_time` column.
+It is straightforward to convert datetimes to a specific timezone using Polars. I've included a helper function to do this for you:
 
-> "Note that, because a Datetime can only have a single time zone, it is impossible to have a column with multiple time zones."
-> - [Polars Docs: Timezones](https://docs.pola.rs/user-guide/transformations/time-series/timezones/)
+```python
+import synoptic
+df = synoptic.TimeSeries(stid='wbb', recent=30).df()
+df = df.synoptic.with_local_timezone()
+```
 
 ## Plotting
 
