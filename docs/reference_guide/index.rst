@@ -1,16 +1,9 @@
-.. SynopticPy Docs documentation master file, created by
-   sphinx-quickstart on Thu Dec 31 15:33:54 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 ===============
 Reference Guide
 ===============
 
 .. toctree::
-   :hidden:
-   :maxdepth: 2
+   :maxdepth: 1
 
-.. automodule:: synoptic.services
-.. automodule:: synoptic.plots
-.. automodule:: synoptic.get_token
+   services
+   namespace

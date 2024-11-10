@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
 import os
 import sys
-from datetime import datetime
 
 import pydata_sphinx_theme
 
@@ -29,11 +29,11 @@ version = ".".join([str(i) for i in synoptic.__version_tuple__])
 
 # -- Project information -----------------------------------------------------
 # ---- Project information -----------------------------------------------------
-utc_now = datetime.utcnow().strftime("%H:%M UTC %d %b %Y")
+utc_now = datetime.datetime.now(datetime.UTC).strftime("%H:%M UTC %d %b %Y")
 
 project = "SynopticPy"
-copyright = f"{datetime.utcnow():%Y}, Brian K. Blaylock.    ♻ Updated: {utc_now}"
-author = f"Brian K. Blaylock"
+author = "Brian K. Blaylock"
+copyright = f"{datetime.datetime.now(datetime.UTC).strftime('%Y')}, {author}.    ♻ Updated: {utc_now}"
 
 # -- General configuration ---------------------------------------------------
 
@@ -53,7 +53,6 @@ extensions = [
     "autodocsumm",
     "sphinx_markdown_tables",
     "myst_parser",
-    "sphinxcontrib.mermaid",
 ]
 
 
@@ -61,18 +60,29 @@ autosummary_generate = True  # Turn on sphinx.ext.autosummary
 
 # MyST Docs: https://myst-parser.readthedocs.io/en/latest/syntax/optional.html
 myst_enable_extensions = [
-    "linkify",  # Autodetects URL links in Markdown files
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
 ]
 
 # Set up mapping for other projects' docs
 intersphinx_mapping = {
     "metpy": ("https://unidata.github.io/MetPy/latest/", None),
-    "pint": ("https://pint.readthedocs.io/en/stable/", None),
     "matplotlib": ("https://matplotlib.org/", None),
     "python": ("https://docs.python.org/3/", None),
+    "polars": ("https://docs.pola.rs/api/python/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
-    "xarray": ("https://xarray.pydata.org/en/stable/", None),
 }
 
 source_suffix = {
@@ -100,7 +110,7 @@ exclude_patterns = [
 # a list of builtin themes.
 #
 html_theme = "pydata_sphinx_theme"
-html_favicon = "_static/wxicon.png"
+html_favicon = "_static/logo_SynopticPy_blue.svg"
 
 html_theme_options = {
     "external_links": [
@@ -116,11 +126,6 @@ html_theme_options = {
     "header_links_before_dropdown": 4,
     "icon_links": [
         {
-            "name": "Twitter",
-            "url": "https://twitter.com/blaylockbk",
-            "icon": "fa-brands fa-twitter",
-        },
-        {
             "name": "GitHub",
             "url": "https://github.com/blaylockbk/SynopticPy",
             "icon": "fa-brands fa-github",
@@ -132,8 +137,9 @@ html_theme_options = {
         },
     ],
     "logo": {
-        "image_light": "_static/SynopticPy_logo.png",
-        "image_dark": "_static/SynopticPy_logo.png",
+        "test": "SynopticPy",
+        "image_light": "_static/logo_SynopticPy_blue.svg",
+        "image_dark": "_static/logo_SynopticPy_white.svg",
     },
     "use_edit_page_button": True,
     "show_toc_level": 1,
@@ -155,7 +161,7 @@ html_sidebars = {}
 html_context = {
     "github_user": "blaylockbk",
     "github_repo": "SynopticPy",
-    "github_version": "main",  # Make changes to the master branch
+    "github_version": "main",
     "doc_path": "docs",
 }
 
@@ -169,21 +175,20 @@ todo_include_todos = True
 
 # ---- Options for autosummary/autodoc output ---------------------------------
 
-# Set autodoc defaults
+autosummary_generate = True
+autodoc_typehints = "description"
+autodoc_member_order = "groupwise"
+
+## Set autodoc defaults
 autodoc_default_options = {
-    "autosummary": True,  # Include a members "table of contents"
+    #"autosummary": True,  # Include a members "table of contents"
     "members": True,  # Document all functions/members
-    "special-members": "__init__",
+    #"special-members": "__init__",
 }
 
 autodoc_mock_imports = [
-    "xesmf",
     "numpy",
     "matplotlib",
-    "pandas",
-    "xarray",
+    "polars",
     "cartopy",
-    "cfgrib",
-    "imageio",
-    "siphon",
 ]

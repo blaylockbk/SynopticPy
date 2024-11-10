@@ -1,13 +1,18 @@
-.. SynopticPy Docs documentation master file, created by
-   sphinx-quickstart on Thu Dec 31 15:33:54 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. raw :: html
 
-.. image:: _static/SynopticPy_logo.png
+   <div align=center>
+   <img src="_static/SynopticPy_white.svg" style="background-color:transparent" width=350 class='only-dark' />
+   </div>
+   <br>
+   <br>
 
-===========================================
-The Synoptic API for Python (unofficial)
-===========================================
+.. raw :: html
+
+   <div align=center>
+   <img src="_static/SynopticPy_blue.svg" style="background-color:transparent" width=350 class='only-light' />
+   </div>
+   <br>
+   <br>
 
 .. toctree::
    :maxdepth: 3
@@ -16,22 +21,40 @@ The Synoptic API for Python (unofficial)
    /user_guide/index
    /reference_guide/index
 
-The `Synoptic Mesonet API <https://synopticdata.com/mesonet-api>`_ (formerly MesoWest) gives you access to real-time and historical surface-based weather and environmental observations for thousands of stations. Synoptic data access is `free <https://synopticdata.com/news/2022/3/15/synoptic-data-pbc-launches-new-open-access-weather-data-service>`_ for open-access data. More data and enhances services are available through a `paid tier <https://synopticdata.com/pricing>`_ (available through Synoptic, not me).
 
-.. note::
-   🌐 Register for a free account at the `Synoptic API Webpage
-   <https://developers.synopticdata.com>`_. You will need to obtain an API token before using this python package.
 
-   .. figure:: _static/synoptic_logo.png
-      :width: 300
+===================================
+SynopticPy: Synoptic API for Python
+===================================
 
-.. note::
-   You can create timeseries of observations from weather stations using the `Station Timeseries Web App <https://blaylockbk.github.io/SynopticPy/timeseries>`_. This is a quick way to use SynopticPy without writing any code yourself.
+`Synoptic's Weather API <https://docs.synopticdata.com/services/weather-data-api>`_ provides real-time and historical surface-based weather and environmental observations for thousands of mesonet stations, and the `open-access data <https://synopticdata.com/pricing/open-access-pricing/>`_ is *free*. More data and enhanced services may be purchased (from Synoptic, not me).
 
-SynopticPy is a collection of functions I use to conveniently access data from the Synoptic API and convert the JSON data to a `Pandas DataFrame <https://pandas.pydata.org/docs/>`_. This may be helpful to others who are getting started with the Synoptic API and Python. The idea is loosely based on the obsolete `MesoPy <https://github.com/mesowx/MesoPy>`_ python wrapper, but returning the data as a Pandas DataFrame instead of a simple dictionary, making the retrieved data more ready-to-use.
+I'm a Synoptic user. I wrote this package to conveniently request data from Synoptic in a Pythonic way and convert its returned JSON to a `Polars DataFrame <https://docs.pola.rs/>`_.
 
-If you have stumbled across this package, I hope it is useful to you or at least gives you some ideas.
+.. code:: python
+
+   from datetime import timedelta
+   from synoptic import TimeSeries
+
+   df = TimeSeries(
+      stid="wbb",
+      recent=timedelta(minutes=30)
+   ).df()
+
+.. raw :: html
+
+   <img src="_static/json_to_polars.png" style="background-color:transparent" />
+
+
+.. important::
+   🎟️ You need a Synoptic API token before using SynopticPy. `Register for a free Synoptic account
+   <https://customer.synopticdata.com/signup-targeted/?signup=open-access>`_.
+
+I'm sharing this package to improve my skills with Polars and gain more experience in building and maintaining open-source Python packages. If you are using Synoptic's API and came across this package, I hope you find it useful.
 
 **Best of Luck 🍀**
 
 -Brian
+
+.. seealso::
+   📈 The `StationPy Web App <https://blaylockbk.github.io/SynopticPy/timeseries>`_ lets you plot station data in your browser powered by `pyscript <https://pyscript.net/>`_.

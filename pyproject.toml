@@ -1,18 +1,20 @@
 [project]
 name = "SynopticPy"
-description = "Load mesonet weather and environmental data from the Synoptic API into a Pandas Dataframe."
+description = "Retrieve mesonet weather data as Polars DataFrames from Synoptic's Weather API."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
+# NOTE: 3.9 doesn't work because I'm using some new typing syntax
+# NOTE: 3.10 doesn't work because I'm using `from datetime import UTC`
+# NOTE: 3.10 doesn't work because I'm using tomllib, which was introduced in 3.11
 license = { file = "LICENSE" }
 authors = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
 maintainers = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Operating System :: MacOS",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
@@ -20,16 +22,10 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Atmospheric Science",
 ]
-keywords = [
-    "weather",
-    "meteorology",
-    "mesonet",
-    "atmosphere",
-]
+keywords = ["weather", "meteorology", "mesonet", "atmosphere"]
 dependencies = [
-    "matplotlib",
     "numpy",
-    "pandas",
+    "polars[style,plot,timezone]>=1.9.0",
     "requests",
     "toml",
 ]
@@ -43,8 +39,20 @@ dynamic = ["version"]
 "Bug Tracker" = "https://github.com/blaylockbk/SynopticPy/issues"
 
 [project.optional-dependencies]
+extras = [
+    "altair",      # Plotting
+    "cartopy",     # Plotting
+    "herbie-data", # Need the Cartopy plotting EasyMap
+    "matplotlib",  # Plotting
+    "metpy",
+    "pyarrow",     # Write to Parquet with pyarrow
+    "seaborn",     # Plotting
+]
+
 docs = [
     "autodocsumm",
+    "esbonio",
+    "ipython",
     "linkify-it-py",
     "myst-parser",
     "nbconvert",
@@ -58,19 +66,26 @@ docs = [
     "sphinx-markdown-tables",
     "sphinxcontrib-mermaid",
 ]
-test = ["pytest", "ruff"]
+test = ["pytest", "pytest-cov", "ruff"]
 
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
-[tool.setuptools]
-packages = ["synoptic"]
 
-[tool.setuptools_scm]
-version_scheme = "post-release"
-local_scheme = "no-local-version"
-write_to = "synoptic/_version.py"
+[tool.hatch]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/synoptic/_version.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/.github", "/docs", "/11ty-site", "/metars", "/notebooks"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/synoptic"]
 
 [tool.ruff]
 extend-include = ["*.ipynb"]
@@ -78,19 +93,15 @@ extend-include = ["*.ipynb"]
 [tool.ruff.lint]
 extend-select = [
     "UP", # pyupgrade
-    "D", # pydocstyle
-
+    "D",  # pydocstyle
 ]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
-[tool.isort]
-profile = "black"
-
 [tool.pytest.ini_options]
 minversion = "2.0"
-addopts = "-rsfEX -p pytester --strict-markers --verbosity=3"
+addopts = "-rsfEX -p pytester --strict-markers --verbosity=3 --cov=synoptic"
 log_level = "DEBUG"
 testpaths = ["tests"]
 xfail_strict = true
