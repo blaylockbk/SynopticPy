@@ -1,6 +1,7 @@
 from typing import Literal
 
 import polars as pl
+import polars.selectors as cs
 
 
 @pl.api.register_dataframe_namespace("synoptic")
@@ -9,6 +10,26 @@ class SynopticFrame:
 
     def __init__(self, df: pl.DataFrame) -> None:
         self._df = df
+
+    def with_local_timezone(self) -> pl.DataFrame | dict:
+        """Convert datetime columns from UTC to local timezone.
+
+        Returns
+        -------
+        DataFrame if only one unique timezone is present, else returns
+        a dict of DataFrames, one item for each timezone.
+        """
+        df = self._df
+
+        if len(df["timezone"].unique()) > 1:
+            a = {}
+            for i in df.partition_by("timezone"):
+                tz = i["timezone"].unique().item()
+                a[tz] = i.with_columns(cs.datetime().dt.convert_time_zone(tz))
+            return a
+        else:
+            tz = df["timezone"].unique().item()
+            return df.with_columns(cs.datetime().dt.convert_time_zone(tz))
 
     def pivot(self, *, sensor_index: int = 1, **kwargs) -> pl.DataFrame:
         """Pivot a long-form SynopticPy DataFrame to wide-form.
