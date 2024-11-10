@@ -7,8 +7,8 @@ authors:
     email: blaylockbk@gmail.com
     orcid: "https://orcid.org/0000-0003-2133-9313"
 title: "SynopticPy: Synoptic API for Python"
-version: 2024.10.0
-date-released: "2023-10-31"
+version: 2024.11.0
+date-released: "2024-11-09"
 url: "https://synopticpy.readthedocs.io/"
 repository-code: "https://github.com/blaylockbk/SynopticPy"
 type: software
