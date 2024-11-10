@@ -563,6 +563,17 @@ class Metadata(SynopticAPI):
     """
 
     def __init__(self, **params):
+        # `start` and `end` are not valid parameters, but `obrange` is.
+        # This is confusing. See https://github.com/blaylockbk/SynopticPy/issues/55.
+
+        # If `start` and `end` are both given, then use those values for `obrange`.
+
+        if "start" in params or "end" in params:
+            raise ValueError(
+                "Metadata doesn't accept a `start` or `end` parameter. Instead, use `obstart=(start_datetime,end_datetime)` to specify the observation time range."
+            )
+            # TODO: Instead of error, should I just put the values in obrange for the user and move on?
+
         super().__init__("metadata", **params)
 
     @lru_cache
