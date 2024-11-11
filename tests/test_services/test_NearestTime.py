@@ -47,7 +47,7 @@ def test_kmry_wind_qc():
         within=timedelta(minutes=60),
         vars="wind_speed",
         qc=True,
-        qc_check="all",
+        qc_checks="all",
     )
 
     assert (
