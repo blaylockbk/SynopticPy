@@ -30,7 +30,7 @@
 
 </div>
 
-[Synoptic's Weather API](https://synopticdata.com/weatherapi/) provides real-time and historical surface-based weather and environmental observations thousands of mesonet stations, and the [open-access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services may be purchased (from Synoptic, not me).
+[Synoptic's Weather API](https://synopticdata.com/weatherapi/) provides real-time and historical surface-based weather and environmental observations for thousands of mesonet stations, and the [open-access data](https://synopticdata.com/pricing/open-access-pricing/) is _free_. More data and enhanced services may be purchased (from Synoptic, not me).
 
 I'm a Synoptic user. I wrote this package to conveniently request data from Synoptic in a Pythonic way and convert its returned JSON to a **[Polars DataFrame](https://docs.pola.rs/user-guide/getting-started/)**.
 
