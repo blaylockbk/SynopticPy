@@ -2,6 +2,7 @@
 
 import os
 import re
+import warnings
 from datetime import datetime, timedelta
 from functools import lru_cache
 from pathlib import Path
@@ -18,7 +19,8 @@ from synoptic.json_parsers import (
     parse_stations_precipitation,
     parse_stations_timeseries,
 )
-from synoptic.token import Token, ANSI, configure
+from synoptic.token import ANSI, Token, configure
+from synoptic.params import validate_params
 
 # Initialize Token to get any environment or configured value
 TOKEN = Token()
@@ -58,47 +60,6 @@ ServiceType = Literal[
     "networks",
     "networktypes",
 ]
-
-station_selectors = {
-    "stid",
-    "state",
-    "country",
-    "nwszone",
-    "nwsfirezone",
-    "cwa",
-    "gacc",
-    "subgacc",
-    "county",
-    "vars",
-    "varsoperator",
-    "network",
-    "radius",
-    "bbox",
-    "status",
-    "complete",
-    "fields",  # NOT SUPPORTED
-}
-
-# TODO: Not a complete list
-optional_parameters = {
-    "obtimezone",  # IGNORED, only returns data in UTC
-    "showemptystations",
-    "showemptyvars",
-    "units",
-    "precip",
-    "all_reports",
-    "hfmetars",
-    "sensorvars",
-    "qc",
-    "qc_remove_data",
-    "qc_flags",
-    "qc_checks",
-    "minmax",
-    "minmaxtype",
-    "minmaxtimezone",
-    "timeformat",  # IGNORED, only
-    "output",  # IGNORED, only requests JSON data.
-}
 
 
 class SynopticAPIError(Exception):
@@ -206,6 +167,7 @@ class SynopticAPI:
     ):
         self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
         self.verbose = verbose
+        self.service = service
 
         # -------------
         # Get API token
@@ -223,11 +185,19 @@ class SynopticAPI:
         params = {k.lower(): v for k, v in params.items()}
         params["token"] = self.token
 
-        # Don't allow user to specify 'timeformat'
+        validate_params(self.service, **params)
+
+        # Ignore request to change default 'timeformat' (always use ISO date)
         params.pop("timeformat", None)
 
-        # Don't allow user to specify `output`
+        # Ignore request to change default 'output' (always return json)
         params.pop("output", None)
+
+        # Ignore request to change default 'fields`' (always get all fields)
+        params.pop("fields", None)
+
+        # Ignore request to change 'obtimezone' (always return UTC)
+        params.pop("obtimezone", None)
 
         for key, value in params.items():
             if key == "obrange":
@@ -280,14 +250,15 @@ class SynopticAPI:
 
         # --------------------------------
         # Make API request (get JSON data)
-        self.service = service
         if self.service in _services_stations:
             self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
         else:
             self.endpoint = f"https://api.synopticdata.com/v2/{service}"
 
         if self.verbose:
-            print(f"🚚💨 Speedy delivery from Synoptic {service} service.")
+            print(
+                f"🚚💨 Speedy delivery from Synoptic's {ANSI.text(service, ANSI.GREEN)} service."
+            )
 
         self.response = requests.get(self.endpoint, params=params)
         self.url = self.response.url
@@ -563,6 +534,17 @@ class Metadata(SynopticAPI):
     """
 
     def __init__(self, **params):
+        # `start` and `end` are not valid parameters, but `obrange` is.
+        # This has confused users, such as https://github.com/blaylockbk/SynopticPy/issues/55.
+
+        # Check if 'start' or 'end' is in the parameters
+        if "start" in params or "end" in params:
+            raise ValueError(
+                "The Metadata service does not accept a 'start' or 'end' parameter; "
+                "Rather, 'obrange' is the accepted parameter. "
+                "Please change your query to use `obrange=(start_datetime, end_datetime)` or `obrange=start_datetime`.",
+            )
+
         super().__init__("metadata", **params)
 
     @lru_cache
