@@ -75,13 +75,13 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
         qc = station.get("QC")
         metadata = station_metadata_to_dataframe(station)
 
-        if not observations:
-            # The value of STATION[n]["OBSERVATIONS"] is an empty dict,
-            # in the case of `showemptystatoins=True`.
+        df = pl.DataFrame(observations)
+
+        if not len(df):
+            # The values of STATION[n]["OBSERVATIONS"] is an empty dict,
+            # occurs if `showemptystatoins=True`.
             dfs.append(metadata)
             continue
-
-        df = pl.DataFrame(observations)
 
         observed_float = df.select(pl.col("date_time"), pl.col(pl.Float64)).unpivot(
             index="date_time"
@@ -177,15 +177,16 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
         # Tip: It's informative to look at the unique schema for all observations with
         # `{dtype for col, dtype in pl.DataFrame(observations).schema.items()}`
 
-        if not observations:
-            # The value of STATION[n]["OBSERVATIONS"] is an empty dict,
-            # in the case of `showemptystatoins=True`.
+        df = pl.DataFrame(observations)
+
+        if not len(df):
+            # The values of STATION[n]["OBSERVATIONS"] is an empty dict,
+            # occurs if `showemptystatoins=True`.
             dfs.append(metadata)
             continue
 
         # TODO: Someday Polars might let you select nested column by wildcard
         # TODO: https://github.com/pola-rs/polars/issues/11067
-        df = pl.DataFrame(observations)
 
         col_has_float_value = []
         col_has_string_value = []
