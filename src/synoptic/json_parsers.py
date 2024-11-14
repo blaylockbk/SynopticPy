@@ -8,7 +8,9 @@ if TYPE_CHECKING:
     from synoptic.services import SynopticAPI
 
 
-def unnest_period_of_record(df: pl.DataFrame) -> pl.DataFrame:
+def unnest_period_of_record(
+    df: pl.DataFrame | pl.LazyFrame,
+) -> pl.DataFrame | pl.LazyFrame:
     """Un-nest the PERIOD_OF_RECORD column struct."""
     return df.with_columns(
         pl.struct(
