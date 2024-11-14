@@ -11,6 +11,7 @@ dependencies:
   # -----
   - altair
   #- cartopy
+  - great_tables
   - jupyter
   - matplotlib
   #- metpy
