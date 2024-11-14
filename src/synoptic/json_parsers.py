@@ -35,6 +35,7 @@ def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
     metadata.pop("QC", None)
     df = (
         pl.DataFrame(metadata)
+        .with_columns(pl.col("LATITUDE", "LONGITUDE").str.strip_chars())
         .with_columns(
             pl.col("STID").cast(pl.String),
             pl.col("ID", "MNET_ID").cast(pl.UInt32),
