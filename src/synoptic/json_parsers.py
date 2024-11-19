@@ -28,42 +28,37 @@ def unnest_period_of_record(
     ).unnest("PERIOD_OF_RECORD")
 
 
-def station_metadata_to_dataframe(metadata: dict) -> pl.DataFrame:
-    """Convert STATION metadata from JSON to a DataFrame."""
-    metadata = metadata.copy()
-    metadata.pop("OBSERVATIONS", None)
-    metadata.pop("SENSOR_VARIABLES", None)
-    metadata.pop("LATENCY", None)
-    metadata.pop("QC", None)
-    df = (
-        pl.DataFrame(metadata)
-        .with_columns((pl.selectors.string() & pl.col("LATITUDE")).str.strip_chars())
-        .with_columns((pl.selectors.string() & pl.col("LONGITUDE")).str.strip_chars())
-        .with_columns(
-            pl.col("STID").cast(pl.String),
-            pl.col("ID", "MNET_ID").cast(pl.UInt32),
-            pl.col("ELEVATION", "LATITUDE", "LONGITUDE").cast(pl.Float64),
-            is_active=pl.when(pl.col("STATUS") == "ACTIVE")
-            .then(True)
-            .otherwise(pl.when(pl.col("STATUS") == "INACTIVE").then(False)),
-        )
-        .drop("UNITS", "STATUS")
-    )
-    if "RESTRICTED" in df.columns:
+def station_metadata_to_dataframe(STATION: list[dict]):
+    """From STATION, produce the metadata DataFrame."""
+    a = []
+    for metadata in STATION:
+        metadata = metadata.copy()
+        metadata.pop("OBSERVATIONS", None)
+        metadata.pop("SENSOR_VARIABLES", None)
+        metadata.pop("LATENCY", None)
+        metadata.pop("QC", None)
+        a.append(metadata)
+    df = pl.DataFrame(a, infer_schema_length=None).lazy()
+    df = df.with_columns(
+        pl.col("STID").cast(pl.String),
+        pl.col("ID", "MNET_ID").cast(pl.UInt32),
+        pl.col("ELEVATION", "LATITUDE", "LONGITUDE").cast(pl.Float64),
+        is_active=pl.when(pl.col("STATUS") == "ACTIVE")
+        .then(True)
+        .otherwise(pl.when(pl.col("STATUS") == "INACTIVE").then(False)),
+    ).drop("UNITS", "STATUS")
+
+    if "RESTRICTED" in df.collect_schema().names():
         df = df.rename({"RESTRICTED": "is_restricted"})
 
-    if "ELEV_DEM" in df.columns:
+    if "ELEV_DEM" in df.collect_schema().names():
         # This isn't in the Latency request
         df = df.with_columns(pl.col("ELEV_DEM").cast(pl.Float64))
 
-    if len(df) > 1:
-        # When param `complete=1`, some stations have multiple providers
-        # and is given as a list of key-value pairs of provider name and
-        # url. But Polars loads this as individual rows.
-        # I'll just return the first.
-        df = df[0]
+    df = df.pipe(unnest_period_of_record)
+    df = df.rename({i: i.lower() for i in df.collect_schema().names()})
 
-    return df
+    return df.collect()
 
 
 def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
@@ -166,6 +161,161 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
 
 
 def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
+    """Parse STATIONS items for 'latest' and 'nearesttime' service.
+
+    Parameters
+    ----------
+    S : SynopticAPI instance
+    """
+    # Unpack Latest/Nearest time JSON into parts
+    observations = []
+    qc = []
+    latency = []
+    sensor_variables = []
+
+    for s in S.STATION:
+        observations.append({"stid": s["STID"]} | s.pop("OBSERVATIONS", {}))
+        qc.append({"stid": s["STID"]} | s.pop("qc", {}))
+        latency.append({"stid": s["STID"]} | s.pop("latency", {}))
+        sensor_variables.append({"stid": s["STID"]} | s.pop("sensor_variables", {}))
+
+    # Get Metadata DataFrame
+    metadata = station_metadata_to_dataframe(S.STATION)
+
+    # Get Observations DataFrame (needs more processing)
+    df = pl.DataFrame(observations, infer_schema_length=None)
+
+    # *************************************************************************
+    # BUG: Synoptic API ozone_concentration_value_1, the value is returned as string and not float
+    if "ozone_concentration_value_1" in df.columns:
+        df = df.with_columns(
+            pl.struct(
+                [
+                    pl.col("ozone_concentration_value_1")
+                    .struct.field("value")
+                    .replace("", None)
+                    .cast(pl.Float64),
+                    pl.col("ozone_concentration_value_1").struct.field("date_time"),
+                ]
+            ).alias("ozone_concentration_value_1")
+        )
+    # *************************************************************************
+
+    # Separate columns by value type
+    cols_with_float = []
+    cols_with_string = []
+    cols_with_cloud_layer = []
+    cols_with_other = []
+    for col, schema in df.schema.items():
+        if hasattr(schema, "fields"):
+            if pl.Field("value", pl.Float64) in schema.fields:
+                cols_with_float.append(col)
+            elif pl.Field("value", pl.String) in schema.fields:
+                cols_with_string.append(col)
+            elif col.startswith("cloud_layer"):
+                cols_with_cloud_layer.append(col)
+            elif pl.Field("value", pl.Struct) in schema.fields:
+                cols_with_other.append(col)
+                print(f"WARNING: Unknown struct for {col=} {schema=}")
+        else:
+            print(f"{col=}, {schema=}")
+
+    to_concat = []
+
+    # Unpack the Float observations
+    if cols_with_float:
+        observed_float = (
+            df.select(["stid"] + cols_with_float)
+            .select("stid", "^.*value.*$")
+            .unpivot(index="stid")
+            .with_columns(
+                pl.col("variable").str.extract_groups(
+                    r"(?<variable>.+)_value_(?<sensor_index>\d)(?<is_derived>d?)"
+                )
+            )
+            .unnest("variable")
+            .with_columns(
+                pl.col("is_derived") == "d",
+                pl.col("sensor_index").cast(pl.UInt32),
+                pl.col("variable").replace(S.UNITS).alias("units"),
+            )
+            .unnest("value")
+            .with_columns(pl.col("date_time").str.to_datetime())
+            .drop_nulls()
+        )
+        to_concat.append(observed_float)
+
+    # Unpack the string observations
+    if cols_with_string:
+        observed_string = (
+            df.select(["stid"] + cols_with_string)
+            .select("stid", "^.*value.*$")
+            .unpivot(index="stid")
+            .with_columns(
+                pl.col("variable").str.extract_groups(
+                    r"(?<variable>.+)_value_(?<sensor_index>\d)(?<is_derived>d?)"
+                )
+            )
+            .unnest("variable")
+            .with_columns(
+                pl.col("is_derived") == "d",
+                pl.col("sensor_index").cast(pl.UInt32),
+                pl.col("variable").replace(S.UNITS).alias("units"),
+            )
+            .unnest("value")
+            .rename({"value": "value_string"})
+            .with_columns(pl.col("date_time").str.to_datetime())
+            .drop_nulls()
+        )
+        to_concat.append(observed_string)
+
+    # Unpack the cloud layer
+    if cols_with_cloud_layer:
+        observed_cloud_layer = (
+            (
+                df.select(["stid"] + cols_with_cloud_layer)
+                .select("stid", "^.*value.*$")
+                .unpivot(index="stid")
+                .with_columns(
+                    pl.col("variable").str.extract_groups(
+                        r"(?<variable>.+)_value_(?<sensor_index>\d)(?<is_derived>d?)"
+                    )
+                )
+                .unnest("variable")
+                .with_columns(
+                    pl.col("is_derived") == "d",
+                    pl.col("sensor_index").cast(pl.UInt32),
+                    pl.col("variable").replace(S.UNITS).alias("units"),
+                )
+                .unnest("value")
+                .rename({"value": "value_cloud_layer"})
+                .with_columns(pl.col("date_time").str.to_datetime())
+                .drop_nulls()
+            )
+            .unnest("value_cloud_layer")
+            .rename({"sky_condition": "value_string", "height_agl": "value"})
+        )
+        to_concat.append(observed_cloud_layer)
+
+    # Join all observation values
+    observed = pl.concat(to_concat, how="diagonal_relaxed")
+
+    # Join the metadata to the observed values
+    observed = observed.join(metadata, on="stid", how="full", coalesce=True)
+
+    if "qc" in observed.columns:
+        observed = (
+            observed.unnest("qc")
+            .rename({"status": "qc_passed"})
+            .with_columns(
+                pl.col("qc_passed").replace_strict({"failed": False, "passed": True})
+            )
+        )
+
+    return observed
+
+
+def OLD_parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     """Parse STATIONS items for 'latest' and 'nearesttime' service.
 
     Parameters

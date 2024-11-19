@@ -14,6 +14,17 @@ def test_within_as_int():
     assert len(s.df())
 
 
+def test_all_utah_stations():
+    """Get latest data from all Utah stations."""
+    df = Latest(
+        state="ut",
+        complete=True,
+        qc=True,
+        qc_checks="all",
+    ).df()
+    assert len(df)
+
+
 def test_param_as_bool():
     """Get latest temperature and wind within 30 minutes (parameter as int)."""
     s = Latest(

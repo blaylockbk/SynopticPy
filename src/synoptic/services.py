@@ -16,6 +16,7 @@ import synoptic.namespace  # noqa: E402, F401
 from synoptic.json_parsers import (
     parse_stations_latency,
     parse_stations_latest_nearesttime,
+    OLD_parse_stations_latest_nearesttime,
     parse_stations_precipitation,
     parse_stations_timeseries,
 )
