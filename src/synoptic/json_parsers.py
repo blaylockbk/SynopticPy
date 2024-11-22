@@ -30,7 +30,6 @@ def unnest_period_of_record(
 
 def parse_raw_variable_column(
     df: pl.DataFrame | pl.LazyFrame,
-    units_dict: dict,
 ) -> pl.DataFrame | pl.LazyFrame:
     """Parse the raw values in the 'variable' column.
 
@@ -61,8 +60,21 @@ def parse_raw_variable_column(
         .with_columns(
             pl.col("is_derived") == "d",
             pl.col("sensor_index").cast(pl.UInt32),
-            pl.col("variable").replace(units_dict).alias("units"),
         )
+    )
+
+
+def attach_units(df, units_dict):
+    """Attach units information as a new column.
+
+    Parameters
+    ----------
+    units_dict : dict
+        A mapping of the variable names to unit, as provided by
+        `SynopticAPI().UNITS`.
+    """
+    return df.with_columns(
+        pl.col("variable").replace(units_dict).alias("units"),
     )
 
 
@@ -106,8 +118,8 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
     ----------
     s : SynopticAPI instance
     """
-    # TODO: Need to do something with the list of qc data
     # TODO: Need to implement parsing cloud_layer
+    # TODO: Do I need to have a `qc_passed` column to be consistent with the Latest service?
 
     observations = []
     qc = []
@@ -116,7 +128,11 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
 
     for s in S.STATION:
         observations.append({"stid": s["STID"]} | s.pop("OBSERVATIONS", {}))
-        qc.append({"stid": s["STID"]} | s.pop("QC", {}))
+        if "QC" in s:
+            qc.append(
+                {"stid": s["STID"], "date_time": observations[-1]["date_time"]}
+                | s.pop("QC", {})
+            )
         latency.append({"stid": s["STID"]} | s.pop("LATENCY", {}))
         sensor_variables.append({"stid": s["STID"]} | s.pop("SENSOR_VARIABLES", {}))
 
@@ -199,11 +215,30 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
     # Join all observation values
     observed = pl.concat(to_concat, how="diagonal_relaxed")
 
+    # Attach QC flags if available.
+    if qc:
+        qc_flags = (
+            pl.DataFrame(qc, infer_schema_length=None)
+            .unpivot(index=["stid", "date_time"], value_name="qc_flags")
+            .filter(pl.col("qc_flags").is_not_null())
+            .explode("date_time", "qc_flags")
+            # TODO: Do I need to have a `qc_passed` column to be consistent with the Latest service?
+        )
+        observed = observed.join(
+            qc_flags,
+            on=["stid", "date_time", "variable"],
+            how="full",
+            coalesce=True,
+        )
+
     # Cast 'date_time' column from string to datetime
     observed = observed.with_columns(pl.col("date_time").str.to_datetime())
 
     # Parse the variable name
-    observed = observed.pipe(parse_raw_variable_column, S.UNITS)
+    observed = observed.pipe(parse_raw_variable_column)
+
+    # Attach the variable's units
+    observed = observed.pipe(attach_units, S.UNITS)
 
     # Join the metadata to the observed values
     metadata = station_metadata_to_dataframe(S.STATION)
@@ -430,7 +465,8 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     observed = observed.with_columns(pl.col("date_time").str.to_datetime())
 
     # Parse the variable name
-    observed = observed.pipe(parse_raw_variable_column, S.UNITS)
+    observed = observed.pipe(parse_raw_variable_column)
+    observed = observed.pipe(attach_units, S.UNITS)
 
     # Join the metadata to the observed values
     metadata = station_metadata_to_dataframe(S.STATION)
