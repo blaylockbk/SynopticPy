@@ -1,4 +1,4 @@
-"""Tests for the Latest Class."""
+"""Tests for the Latest service class."""
 
 from synoptic.services import Latest
 from datetime import timedelta

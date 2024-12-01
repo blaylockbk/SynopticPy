@@ -256,105 +256,6 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
     return observed
 
 
-def OLD_parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
-    """Parse all STATION items for 'timeseries' service into long-format DataFrame.
-
-    Parameters
-    ----------
-    s : SynopticAPI instance
-    """
-    dfs = []
-    for station in S.STATION:
-        observations = station.get("OBSERVATIONS")
-        qc = station.get("QC")
-        metadata = station_metadata_to_dataframe(station)
-
-        df = pl.DataFrame(observations)
-
-        if not len(df):
-            # The values of STATION[n]["OBSERVATIONS"] is an empty dict,
-            # occurs if `showemptystatoins=True`.
-            dfs.append(metadata)
-            continue
-
-        observed_float = df.select(pl.col("date_time"), pl.col(pl.Float64)).unpivot(
-            index="date_time"
-        )
-        observed_string = (
-            df.select(pl.col("date_time"), pl.col(pl.String).exclude("date_time"))
-            .unpivot(index="date_time")
-            .rename({"value": "value_string"})
-        )
-
-        observed = pl.concat(
-            [i for i in (observed_float, observed_string) if len(i)],
-            how="diagonal_relaxed",
-        )
-
-        col_order = ["date_time", "variable"]
-        observed = (
-            observed.with_columns(pl.col("date_time").str.to_datetime())
-            .select(col_order + [pl.exclude(col_order)])
-            .with_columns(
-                pl.col("variable").str.extract_groups(
-                    r"(?<variable>.+)_set_(?<sensor_index>\d)(?<is_derived>d?)"
-                )
-            )
-            .unnest("variable")
-            .with_columns(
-                pl.col("is_derived") == "d",
-                pl.col("sensor_index").cast(pl.UInt32),
-                pl.col("variable").replace(S.UNITS).alias("units"),
-            )
-        )
-
-        if any(metadata["QC_FLAGGED"]):
-            qc = (
-                pl.DataFrame(qc)
-                .with_columns(
-                    date_time=pl.Series(observations["date_time"]).str.to_datetime()
-                )
-                .unpivot(index="date_time", value_name="qc_flags")
-                .with_columns(
-                    pl.col("variable").str.extract_groups(
-                        r"(?<variable>.+)_set_(?<sensor_index>\d)(?<is_derived>d?)"
-                    )
-                )
-                .unnest("variable")
-                .with_columns(
-                    pl.col("is_derived") == "d",
-                    pl.col("sensor_index").cast(pl.UInt32),
-                )
-            )
-
-            # Attach the QC information to the observations
-            observed = observed.join(
-                qc,
-                on=["date_time", "variable", "sensor_index", "is_derived"],
-                how="full",
-                coalesce=True,
-            )
-
-        # Attach the metadata to the observations
-        observed = observed.join(metadata, how="cross")
-
-        dfs.append(observed)
-
-    df = pl.concat(dfs, how="diagonal_relaxed")
-
-    # Clean up
-    df = df.pipe(unnest_period_of_record)
-    df = df.rename({i: i.lower() for i in df.columns})
-
-    if "qc_flagged" in df.columns:
-        # Don't want to confuse the user with this column, so drop it.
-        # The user only needs to check for the `qc_flags` column to see if
-        # the observation was QCed.
-        df = df.drop("qc_flagged")
-
-    return df
-
-
 def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     """Parse STATIONS items for 'latest' and 'nearesttime' service.
 
@@ -370,6 +271,7 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
 
     for s in S.STATION:
         observations.append({"stid": s["STID"]} | s.pop("OBSERVATIONS", {}))
+        # TODO: DO I need to handle QC like I do in timeseries?
         qc.append({"stid": s["STID"]} | s.pop("QC", {}))
         latency.append({"stid": s["STID"]} | s.pop("LATENCY", {}))
         sensor_variables.append({"stid": s["STID"]} | s.pop("SENSOR_VARIABLES", {}))
@@ -491,53 +393,51 @@ def parse_stations_precipitation(S: "SynopticAPI") -> pl.DataFrame:
     ----------
     s : SynopticAPI instance
     """
-    dfs = []
-    for station in S.STATION:
-        observations = station.get("OBSERVATIONS")
-        metadata = station_metadata_to_dataframe(station)
+    observations = []
+    qc = []
+    latency = []
+    sensor_variables = []
 
-        if not observations:
-            # The value of STATION[n]["OBSERVATIONS"] is an empty dict,
-            # in the case of `showemptystatoins=True`.
-            dfs.append(metadata)
-            continue
+    for s in S.STATION:
+        observations.append({"stid": s["STID"]} | s.pop("OBSERVATIONS", {}))
+        qc.append({"stid": s["STID"]} | s.pop("QC", {}))
+        latency.append({"stid": s["STID"]} | s.pop("LATENCY", {}))
+        sensor_variables.append({"stid": s["STID"]} | s.pop("SENSOR_VARIABLES", {}))
 
-        z = (
-            pl.DataFrame(observations["precipitation"]).with_columns(
-                pl.col("first_report").str.to_datetime(),
-                pl.col("last_report").str.to_datetime(),
-                pl.lit(S.UNITS["precipitation"]).alias("units"),
-            )
-        ).join(metadata, how="cross")
-        dfs.append(z)
-    df = pl.concat(dfs, how="diagonal_relaxed")
-    df = df.rename({i: i.lower() for i in df.columns})
+
+    df = (
+        pl.DataFrame(observations, infer_schema_length=None)
+        .explode("precipitation")
+        .unnest("precipitation")
+        .with_columns(
+            pl.col("first_report", "last_report").str.to_datetime(),
+            pl.lit(S.UNITS["precipitation"]).alias("units"),
+        )
+    )
+
+    # Join the metadata to the observed values
+    metadata = station_metadata_to_dataframe(S.STATION)
+    df = df.join(metadata, on="stid", how="full", coalesce=True)
+
     return df
-
 
 def parse_stations_latency(S: "SynopticAPI") -> pl.DataFrame:
     """Parse STATION portion of JSON object for the 'latency' service."""
-    dfs = []
-    for station in S.STATION:
-        metadata = station_metadata_to_dataframe(station)
+    observations = []
+    qc = []
+    latency = []
+    sensor_variables = []
 
-        latency = (
-            pl.DataFrame(station["LATENCY"])
-            .with_columns(
-                pl.col("date_time").str.to_datetime(),
-                pl.duration(minutes="values").alias("latency"),
-            )
-            .drop("values")
-        )
+    for s in S.STATION:
+        observations.append({"stid": s["STID"]} | s.pop("OBSERVATIONS", {}))
+        qc.append({"stid": s["STID"]} | s.pop("QC", {}))
+        latency.append({"stid": s["STID"]} | s.pop("LATENCY", {}))
+        sensor_variables.append({"stid": s["STID"]} | s.pop("SENSOR_VARIABLES", {}))
 
-        # Attach the metadata to the observations
-        latency = latency.join(metadata, how="cross")
-        dfs.append(latency)
+    df = pl.DataFrame(latency).explode("date_time", "values")
 
-    df = pl.concat(dfs, how="diagonal_relaxed")
-
-    # Clean up
-    df = df.pipe(unnest_period_of_record)
-    df = df.rename({i: i.lower() for i in df.columns})
+    # Join the metadata to the observed values
+    metadata = station_metadata_to_dataframe(S.STATION)
+    df = df.join(metadata, on="stid", how="full", coalesce=True)
 
     return df

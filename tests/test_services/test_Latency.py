@@ -1,3 +1,5 @@
+"""Tests for the Latency service class."""
+
 from datetime import datetime
 from synoptic.services import Latency
 

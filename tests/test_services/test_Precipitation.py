@@ -64,7 +64,7 @@ def test_pmode_interval_daily():
 def test_showemptystations():
     """Test the case with showemptystation==True."""
     df = Precipitation(
-        START="2024-10-10",
+        start="2024-10-10",
         end="2024-11-01",
         bbox=[-120, 40, -119, 41],
         showemptystations=True,
