@@ -315,7 +315,7 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
                 cols_with_other.append(col)
                 print(f"WARNING: Unknown struct for {col=} {schema=}")
         else:
-            print(f"{col=}, {schema=}")
+            pass
 
     to_concat = []
 
