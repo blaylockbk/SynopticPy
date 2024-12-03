@@ -12,7 +12,7 @@ import polars as pl
 import requests
 import toml
 
-import synoptic.namespace  # noqa: E402, F401
+import synoptic.polars_namespace  # noqa: E402, F401
 from synoptic.json_parsers import (
     parse_stations_latency,
     parse_stations_latest_nearesttime,
