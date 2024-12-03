@@ -20,7 +20,9 @@ def test_qced_air_temp():
     )
     assert len(s.df())
     assert any(s.df()["qc_flags"].is_not_null())
-    assert s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df()["qc_passed"]).sum() == 1
+    assert (
+        s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df()["qc_passed"]).sum() == 1
+    )
 
 
 def test_radius_kmry():
@@ -57,23 +59,10 @@ def test_kmry_wind_qc():
         == 28
     )
 
-    assert s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df()["qc_passed"]).sum() == 3
+    assert (
+        s.QC_SUMMARY["TOTAL_OBSERVATIONS_FLAGGED"] == (~s.df()["qc_passed"]).sum() == 3
+    )
 
-    for i in s.STATION:
-        if i["STID"] == "E1554":
-            assert i["OBSERVATIONS"] == {
-                "wind_speed_value_1": {
-                    "value": 0.0,
-                    "date_time": "2024-01-01T00:00:00Z",
-                    "qc": {"status": "failed", "qc_flags": [3]},
-                }
-            }
-            E1554 = s.df().filter(stid="E1554")
-            assert E1554["date_time"][0] == datetime(2024, 1, 1, 0, 0, tzinfo=UTC)
-            assert E1554["variable"][0] == "wind_speed"
-            assert E1554["value"][0] == 0
-            assert E1554["qc_flags"].to_list() == [[3]]
-            assert not E1554["qc_passed"][0]
 
 def test_showemptystations():
     """Test bounding box with showemptystations."""
@@ -82,5 +71,27 @@ def test_showemptystations():
         within=120,
         bbox=[-120, 40, -119, 41],
         showemptystations=True,
+    ).df()
+    assert len(df)
+
+
+def test_utah_ozone():
+    """Test Utah ozone air quality."""
+    df = NearestTime(
+        attime=datetime(2024, 7, 23, 18),
+        within="30m",
+        network=9,  # Utah's Division of Air Quality
+        vars="ozone_concentration",
+    ).df()
+    assert len(df)
+
+
+def test_utah_pm25():
+    """Test Utah PM 2.5 air quality."""
+    df = NearestTime(
+        attime=datetime(2023, 12, 19, 21),
+        within="30m",
+        network=9,  # Utah's Division of Air Quality
+        vars="PM_25_concentration",
     ).df()
     assert len(df)

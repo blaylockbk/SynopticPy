@@ -279,23 +279,23 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     # Get Observations DataFrame
     df = pl.DataFrame(observations, infer_schema_length=None)
 
-    # *************************************************************************
-    # BUG: Synoptic API
-    # The ozone_concentration_value_1 value is returned as string but should
-    # be a float.
-    if "ozone_concentration_value_1" in df.columns:
-        df = df.with_columns(
-            pl.struct(
-                [
-                    pl.col("ozone_concentration_value_1")
-                    .struct.field("value")
-                    .replace("", None)
-                    .cast(pl.Float64),
-                    pl.col("ozone_concentration_value_1").struct.field("date_time"),
-                ]
-            ).alias("ozone_concentration_value_1")
-        )
-    # *************************************************************************
+    ## *************************************************************************
+    ## BUG: Synoptic API -- This doesn't seem to be an issue anymore
+    ## The ozone_concentration_value_1 value is returned as string but should
+    ## be a float.
+    #if "ozone_concentration_value_1" in df.columns:
+    #    df = df.with_columns(
+    #        pl.struct(
+    #            [
+    #                pl.col("ozone_concentration_value_1")
+    #                .struct.field("value")
+    #                .replace("", None)
+    #                .cast(pl.Float64),
+    #                pl.col("ozone_concentration_value_1").struct.field("date_time"),
+    #            ]
+    #        ).alias("ozone_concentration_value_1")
+    #    )
+    ## *************************************************************************
 
     # Separate columns by value type
     cols_with_float = []
@@ -404,7 +404,6 @@ def parse_stations_precipitation(S: "SynopticAPI") -> pl.DataFrame:
         latency.append({"stid": s["STID"]} | s.pop("LATENCY", {}))
         sensor_variables.append({"stid": s["STID"]} | s.pop("SENSOR_VARIABLES", {}))
 
-
     df = (
         pl.DataFrame(observations, infer_schema_length=None)
         .explode("precipitation")
@@ -420,6 +419,7 @@ def parse_stations_precipitation(S: "SynopticAPI") -> pl.DataFrame:
     df = df.join(metadata, on="stid", how="full", coalesce=True)
 
     return df
+
 
 def parse_stations_latency(S: "SynopticAPI") -> pl.DataFrame:
     """Parse STATION portion of JSON object for the 'latency' service."""

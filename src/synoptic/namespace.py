@@ -97,10 +97,14 @@ class SynopticFrame:
         if "mnet_id" not in df.columns:
             raise ValueError("Column 'mnet_id' is not in the DataFrame.")
 
-        return df.join(
+        networks = (
             Networks(id=df["mnet_id"].unique().to_list(), verbose=False)
             .df()
             .select("mnet_id", f"{which}name")
-            .rename({f"{which}name": "network_name"}),
+            .rename({f"{which}name": "network_name"})
+        )
+
+        return df.join(
+            networks,
             on="mnet_id",
         )
