@@ -17,13 +17,9 @@ Below is my running TODO list for this package.
 
 ## TODO
 
-- [ ] Close all legacy GitHub issues and discussions.
-
 - [ ] Implement logging. Include log level in config file.
 
 ### Documentation
-
-- [ ] Convert all old gallery notebooks I want to keep.
 
 - [ ] Tutorials for each service.
 
@@ -33,7 +29,7 @@ Below is my running TODO list for this package.
 
 ## Features
 
-- [ ] Latest/NearstTime: unnest minmax column
+- [ ] Latest/NearestTime: unnest minmax column
 
 - [ ] Metadata: parsing sensor_variables column when `sensorvars=1`
 
@@ -41,7 +37,7 @@ Below is my running TODO list for this package.
 
 - [ ] Timeseries: could have argument `with_latency` and make a latency request and join to data.
 
-- [ ] Not all columns are parsed (complex stucts)
+- [ ] Not all columns are parsed (complex structs)
 
 ## Polars Custom Namespace
 

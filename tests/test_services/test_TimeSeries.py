@@ -79,3 +79,14 @@ def test_showemptystations2():
         showemptystations=True,
     ).df()
     assert len(df)
+
+
+def test_utah_ozone():
+    """Test Utah ozone air quality."""
+    df = TimeSeries(
+        start=datetime(2024, 7, 23, 21),
+        end=datetime(2024, 7, 25, 21),
+        network=9,  # Utah's Division of Air Quality
+        vars="ozone_concentration",
+    ).df()
+    assert len(df)

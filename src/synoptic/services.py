@@ -12,7 +12,7 @@ import polars as pl
 import requests
 import toml
 
-import synoptic.namespace  # noqa: E402, F401
+import synoptic.polars_namespace  # noqa: E402, F401
 from synoptic.json_parsers import (
     parse_stations_latency,
     parse_stations_latest_nearesttime,
@@ -168,6 +168,7 @@ class SynopticAPI:
         self.help_url = "https://docs.synopticdata.com/services/weather-data-api"
         self.verbose = verbose
         self.service = service
+        self.timers = {}
 
         # -------------
         # Get API token
@@ -180,6 +181,7 @@ class SynopticAPI:
 
         # ----------------
         # Parse parameters
+        timer = datetime.now()
 
         # Force all param keys to be lower case.
         params = {k.lower(): v for k, v in params.items()}
@@ -247,9 +249,12 @@ class SynopticAPI:
                     params[key] = f"{value.total_seconds() / 60:.0f}"
 
         self.params = params
+        self.timers["parse_params"] = datetime.now() - timer
 
         # --------------------------------
         # Make API request (get JSON data)
+        timer = datetime.now()
+
         if self.service in _services_stations:
             self.endpoint = f"https://api.synopticdata.com/v2/stations/{service}"
         else:
@@ -260,14 +265,19 @@ class SynopticAPI:
                 f"🚚💨 Speedy delivery from Synoptic's {ANSI.text(service, ANSI.GREEN)} service."
             )
 
+        timer = datetime.now()
+
         self.response = requests.get(self.endpoint, params=params)
         self.url = self.response.url
         self.json = self.response.json()
+        self.timers["api_request"] = datetime.now() - timer
 
         # ----------------------------------------------------
         # Attach each JSON key-value pair as a class attribute
+        timer = datetime.now()
         for key, value in self.json.items():
             setattr(self, key, value)
+        self.timers["attach_keys_as_attribute"] = datetime.now() - timer
 
         # -------------------
         # Check returned data
@@ -283,7 +293,8 @@ class SynopticAPI:
 
         if self.verbose:
             print(
-                f"📦 Received data from {self.SUMMARY.get('NUMBER_OF_OBJECTS'):,} stations."
+                f"📦 Received data from {ANSI.CYAN}{self.SUMMARY.get('NUMBER_OF_OBJECTS'):,}{ANSI.RESET} stations"
+                f" ({self.timers['api_request'].total_seconds():.2f} seconds)."
             )
 
     def __repr__(self):
@@ -342,7 +353,9 @@ class TimeSeries(SynopticAPI):
         with_latency : bool
             If True, return data with latency column from the Latency service.
         """
+        timer = datetime.now()
         df = parse_stations_timeseries(self)
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
 
         if with_latency:
             latency = Latency(**self.params).df
@@ -390,7 +403,9 @@ class Latest(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Stations latest DataFrame."""
+        timer = datetime.now()
         df = parse_stations_latest_nearesttime(self)
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -420,7 +435,9 @@ class NearestTime(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Stations nearest time DataFrame."""
+        timer = datetime.now()
         df = parse_stations_latest_nearesttime(self)
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -465,7 +482,9 @@ class Precipitation(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Stations precipitation DataFrame."""
+        timer = datetime.now()
         df = parse_stations_precipitation(self)
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -510,7 +529,9 @@ class Latency(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Stations latency DataFrame."""
+        timer = datetime.now()
         df = parse_stations_latency(self)
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -550,6 +571,7 @@ class Metadata(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Stations metadata DataFrame."""
+        timer = datetime.now()
         df = pl.DataFrame(
             self.STATION,
             schema_overrides={
@@ -589,6 +611,7 @@ class Metadata(SynopticAPI):
         )
 
         df = df.rename({i: i.lower() for i in df.columns})
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -611,10 +634,12 @@ class QCTypes(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Quality control typres DataFrame."""
+        timer = datetime.now()
         df = pl.DataFrame(self.QCTYPES).with_columns(
             pl.col("ID", "SOURCE_ID").cast(pl.UInt32)
         )
         df = df.rename({i: i.lower() for i in df.columns})
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -638,6 +663,7 @@ class Variables(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Variables DataFrame."""
+        timer = datetime.now()
         df = pl.concat(
             [
                 pl.DataFrame(i)
@@ -646,6 +672,7 @@ class Variables(SynopticAPI):
                 for i in self.VARIABLES
             ]
         ).with_columns(pl.col("vid").cast(pl.UInt32))
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -669,6 +696,7 @@ class Networks(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Networks DataFrame."""
+        timer = datetime.now()
         df = (
             pl.concat([pl.DataFrame(i) for i in self.MNET], how="diagonal_relaxed")
             .with_columns(
@@ -691,6 +719,7 @@ class Networks(SynopticAPI):
         )
 
         df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnet_id"})
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
 
 
@@ -712,6 +741,7 @@ class NetworkTypes(SynopticAPI):
     @lru_cache
     def df(self) -> pl.DataFrame:
         """Network types DataFrame."""
+        timer = datetime.now()
         df = (
             pl.DataFrame(self.MNETCAT)
             .with_columns(
@@ -732,4 +762,5 @@ class NetworkTypes(SynopticAPI):
             .unnest("PERIOD_OF_RECORD")
         )
         df = df.rename({i: i.lower() for i in df.columns}).rename({"id": "mnetcat_id"})
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df

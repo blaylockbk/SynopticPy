@@ -1,4 +1,4 @@
-"""Tests for the Latest Class."""
+"""Tests for the Latest service class."""
 
 from synoptic.services import Latest
 from datetime import timedelta
@@ -12,6 +12,17 @@ def test_within_as_int():
         within=30,
     )
     assert len(s.df())
+
+
+def test_all_utah_stations():
+    """Get latest data from all Utah stations."""
+    df = Latest(
+        state="ut",
+        complete=True,
+        qc=True,
+        qc_checks="all",
+    ).df()
+    assert len(df)
 
 
 def test_param_as_bool():
