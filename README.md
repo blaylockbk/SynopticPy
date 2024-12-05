@@ -65,7 +65,7 @@ conda install -c conda-forge synopticpy
 
 > [!IMPORTANT]
 >
-> ## 🎟️ You need a Synoptic API token before using SynopticPy. [Register for a FREE Synoptic account now](https://customer.synopticdata.com/).
+> ## 🎟️ To use SynopticPy you need a [Synoptic API token](https://customer.synopticdata.com/).
 
 There are three ways you can configure your Synoptic API token:
 
