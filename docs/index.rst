@@ -47,8 +47,7 @@ I'm a Synoptic user. I wrote this package to conveniently request data from Syno
 
 
 .. important::
-   🎟️ You need a Synoptic API token before using SynopticPy. `Register for a free Synoptic account
-   <https://customer.synopticdata.com/signup-targeted/?signup=open-access>`_.
+   🎟️ To use SynopticPy you need a `Synoptic API token <https://customer.synopticdata.com/signup-targeted/?signup=open-access>`_.
 
 I'm sharing this package to improve my skills with Polars and gain more experience in building and maintaining open-source Python packages. If you are using Synoptic's API and came across this package, I hope you find it useful.
 

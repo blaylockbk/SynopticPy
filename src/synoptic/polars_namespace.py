@@ -1,3 +1,5 @@
+import warnings
+from pathlib import Path
 from typing import Literal
 
 import polars as pl
@@ -10,6 +12,74 @@ class SynopticFrame:
 
     def __init__(self, df: pl.DataFrame) -> None:
         self._df = df
+
+    def write_met(self, file: Path | str) -> None:
+        """Write to 11-column ASCII file for Model Evaluation Tools (MET) ASCII2NC tool.
+
+        WARNING: I haven't actually tested that the file it writes can
+        be used by MET's ASCII2NC tool. This is primarily a proof of
+        concept. Please open a PR if you want to see this feature
+        improved and tested.
+
+        > The default ASCII point observation format consists of one row of data
+        > per observation value. Each row of data consists of 11 columns as shown
+        > in [Table 7.4](https://met.readthedocs.io/en/latest/Users_Guide/reformat_point.html#table-reformat-point-ascii2nc-format).
+
+        Description
+        https://met.readthedocs.io/en/latest/Users_Guide/reformat_point.html#ascii2nc-tool
+
+        Sample Data
+        https://github.com/dtcenter/MET/blob/main_v11.1/data/sample_obs/ascii/sample_ascii_obs_varname.txt
+        """
+        if isinstance(file, str):
+            file = Path(file)
+
+        warnings.warn(
+            "`write_met` is experimental and proof of concept. NEEDS TESTING WIT MET's ASCII2NC tool."
+        )
+
+        # Get 11 columns of data required.
+        met = self._df.filter(~pl.col("value").is_null()).select(
+            pl.lit("MESONET").alias("Message_Type"),
+            pl.col("stid").alias("Station_ID"),
+            pl.col("date_time").dt.strftime("%Y%m%d_%H%M%S").alias("Valid_Time"),
+            pl.col("latitude").alias("Lat"),
+            pl.col("longitude").alias("Lon"),
+            pl.col("elevation").alias("Elevation") * 0.3048,  # feet to meters
+            pl.col("variable").alias("Variable_Name"),
+            pl.lit(None).alias("Level"),
+            pl.lit(None).alias("Height"),
+            pl.when(pl.col("qc_flagged"))
+            .then(pl.lit("flagged"))
+            .otherwise(pl.lit("passed"))
+            .alias("QC_String"),
+            pl.col("value").alias("Observation_Value"),
+        )
+
+        # Replace Synoptic's variable name with GRIB short name
+        # TODO: List is incomplete
+        met = met.with_columns(
+            pl.col("Variable_Name").replace(
+                {
+                    "air_temp": "TMP",
+                    "relative_humidity": "RH",
+                    "dew_point_temperature": "DPT",
+                    "wind_speed": "WIND",
+                    "wind_direction": "WDIR",
+                    "sea_level_pressure": "PRMSL",
+                    "pressure": "PRES",
+                }
+            )
+        )
+
+        # Write ASCII file
+        # TODO: The file written is space-delimitated, not fixed with.
+        # TODO: Is that OK for MET? If not, need to use formatted np.savetxt.
+        met.with_columns(pl.all().cast(str)).fill_null("NA").write_csv(
+            file,
+            separator=" ",
+            include_header=False,
+        )
 
     def with_local_timezone(self) -> pl.DataFrame | dict:
         """Convert datetime columns from UTC to local timezone.
