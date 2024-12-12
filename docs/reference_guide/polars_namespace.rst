@@ -9,7 +9,7 @@ For example `df.synoptic.with_networkname()`.
 .. toctree::
     :maxdepth: 2
 
-.. currentmodule:: synoptic.namespace
+.. currentmodule:: synoptic.polars_namespace
 
 .. autosummary::
    :toctree: _autosummary

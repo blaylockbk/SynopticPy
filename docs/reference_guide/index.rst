@@ -6,4 +6,4 @@ Reference Guide
    :maxdepth: 1
 
    services
-   namespace
+   polars_namespace
