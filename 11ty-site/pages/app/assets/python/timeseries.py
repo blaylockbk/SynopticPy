@@ -1,20 +1,20 @@
-from pyscript import Element
-from pyodide.http import open_url
-import js
 import io
+import itertools
 import json
+import re
+import sys
+
+import js
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
 import scipy.stats
-import itertools
-import sys
-import re
-
 from matplotlib.patches import Polygon
+from pyodide.http import open_url
+from pyscript import display
 
-print(f"Python version:", sys.version)
+print(f"Python version: {sys.version}")
 print(f"imported matplotlib {mpl.__version__}")
 print(f"imported pandas {pd.__version__}")
 print(f"imported numpy {np.__version__}")
@@ -780,10 +780,10 @@ def main(display):
         f"{status_symbol} Response Message: {data['SUMMARY']['RESPONSE_MESSAGE']}. Received [{data['SUMMARY'].get('NUMBER_OF_OBJECTS')}] stations. Timer: {data['SUMMARY'].get('DATA_QUERY_TIME', 'n/a')}"
     )
 
-    if (
-        data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK"
-    ):
-        msg = data["SUMMARY"]["RESPONSE_MESSAGE"].replace("Please contact support@synopticdata.com.", "")
+    if data["SUMMARY"]["RESPONSE_MESSAGE"] != "OK":
+        msg = data["SUMMARY"]["RESPONSE_MESSAGE"].replace(
+            "Please contact support@synopticdata.com.", ""
+        )
         fig, ax = plot_message(msg)
         display(fig, target="figure-timeseries", append=False)
         display(fig, target="figure-map", append=False)
@@ -870,9 +870,9 @@ def main(display):
     network_df = get_network_info(network_ids)
     for i in Z.values():
         id = i.attrs["MNET_ID"]
-        i.attrs[
-            "MNET_ID"
-        ] = f"{id} - {network_df.loc[id].SHORTNAME} :: {network_df.loc[id].LONGNAME}"
+        i.attrs["MNET_ID"] = (
+            f"{id} - {network_df.loc[id].SHORTNAME} :: {network_df.loc[id].LONGNAME}"
+        )
 
     # ---------------------
     # Figures and Smoothing
