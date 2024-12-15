@@ -1,11 +1,21 @@
 
 {# PyScript #}
-<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+<link rel="stylesheet" href="https://pyscript.net/releases/2024.11.1/core.css" />
 
 {% if global.allowPyScript and allowPyScript %}
-{# 
-  If you don't want to load in this script, use 
+{#
+  If you don't want to load in this script, use
   npm run dev:site` instead of `npm run dev`
 #}
-<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+<script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+
+<!-- for splashscreen -->
+<style>
+    #loading { outline: none; border: none; background: transparent }
+</style>
+<script type="module">
+    const loading = document.getElementById('loading');
+    addEventListener('py:ready', () => loading.close());
+    loading.showModal();
+</script>
 {% endif %}
