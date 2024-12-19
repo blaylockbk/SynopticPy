@@ -14,6 +14,7 @@ User Guide
 .. toctree::
    :maxdepth: 1
    :caption: Tutorial
+   :numbered:
 
    services_tutorials/TimeSeries.ipynb
    services_tutorials/Latest.ipynb
