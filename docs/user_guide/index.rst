@@ -12,7 +12,6 @@ User Guide
    FAQ.ipynb
 
 .. toctree::
-   :glob:
    :maxdepth: 1
    :caption: Tutorial
 
