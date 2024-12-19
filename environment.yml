@@ -2,7 +2,7 @@ name: synoptic2
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
+  - python=3.13
   - pip
   - git
   - nodejs
@@ -10,18 +10,18 @@ dependencies:
   # Tools
   # -----
   - altair
-  #- cartopy
+  - cartopy
   - great_tables
   - jupyter
   - matplotlib
-  #- metpy
+  - metpy
   - numpy
-  #- pandas
+  - pandas
   - polars
   - pyarrow
   - requests
+  - scikit-image # To plot NASA Worldview images from herbie.toolbox.EasyMap
   - seaborn
-  - toml
 
   # Formatter and Testing
   # ---------------------
@@ -44,16 +44,3 @@ dependencies:
   #- latexmk
   #- myst-parser
   #- linkify-it-py
-
-  #- pip:
-    # Development Version from GitHub
-    #- git+https://github.com/blaylockbk/SynopticPy.git
-
-    # Or, latest release from PyPI
-    #- SynopticPy
-
-    # Borrow some tools from Brian's garage
-    #- git+https://github.com/blaylockbk/Carpenter_Workshop.git
-
-
-  ## Or, clone the repo and do `pip install -e .`
