@@ -16,7 +16,15 @@ User Guide
    :maxdepth: 1
    :caption: Tutorial
 
-   services_tutorials/*
+   services_tutorials/TimeSeries.ipynb
+   services_tutorials/Latest.ipynb
+   services_tutorials/NearestTime.ipynb
+   services_tutorials/Precipitation.ipynb
+   services_tutorials/Metadata.ipynb
+   services_tutorials/Variables.ipynb
+   services_tutorials/Networks.ipynb
+   services_tutorials/NetworkTypes.ipynb
+   services_tutorials/QCTypes.ipynb
 
 .. toctree::
    :glob:
