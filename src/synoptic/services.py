@@ -102,11 +102,11 @@ def parse_obrange(x: str | datetime | tuple[datetime, datetime]):
         - Start and end date as string `['YYYYMMDDHHMM','YYYYMMDDHHMM']`
         - Start and end date as datetime `(datetime,datetime)`
     """
-    if hasattr(x, "hour"):
+    if hasattr(x, "day"):
         return f"{x:%Y%m%d%H%M}"
     elif (
         isinstance(x, list | tuple)
-        and all(hasattr(i, "hour") for i in x)
+        and all(hasattr(i, "day") for i in x)
         and len(x) == 2
     ):
         return f"{x[0]:%Y%m%d%H%M},{x[1]:%Y%m%d%H%M}"
@@ -235,7 +235,7 @@ class SynopticAPI:
                             "Try using a datetime object or string like 'YYYY-MM-DD HH:MM'."
                         )
 
-                if hasattr(value, "minute"):
+                if hasattr(value, "day"):
                     params[key] = f"{value:%Y%m%d%H%M}"
                 else:
                     params[key] = str(value)

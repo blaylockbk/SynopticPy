@@ -1,6 +1,6 @@
 """Tests for Metadata Class."""
 
-from datetime import datetime
+from datetime import datetime, date
 
 from synoptic.services import Metadata
 
@@ -24,6 +24,18 @@ def test_all_stations_obrange():
         obrange=(
             datetime(2000, 1, 1),
             datetime(2001, 1, 1),
+        ),
+    )
+    assert len(s.df())
+
+
+def test_obrange_as_date():
+    """Get metadata for an obrange, using datetime.date."""
+    s = Metadata(
+        state="UT",
+        obrange=(
+            date(2024, 1, 1),
+            date(2024, 1, 2),
         ),
     )
     assert len(s.df())
