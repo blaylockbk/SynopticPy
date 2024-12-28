@@ -16,6 +16,7 @@ station_selectors = {
     "varsoperator",
     "network",
     "radius",
+    "limit",
     "bbox",
     "height",
     "width",
