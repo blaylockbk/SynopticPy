@@ -581,6 +581,9 @@ class Metadata(SynopticAPI):
                 "MNET_ID": pl.UInt32,
                 "WIMS_ID": pl.UInt32,
             },
+            infer_schema_length=None,
+            # TODO: Setting to None is slow, but necessary to parse the "providers" column
+            # TODO: How do you set the schema_overrides for 'providers' to List(Struct({'name': pl.String, 'url': pl.String}))
         )
 
         df = (
