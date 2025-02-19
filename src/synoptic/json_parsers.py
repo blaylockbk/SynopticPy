@@ -92,7 +92,7 @@ def station_metadata_to_dataframe(STATION: list[dict]):
     df = df.with_columns(
         pl.col("STID").cast(pl.String),
         pl.col("ID", "MNET_ID").cast(pl.UInt32),
-        pl.col("ELEVATION", "LATITUDE", "LONGITUDE").cast(pl.Float64),
+        pl.col("ELEVATION", "LATITUDE", "LONGITUDE").str.strip_chars().cast(pl.Float64),
         is_active=pl.when(pl.col("STATUS") == "ACTIVE")
         .then(True)
         .otherwise(pl.when(pl.col("STATUS") == "INACTIVE").then(False)),

@@ -90,3 +90,17 @@ def test_utah_ozone():
         vars="ozone_concentration",
     ).df()
     assert len(df)
+
+
+def test_convert_LATITUDE_with_white_space():
+    """Test cast LATITUDE data to float when white space is present.
+
+    The value " 42.870000" is present in this test case.
+    """
+    df = TimeSeries(
+        bbox=[-90, 40, -85, 44],
+        start=datetime(2024, 8, 24, 00, 00, 00),
+        end=datetime(2024, 8, 24, 1, 00, 00),
+    ).df()
+
+    assert len(df)
