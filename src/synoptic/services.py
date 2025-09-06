@@ -34,6 +34,8 @@ _services_stations = {
     "latest",
     "nearesttime",
     "precipitation",
+    "statistics",
+    "percentiles",
     "qcsegments",
     "latency",
     "metadata",
@@ -52,6 +54,8 @@ ServiceType = Literal[
     "latest",
     "nearesttime",
     "precipitation",
+    "statistics",
+    "percentiles",
     "qcsegments",
     "latency",
     "metadata",
@@ -486,6 +490,52 @@ class Precipitation(SynopticAPI):
         df = parse_stations_precipitation(self)
         self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
         return df
+
+
+class Percentiles(SynopticAPI):
+    """
+    Request station percentiles.
+
+    Refer to the official documentation: https://docs.synopticdata.com/services/percentiles
+
+
+    Parameters
+    ----------
+    # TODO: I can't develop this capability because
+    # TODO: "Account associated with this token does not have access to the statistics service."
+    """
+
+    def __init__(self, **params):
+        super().__init__("percentiles", **params)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations percentile DataFrame."""
+        timer = datetime.now()
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
+
+
+class Statistics(SynopticAPI):
+    """
+    Request station statistics.
+
+    Refer to the official documentation: https://docs.synopticdata.com/services/statistics
+
+
+    Parameters
+    ----------
+    # TODO: I can't develop this capability because
+    # TODO: "Account associated with this token does not have access to the statistics service."
+    """
+
+    def __init__(self, **params):
+        super().__init__("statistics", **params)
+
+    @lru_cache
+    def df(self) -> pl.DataFrame:
+        """Stations statistics DataFrame."""
+        timer = datetime.now()
+        self.timers["parse_to_polars_dataframe"] = datetime.now() - timer
 
 
 class QCSegments(SynopticAPI):

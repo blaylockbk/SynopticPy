@@ -99,6 +99,45 @@ params_precipitation = (
     }
 )
 
+params_percentiles = (
+    station_selectors
+    | {"token"}
+    | {
+        "vars",
+        "data",
+        "complete",
+        "daily_min",
+        "daily_max",
+        "obtimezone",  # IGNORED
+        "hourly",
+        "start",
+        "end",
+        "percentiles",
+        "complete",
+        "fields",
+        "showemptystations",
+        "showemptyvars",
+        "units",
+        "sitinghistory",
+    }
+)
+params_statistics = (
+    station_selectors
+    | {"token", "start", "end", "recent"}
+    | {
+        "vars",
+        "period",
+        "statistic",
+        "complete",
+        "fields",
+        "obtimezone",  # IGNORED
+        "showemptystations",
+        "showemptyvars",
+        "units",
+        "sitinghistory",
+    }
+)
+
 params_qcsegments = (
     station_selectors
     | {"token", "start", "end", "recent"}
@@ -148,6 +187,8 @@ def validate_params(service, **params):
         "latest": params_latest,
         "nearesttime": params_nearesttime,
         "precipitation": params_precipitation,
+        "percentiles": params_percentiles,
+        "statistics": params_statistics,
         "qcsegments": params_qcsegments,
         "latency": params_latency,
         "metadata": params_metadata,
