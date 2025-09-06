@@ -232,7 +232,9 @@ def parse_stations_timeseries(S: "SynopticAPI") -> pl.DataFrame:
         )
 
     # Cast 'date_time' column from string to datetime
-    observed = observed.with_columns(pl.col("date_time").str.to_datetime())
+    observed = observed.with_columns(
+        pl.col("date_time").str.to_datetime(time_zone="UTC")
+    )
 
     # Parse the variable name
     observed = observed.pipe(parse_raw_variable_column)
@@ -365,7 +367,7 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
 
     # Cast 'date_time' column from string to datetime
     observed = observed.with_columns(
-        pl.col("date_time").str.to_datetime("%Y-%m-%dT%H:%M:%S%#z")
+        pl.col("date_time").str.to_datetime(time_zone="UTC")
     )
 
     # Parse the variable name
@@ -411,7 +413,7 @@ def parse_stations_precipitation(S: "SynopticAPI") -> pl.DataFrame:
         .explode("precipitation")
         .unnest("precipitation")
         .with_columns(
-            pl.col("first_report", "last_report").str.to_datetime(),
+            pl.col("first_report", "last_report").str.to_datetime(time_zone="UTC"),
             pl.lit(S.UNITS["precipitation"]).alias("units"),
         )
     )
