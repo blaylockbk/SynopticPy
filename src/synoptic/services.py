@@ -704,7 +704,7 @@ class Networks(SynopticAPI):
             pl.concat([pl.DataFrame(i) for i in self.MNET], how="diagonal_relaxed")
             .with_columns(
                 pl.col("ID", "CATEGORY").cast(pl.UInt32),
-                pl.col("LAST_OBSERVATION").str.to_datetime(),
+                pl.col("LAST_OBSERVATION").str.to_datetime(time_zone="UTC"),
                 pl.struct(
                     pl.col("PERIOD_OF_RECORD")
                     .struct.field("start")
