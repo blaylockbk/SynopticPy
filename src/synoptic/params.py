@@ -165,5 +165,10 @@ def validate_params(service, **params):
                 f"'{key}' is not an expected API parameter for the {service} service.",
                 UserWarning,
             )
+        if key in {"obtimezone"}:
+            warnings.warn(
+                f"The '{key}' key is ignored by SynopticPy because a Polars DataFrame can't have mixed timezones in a column.",
+                UserWarning,
+            )
         if key in {"timeformat", "output", "fields", "obtimezone"}:
             warnings.warn(f"The '{key}' key is ignored by SynopticPy.", UserWarning)
