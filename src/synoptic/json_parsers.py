@@ -283,7 +283,7 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     ## BUG: Synoptic API -- This doesn't seem to be an issue anymore
     ## The ozone_concentration_value_1 value is returned as string but should
     ## be a float.
-    #if "ozone_concentration_value_1" in df.columns:
+    # if "ozone_concentration_value_1" in df.columns:
     #    df = df.with_columns(
     #        pl.struct(
     #            [
@@ -364,7 +364,9 @@ def parse_stations_latest_nearesttime(S: "SynopticAPI") -> pl.DataFrame:
     observed = pl.concat(to_concat, how="diagonal_relaxed")
 
     # Cast 'date_time' column from string to datetime
-    observed = observed.with_columns(pl.col("date_time").str.to_datetime())
+    observed = observed.with_columns(
+        pl.col("date_time").str.to_datetime("%Y-%m-%dT%H:%M:%S%#z")
+    )
 
     # Parse the variable name
     observed = observed.pipe(parse_raw_variable_column)
