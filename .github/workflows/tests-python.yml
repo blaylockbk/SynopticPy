@@ -52,5 +52,6 @@ jobs:
       - name: Run tests
         shell: bash -el {0}
         env:
+          SYNOPTIC_TOKEN: ${{ secrets.SYNOPTIC_TOKEN }}
           TMPDIR: ${{ runner.temp }}
         run: uv run pytest
