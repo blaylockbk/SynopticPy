@@ -72,6 +72,8 @@ def string_to_timedelta(x: str) -> timedelta:
     """
     Parse a duration string to a timedelta.
 
+    Parameters
+    ----------
     x : str
         String representation of duration. Can use ISO 8601 duration, in
         a limited fashion, or a Polars-style period string.
@@ -79,12 +81,35 @@ def string_to_timedelta(x: str) -> timedelta:
         - `'P1DT6H'` = 1 day, 6 hours
         - `'30m'` = 30 minutes
         - `'3d6h30m10s'` = 3 days, 6 hours, 30 minutes, 10 seconds
-    """
-    x = x.lower()
-    x = x.replace("p", "").replace("t", "")
-    pattern = r"(?:(?P<days>\d+)d)?(?:(?P<hours>\d+)h)?(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?"
 
-    groups = re.match(pattern, x).groupdict()
+    Returns
+    -------
+    timedelta
+        The parsed timedelta object.
+
+    Raises
+    ------
+    ValueError
+        If the string cannot be parsed as a valid duration.
+    """
+    x = x.strip().lower()
+    x = x.replace("p", "").replace("t", "")
+    
+    pattern = r"^(?:(?P<days>\d+)d)?(?:(?P<hours>\d+)h)?(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?$"
+    
+    match = re.match(pattern, x)
+    if not match:
+        raise ValueError(
+            f"Invalid duration string: '{x}'. "
+            "Expected format like '3d6h30m10s' or 'PT30M'"
+        )
+    
+    groups = match.groupdict()
+    
+    # Check if at least one time component was provided
+    if all(v is None for v in groups.values()):
+        raise ValueError(f"No time components found in duration string: '{x}'")
+    
     kwargs = {k: int(v) for k, v in groups.items() if v is not None}
     return timedelta(**kwargs)
 
