@@ -1,15 +1,25 @@
 # 🐍 Install
 
-Install with conda:
+Add to your project with uv
+
+```bash
+uv add SynopticPy
+```
+
+Install with pip
+
+```bash
+pip install SynopticPy
+```
+
+Install with conda or mamba
 
 ```bash
 conda install -c conda-forge SynopticPy
 ```
 
-Install with pip:
-
 ```bash
-pip install SynopticPy
+mamba install -c conda-forge SynopticPy
 ```
 
 Install latest from GitHub:
@@ -35,7 +45,9 @@ Import SynopticPy by importing the `synoptic` module or importing the classes fo
 ```python
 import synoptic
 ```
+
 or
+
 ```python
 from synoptic import TimeSeries, Precipitation # etc.
 ```

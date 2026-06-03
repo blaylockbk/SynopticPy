@@ -54,6 +54,10 @@ I'm sharing this package to improve my skills with Polars and gain more experien
 # 🐍 Install
 
 ```bash
+uv add SynopticPy
+```
+
+```bash
 pip install SynopticPy
 ```
 
