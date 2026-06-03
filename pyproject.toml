@@ -21,9 +21,9 @@ classifiers = [
 ]
 keywords = ["weather", "meteorology", "mesonet", "atmosphere"]
 dependencies = [
-    "numpy>=2.3.2",
-    "polars[plot,style,timezone]>=1.33.0",
-    "requests>=2.32.5",
+    "numpy>=2.4.6",
+    "polars[plot,style,timezone]>=1.41.2",
+    "requests>=2.34.2",
     "toml>=0.10.2",
 ]
 dynamic = ["version"]
@@ -39,13 +39,13 @@ dynamic = ["version"]
 plot = [
     "altair>=5.5.0",
     "cartopy>=0.25.0",
-    "herbie-data>=2025.7.0",
-    "matplotlib>=3.10.6",
+    "herbie-data>=2026.3.0",
+    "matplotlib>=3.10.9",
     "seaborn>=0.13.2",
 ]
 pandas = [
     "pandas>=2.3.2",
-    "pyarrow>=21.0.0",
+    "pyarrow>=24.0.0",
 ]
 
 [build-system]

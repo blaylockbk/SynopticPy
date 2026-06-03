@@ -25,11 +25,13 @@ jobs:
             python-version: "3.12"
           - os: ubuntu-latest
             python-version: "3.13"
+          - os: ubuntu-latest
+            python-version: "3.14"
           - os: macos-latest
-            python-version: "3.13"
+            python-version: "3.14"
             continue-on-error: true
           - os: windows-latest
-            python-version: "3.13"
+            python-version: "3.14"
             continue-on-error: true
 
     name: Python ${{ matrix.python-version }} • ${{ matrix.os }}
