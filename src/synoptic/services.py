@@ -19,11 +19,9 @@ from synoptic.json_parsers import (
     parse_stations_precipitation,
     parse_stations_timeseries,
 )
-from synoptic.token import ANSI, Token, configure
+from synoptic.token import ANSI, TOKEN, Token, configure
 from synoptic.params import validate_params
 
-# Initialize Token to get any environment or configured value
-TOKEN = Token()
 if TOKEN.token:
     TOKEN.is_valid()
 

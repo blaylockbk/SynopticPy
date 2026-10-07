@@ -165,6 +165,12 @@ class Token:
             # or self._prompt_user_for_token()
         )
 
+    def reload(self):
+        """Reload the token from the environment or config file."""
+        self.source = "user"
+        self.token = self._retrieve_token()
+        return self
+
     def _get_token_from_env(self):
         """Retrieve token from environment variable, if available."""
         value = os.getenv("SYNOPTIC_TOKEN")
@@ -221,6 +227,9 @@ class Token:
             return False
 
 
+TOKEN = Token()
+
+
 def configure(
     token: str | None = None,
     hide_token: bool | None = None,
@@ -271,7 +280,10 @@ def configure(
 
     # =========================
     # Write new content to file
+    CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(CONFIG_FILE, "w") as file:
         file.write(content)
+
+    TOKEN.reload()
 
     print(f"📝 Config file updated; {ANSI.text(CONFIG_FILE, ANSI.BLUE)}.")
