@@ -33,7 +33,7 @@ import synoptic
 synoptic.configure(token="yourToken123456789")
 ```
 
-This creates a new file `~/.config/SynopticPy/config.toml` file with your token. Restart your Python instance, and the next time you `import synoptic` it will use the token value stored in the `config.toml` file.
+This creates or updates `~/.config/SynopticPy/config.toml` and reloads the default token immediately; you do not need to restart Python.
 
 ### 3. Provide the token as an argument
 

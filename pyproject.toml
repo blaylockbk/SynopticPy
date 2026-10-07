@@ -2,16 +2,16 @@
 name = "SynopticPy"
 description = "Retrieve mesonet weather data as Polars DataFrames from Synoptic's Weather API."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = { file = "LICENSE" }
 authors = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
 maintainers = [{ name = "Brian K. Blaylock", email = "blaylockbk@gmail.com" }]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: MacOS",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
@@ -21,8 +21,8 @@ classifiers = [
 ]
 keywords = ["weather", "meteorology", "mesonet", "atmosphere"]
 dependencies = [
-    "numpy>=2.4.6",
-    "polars[plot,style,timezone]>=1.41.2",
+    "numpy>=2.5.3",
+    "polars[plot,style,timezone]>=2.0.0",
     "requests>=2.34.2",
     "toml>=0.10.2",
 ]
@@ -38,14 +38,14 @@ dynamic = ["version"]
 [project.optional-dependencies]
 plot = [
     "altair>=5.5.0",
-    "cartopy>=0.25.0",
-    "herbie-data>=2026.3.0",
-    "matplotlib>=3.10.9",
+    "cartopy>=0.26.0",
+    "herbie-data>=2026.9.0",
+    "matplotlib>=3.11.2",
     "seaborn>=0.13.2",
 ]
 pandas = [
-    "pandas>=2.3.2",
-    "pyarrow>=24.0.0",
+    "pandas>=3.0.6",
+    "pyarrow>=25.0.1",
 ]
 
 [build-system]
