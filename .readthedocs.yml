@@ -28,4 +28,4 @@ sphinx:
 
 # Optionally build your docs in additional formats such as PDF
 formats:
-  - pdf
+#  - pdf  # Doesn't seem to work because of emoji's ??
