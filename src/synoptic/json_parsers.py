@@ -50,12 +50,9 @@ def parse_raw_variable_column(
         A mapping of the variable names to unit, as provided by
         `SynopticAPI().UNITS`.
     """
+    VAR_RE = r"^(?<variable>.+?)_(?:value|set)_(?<sensor_index>\d+)(?<is_derived>d?)$"
     return (
-        df.with_columns(
-            pl.col("variable").str.extract_groups(
-                r"(?<variable>.+)_(?:value|set)_(?<sensor_index>\d)(?<is_derived>d?)"
-            )
-        )
+        df.with_columns(pl.col("variable").str.extract_groups(VAR_RE))
         .unnest("variable")
         .with_columns(
             pl.col("is_derived") == "d",
