@@ -71,7 +71,7 @@ def attach_units(df, units_dict):
         `SynopticAPI().UNITS`.
     """
     return df.with_columns(
-        pl.col("variable").replace(units_dict).alias("units"),
+        pl.col("variable").replace_strict(units_dict, default=None).alias("units")
     )
 
 
